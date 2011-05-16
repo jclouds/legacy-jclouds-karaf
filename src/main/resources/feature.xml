@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+  -->
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+
+    <feature name='jclouds' description='JClouds' version='${jclouds.version}' resolver='(obr)'>
+        <feature version='${guice.version}'>guice</feature>
+        <bundle dependency='true'>wrap:mvn:com.google.guava/guava/${guava.version}</bundle>
+        <bundle dependency='true'>mvn:com.google.code.gson/gson/${gson.version}</bundle>
+        <bundle dependency='true'>wrap:mvn:net.oauth.core/oauth/${net.oauth.version}</bundle>
+        <bundle dependency='true'>wrap:mvn:org.bouncycastle/bcprov-jdk15/${bcprov.version}</bundle>
+        <bundle dependency='true'>wrap:mvn:com.sun.jersey/jersey-core/${jersey.version}</bundle>
+        <bundle>mvn:org.jclouds/jclouds-core/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds/jclouds-blobstore/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name='jclouds-aws-s3' version='${jclouds.version}' resolver='(obr)'>
+        <feature version='${jclouds.version}'>jclouds</feature>
+        <bundle dependency='true'>wrap:mvn:com.jamesmurty.utils/java-xmlbuilder/${java-xmlbuilder.version}</bundle>
+        <bundle dependency='true'>mvn:joda-time/joda-time/${joda.version}</bundle>
+        <bundle dependency='true'>
+            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.netty/${netty.bundle.version}
+        </bundle>
+        <bundle dependency='true'>wrap:mvn:org.apache.httpcomponents/httpcore-osgi/${httpcore.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.httpcomponents/httpclient-osgi/${httpclient.version}</bundle>
+        <bundle>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.driver/jclouds-joda/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.driver/jclouds-netty/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.driver/jclouds-bouncycastle/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.driver/jclouds-enterprise/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.driver/jclouds-apachehc/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/aws-s3/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name='guice' description='Google Guice' version='${guice.version}' resolver='(obr)'>
+        <bundle dependency='true'>wrap:mvn:javax.inject/javax.inject/1</bundle>
+        <bundle dependency='true'>
+            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aopalliance/${aopalliance.bundle.version}
+        </bundle>
+        <bundle>mvn:com.google.inject/guice/${guice.version}</bundle>
+        <bundle>mvn:com.google.inject.extensions/guice-assistedinject/${guice.version}</bundle>
+    </feature>
+
+</features>
