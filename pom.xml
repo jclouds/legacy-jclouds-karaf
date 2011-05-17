@@ -143,6 +143,8 @@
         <joda.version>1.6.2</joda.version>
         <httpclient.version>4.1.1</httpclient.version>
         <httpcore.version>4.1</httpcore.version>
+        <jsch.bundle.version>0.1.44_2</jsch.bundle.version>
+        <commons-io.bundle.version>1.4_2</commons-io.bundle.version>
 
         <!-- Plugin Versions -->
         <maven-bundle-plugin.version>2.1.0</maven-bundle-plugin.version>
@@ -172,6 +174,16 @@
                 <groupId>org.apache.servicemix.bundles</groupId>
                 <artifactId>org.apache.servicemix.bundles.netty</artifactId>
                 <version>${netty.bundle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.jsch</artifactId>
+                <version>${jsch.bundle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.commons-io</artifactId>
+                <version>${commons-io.bundle.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.inject</groupId>
