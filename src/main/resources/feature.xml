@@ -25,31 +25,39 @@
         <bundle>mvn:org.jclouds/jclouds-blobstore/${jclouds.version}</bundle>
     </feature>
 
-    <feature name='jclouds-aws-s3' version='${jclouds.version}' resolver='(obr)'>
+    <feature name='jclouds-aws-s3' description='Amazon Web Service - S3' version='${jclouds.version}' resolver='(obr)'>
         <feature version='${jclouds.version}'>jclouds</feature>
         <bundle dependency='true'>wrap:mvn:com.jamesmurty.utils/java-xmlbuilder/${java-xmlbuilder.version}</bundle>
         <bundle dependency='true'>mvn:joda-time/joda-time/${joda.version}</bundle>
-        <bundle dependency='true'>
-            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.netty/${netty.bundle.version}
-        </bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.netty/${netty.bundle.version}</bundle>
         <bundle dependency='true'>wrap:mvn:org.apache.httpcomponents/httpcore-osgi/${httpcore.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.httpcomponents/httpclient-osgi/${httpclient.version}</bundle>
-        <bundle>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-joda/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-netty/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-bouncycastle/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-enterprise/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-apachehc/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.driver/jclouds-joda/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.driver/jclouds-netty/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.driver/jclouds-bouncycastle/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.driver/jclouds-enterprise/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.driver/jclouds-apachehc/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/aws-s3/${jclouds.version}</bundle>
     </feature>
 
+
+    <feature name='jclouds-aws-ec2' description='Amazon Web Service - EC2' version='${jclouds.version}' resolver='(obr)'>
+        <feature version='${jclouds.version}'>jclouds</feature>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.api/ec2/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/aws-ec2/${jclouds.version}</bundle>
+    </feature>
+
+
     <feature name='guice' description='Google Guice' version='${guice.version}' resolver='(obr)'>
         <bundle dependency='true'>wrap:mvn:javax.inject/javax.inject/1</bundle>
-        <bundle dependency='true'>
-            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aopalliance/${aopalliance.bundle.version}
-        </bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aopalliance/${aopalliance.bundle.version}</bundle>
         <bundle>mvn:com.google.inject/guice/${guice.version}</bundle>
         <bundle>mvn:com.google.inject.extensions/guice-assistedinject/${guice.version}</bundle>
     </feature>
