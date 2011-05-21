@@ -17,11 +17,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.apache.karaf</groupId>
-    <artifactId>jclouds</artifactId>
+    <groupId>org.jclouds</groupId>
+    <artifactId>karaf</artifactId>
     <packaging>pom</packaging>
     <version>1.0</version>
-    <name>Apache Karaf :: JClouds</name>
+    <name>JClouds :: Karaf</name>
 
     <build>
         <plugins>
