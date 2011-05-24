@@ -40,6 +40,7 @@
                         <DynamicImport-Package>${osgi.dynamic.import}</DynamicImport-Package>
                         <Private-Package>${osgi.private}</Private-Package>
                         <Require-Bundle>${osgi.bundles}</Require-Bundle>
+                        <Bundle-Activator>${osgi.activator}</Bundle-Activator>
                     </instructions>
                     <supportedProjectTypes>
                         <supportedProjectType>jar</supportedProjectType>
@@ -55,30 +56,6 @@
                         <goals>
                             <goal>manifest</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>${build-helper-maven-plugin.version}</version>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <id>attach-artifacts</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>attach-artifact</goal>
-                        </goals>
-                        <configuration>
-                            <artifacts>
-                                <artifact>
-                                    <file>target/feature.xml</file>
-                                    <type>xml</type>
-                                    <classifier>features</classifier>
-                                </artifact>
-                            </artifacts>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -119,10 +96,13 @@
     </build>
 
     <modules>
+        <module>feature</module>
+        <module>samples</module>
     </modules>
 
     <properties>
         <osgi.version>4.2.0</osgi.version>
+        <configadmin.version>1.2.8</configadmin.version>
         <karaf.version>2.2.0</karaf.version>
         <jclouds.version>1.0-SNAPSHOT</jclouds.version>
         <felix.configadmin.version>1.2.8</felix.configadmin.version>
@@ -162,6 +142,13 @@
                 <groupId>org.osgi</groupId>
                 <artifactId>org.osgi.core</artifactId>
                 <version>${osgi.version}</version>
+            </dependency>
+
+            <!-- Configuration Admin -->
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.configadmin</artifactId>
+                <version>${configadmin.version}</version>
             </dependency>
 
             <!-- Guice Dependencies -->
