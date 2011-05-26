@@ -16,11 +16,11 @@
 
     <feature name='jclouds' description='JClouds' version='${jclouds.version}' resolver='(obr)'>
         <feature version='${guice.version}'>guice</feature>
-        <bundle dependency='true'>wrap:mvn:com.google.guava/guava/${guava.version}</bundle>
+        <bundle dependency='true'>mvn:com.googlecode.guava-osgi/guava-osgi/${guava.bundle.version}</bundle>
         <bundle dependency='true'>mvn:com.google.code.gson/gson/${gson.version}</bundle>
-        <bundle dependency='true'>wrap:mvn:net.oauth.core/oauth/${net.oauth.version}</bundle>
-        <bundle dependency='true'>wrap:mvn:org.bouncycastle/bcprov-jdk15/${bcprov.version}</bundle>
-        <bundle dependency='true'>wrap:mvn:com.sun.jersey/jersey-core/${jersey.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.oauth-commons/${net.oauth.bundle.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.bcprov-jdk15/${bcprov.bundle.version}</bundle>
+        <bundle dependency='true'>mvn:com.sun.jersey/jersey-core/${jersey.version}</bundle>
         <bundle>mvn:org.jclouds/jclouds-core/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds/jclouds-blobstore/${jclouds.version}</bundle>
     </feature>
@@ -58,8 +58,7 @@
 
     <feature name='jclouds-aws-s3' description='Amazon Web Service - S3' version='${jclouds.version}' resolver='(obr)'>
         <feature version='${jclouds.version}'>jclouds</feature>
-        <bundle dependency='true'>wrap:mvn:com.jamesmurty.utils/java-xmlbuilder/${java-xmlbuilder.version}</bundle>
-        <bundle dependency='true'>mvn:joda-time/joda-time/${joda.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>        <bundle dependency='true'>mvn:joda-time/joda-time/${joda.version}</bundle>
         <bundle dependency='true'>
             mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.netty/${netty.bundle.version}
         </bundle>
@@ -90,7 +89,7 @@
 
     <feature name='jclouds-googlestorage' description='Google Storage' version='${jclouds.version}' resolver='(obr)'>
         <feature version='${jclouds.version}'>jclouds</feature>
-        <bundle dependency='true'>wrap:mvn:com.jamesmurty.utils/java-xmlbuilder/${java-xmlbuilder.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
         <bundle>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/googlestorage/${jclouds.version}</bundle>
     </feature>
@@ -104,7 +103,7 @@
             mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-io/${commons-io.bundle.version}
         </bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
-        <bundle dependency='true'>wrap:mvn:com.jamesmurty.utils/java-xmlbuilder/${java-xmlbuilder.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-jsch/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
@@ -117,7 +116,7 @@
     <feature name='jclouds-eucalyptus-s3' description='Eucalyptus Partner - S3' version='${jclouds.version}'
              resolver='(obr)'>
         <feature version='${jclouds.version}'>jclouds</feature>
-        <bundle dependency='true'>wrap:mvn:com.jamesmurty.utils/java-xmlbuilder/${java-xmlbuilder.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/walrus/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
@@ -297,7 +296,7 @@
     <feature name='jclouds-hosteurope-storage' description='Host Europe Cloud Storage' version='${jclouds.version}'
              resolver='(obr)'>
         <feature version='${jclouds.version}'>jclouds</feature>
-        <bundle dependency='true'>wrap:mvn:com.jamesmurty.utils/java-xmlbuilder/${java-xmlbuilder.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/scality-rs2/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
@@ -344,7 +343,7 @@
         <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
-        <bundle dependency='true'>wrap:mvn:com.jamesmurty.utils/java-xmlbuilder/${java-xmlbuilder.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
         <bundle>mvn:org.jclouds.provider/savvis-symphonyvpdc/${jclouds.version}</bundle>
     </feature>
 
@@ -352,7 +351,7 @@
     <feature name='jclouds-scaleup-storage' description='ScaleUp Cloud Storage' version='${jclouds.version}'
              resolver='(obr)'>
         <feature version='${jclouds.version}'>jclouds</feature>
-        <bundle dependency='true'>wrap:mvn:com.jamesmurty.utils/java-xmlbuilder/${java-xmlbuilder.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/scality-rs2/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
@@ -428,7 +427,7 @@
              version='${jclouds.version}'
              resolver='(obr)'>
         <feature version='${jclouds.version}'>jclouds</feature>
-        <bundle dependency='true'>wrap:mvn:com.jamesmurty.utils/java-xmlbuilder/${java-xmlbuilder.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/scality-rs2/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
@@ -446,7 +445,7 @@
         <bundle dependency='true'>
             mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-io/${commons-io.bundle.version}
         </bundle>
-        <bundle dependency='true'>wrap:mvn:com.jamesmurty.utils/java-xmlbuilder/${java-xmlbuilder.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-jsch/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
@@ -466,7 +465,7 @@
         <bundle dependency='true'>
             mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-io/${commons-io.bundle.version}
         </bundle>
-        <bundle dependency='true'>wrap:mvn:com.jamesmurty.utils/java-xmlbuilder/${java-xmlbuilder.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-jsch/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
@@ -477,7 +476,7 @@
     </feature>
 
     <feature name='guice' description='Google Guice' version='${guice.version}' resolver='(obr)'>
-        <bundle dependency='true'>wrap:mvn:javax.inject/javax.inject/1</bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.javax-inject/${javax.inject.bundle.version}</bundle>
         <bundle dependency='true'>
             mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aopalliance/${aopalliance.bundle.version}
         </bundle>

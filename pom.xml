@@ -61,30 +61,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>${maven-resources-plugin.version}</version>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}/target</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/resources</directory>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
@@ -110,16 +86,16 @@
         <junit.version>4.8.2</junit.version>
         <easymock.version>3.0</easymock.version>
 
-        <javax.inject.version>1</javax.inject.version>
+        <javax.inject.bundle.version>1_1</javax.inject.bundle.version>
         <guice.version>3.0</guice.version>
         <gson.version>1.7.1</gson.version>
-        <guava.version>r09</guava.version>
+        <guava.bundle.version>9.0.0</guava.bundle.version>
         <aopalliance.bundle.version>1.0_5</aopalliance.bundle.version>
         <netty.bundle.version>3.2.3.Final_2</netty.bundle.version>
-        <net.oauth.version>20100527</net.oauth.version>
-        <bcprov.version>1.44</bcprov.version>
+        <net.oauth.bundle.version>20100527_1</net.oauth.bundle.version>
+        <bcprov.bundle.version>1.46_1</bcprov.bundle.version>
         <jersey.version>1.6</jersey.version>
-        <java-xmlbuilder.version>0.3</java-xmlbuilder.version>
+        <java-xmlbuilder.bundle.version>0.3_1</java-xmlbuilder.bundle.version>
         <joda.version>1.6.2</joda.version>
         <httpclient.version>4.1.1</httpclient.version>
         <httpcore.version>4.1</httpcore.version>
@@ -172,10 +148,29 @@
                 <artifactId>org.apache.servicemix.bundles.commons-io</artifactId>
                 <version>${commons-io.bundle.version}</version>
             </dependency>
+
             <dependency>
-                <groupId>javax.inject</groupId>
-                <artifactId>javax.inject</artifactId>
-                <version>${javax.inject.version}</version>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.javax.inject</artifactId>
+                <version>${javax.inject.bundle.version.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.bcprov-jdk15</artifactId>
+                <version>${bcprov.bundle.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.oauth-commons</artifactId>
+                <version>${net.oauth.bundle.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.java-xmlbuilder</artifactId>
+                <version>${java-xmlbuilder.bundle.version}</version>
             </dependency>
 
             <dependency>
@@ -198,30 +193,10 @@
             </dependency>
 
             <dependency>
-                <groupId>net.oauth.core</groupId>
-                <artifactId>oauth</artifactId>
-                <version>${net.oauth.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15</artifactId>
-                <version>${bcprov.version}</version>
-                <optional>true</optional>
-            </dependency>
-
-            <dependency>
                 <groupId>com.sun.jersey</groupId>
                 <artifactId>jersey-core</artifactId>
                 <version>${jersey.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>com.jamesmurty.utils</groupId>
-                <artifactId>java-xmlbuilder</artifactId>
-                <version>${java-xmlbuilder.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
@@ -243,11 +218,10 @@
 
             <!-- Guava -->
             <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
+                <groupId>com.googlecode.guava-osgi</groupId>
+                <artifactId>guava-osgi</artifactId>
+                <version>${guava.bundle.version}</version>
             </dependency>
-
             <!-- Logging Dependencies -->
             <dependency>
                 <groupId>org.slf4j</groupId>
