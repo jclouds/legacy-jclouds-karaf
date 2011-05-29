@@ -1,4 +1,4 @@
-#Karaf JClouds Integration
+# Karaf JClouds Integration
 
 This project currently hosts a Karaf feature for easy installation of JClouds inside Apache Karaf.
 
@@ -25,4 +25,9 @@ karaf@root> osgi:install -s mvn:org.jclouds.karaf.sample/s3-reader/1.0
 
 The sample is basic it will just display the content of the blob to the standard output.
 
+## License
+
+Copyright (C) 2011 Cloud Conscious, LLC. <info@cloudconscious.com>
+
+Licensed under the Apache License, Version 2.0
 
