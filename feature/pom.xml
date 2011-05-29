@@ -105,6 +105,7 @@
                                 <feature>jclouds-aws-s3</feature>
                                 <feature>jclouds-aws-ec2</feature>
                             </features>
+                             <repository>target/features-repo</repository>
                         </configuration>
                     </execution>
                 </executions>
