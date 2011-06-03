@@ -93,6 +93,70 @@
         <bundle>mvn:org.jclouds.provider/aws-ec2/${jclouds.version}</bundle>
     </feature>
 
+    <feature name='jclouds-bluelock-vcdirector' description='vCloud implementation targeted to BlueLock'
+             version='${jclouds.version}'
+             resolver='(obr)'>
+        <feature version='${jclouds.version}'>jclouds</feature>
+        <bundle dependency='true'>
+            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jsch/${jsch.bundle.version}
+        </bundle>
+        <bundle dependency='true'>
+            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-io/${commons-io.bundle.version}
+        </bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-jsch/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/vcloudexpress/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/vcloud-api/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.common/vcloud-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/bluelock-vcdirector/${jclouds.version}</bundle>
+    </feature>
+
+   <feature name='jclouds-bluelock-vcloud-vcenterprise' description='vCloud implementation targeted to Bluelock vCloud Enterprise'
+             version='${jclouds.version}'
+             resolver='(obr)'>
+        <feature version='${jclouds.version}'>jclouds</feature>
+        <bundle dependency='true'>
+            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jsch/${jsch.bundle.version}
+        </bundle>
+        <bundle dependency='true'>
+            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-io/${commons-io.bundle.version}
+        </bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-jsch/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/vcloudexpress/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/vcloud-api/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.common/vcloud-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/bluelock-vcloud-vcenterprise/${jclouds.version}</bundle>
+    </feature>
+ 
+    <feature name='jclouds-bluelock-vcloud-zone01' description='vCloud implementation targeted to Bluelock vCloud Zone01'
+             version='${jclouds.version}'
+             resolver='(obr)'>
+        <feature version='${jclouds.version}'>jclouds</feature>
+        <bundle dependency='true'>
+            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jsch/${jsch.bundle.version}
+        </bundle>
+        <bundle dependency='true'>
+            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-io/${commons-io.bundle.version}
+        </bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-jsch/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/vcloudexpress/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/vcloud-api/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.common/vcloud-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/bluelock-vcloud-zone01/${jclouds.version}</bundle>
+    </feature>
+
+
     <feature name='jclouds-googlestorage' description='Google Storage' version='${jclouds.version}' resolver='(obr)'>
         <feature version='${jclouds.version}'>jclouds</feature>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
@@ -336,6 +400,24 @@
         <bundle>mvn:org.jclouds.provider/openhosting-east1/${jclouds.version}</bundle>
     </feature>
 
+    <feature name='jclouds-rimuhosting' description='ComputeService implementation of RimuHosting datacenters' version='${jclouds.version}'
+             resolver='(obr)'>
+        <feature version='${jclouds.version}'>jclouds</feature>
+        <bundle dependency='true'>
+            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jsch/${jsch.bundle.version}
+        </bundle>
+        <bundle dependency='true'>
+            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-io/${commons-io.bundle.version}
+        </bundle>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-jsch/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/rimuhosting/${jclouds.version}</bundle>
+    </feature>
+
+
     <feature name='jclouds-savvis-symphonyvpdc' description='Savvis Symphony VPDC' version='${jclouds.version}'
              resolver='(obr)'>
         <feature version='${jclouds.version}'>jclouds</feature>
@@ -428,6 +510,28 @@
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/synaptic-storage/${jclouds.version}</bundle>
     </feature>
+
+    <feature name='jclouds-stratogen-vcloud-mycloud' description='vCloud implementation targeted to StratoGen vCloud MyCloud'
+             version='${jclouds.version}'
+             resolver='(obr)'>
+        <feature version='${jclouds.version}'>jclouds</feature>
+        <bundle dependency='true'>
+            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jsch/${jsch.bundle.version}
+        </bundle>
+        <bundle dependency='true'>
+            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-io/${commons-io.bundle.version}
+        </bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-jsch/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/vcloudexpress/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/vcloud-api/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.common/vcloud-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/stratogen-vcloud-mycloud/${jclouds.version}</bundle>
+    </feature>
+
 
     <feature name='jclouds-tiscali-storage' description='Tisali Cloud Storage'
              version='${jclouds.version}'
