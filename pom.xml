@@ -90,7 +90,6 @@
 
     <modules>
         <module>feature</module>
-        <module>samples</module>
     </modules>
 
     <properties>
