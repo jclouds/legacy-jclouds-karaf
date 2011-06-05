@@ -31,12 +31,12 @@
     <groupId>org.jclouds</groupId>
     <artifactId>jclouds-karaf</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>1.0-SNAPSHOT</version>
     <name>JClouds :: Karaf</name>
 
     <scm>
-        <connection>scm:git@github.com:jclouds/jclouds-karaf.git</connection>
-        <developerConnection>git@github.com:jclouds/jclouds-karaf.git</developerConnection>
+        <connection>scm:git:git://github.com/jclouds/jclouds-karaf.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/jclouds/jclouds-karaf.git</developerConnection>
         <url>http://github.com/jclouds/jclouds-karaf</url>
     </scm>
 
