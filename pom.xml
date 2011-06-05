@@ -36,8 +36,8 @@
 
     <scm>
         <connection>scm:git@github.com:jclouds/jclouds-karaf.git</connection>
-        <url>git@github.com:jclouds/jclouds-karaf.git</url>
         <developerConnection>git@github.com:jclouds/jclouds-karaf.git</developerConnection>
+        <url>http://github.com/jclouds/jclouds</url>
     </scm>
 
     <build>
