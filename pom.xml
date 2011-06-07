@@ -87,6 +87,7 @@
     </build>
 
     <modules>
+        <module>commands</module>
         <module>feature</module>
     </modules>
 
@@ -131,6 +132,11 @@
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>org.osgi.core</artifactId>
+                <version>${osgi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.compendium</artifactId>
                 <version>${osgi.version}</version>
             </dependency>
 
@@ -261,6 +267,41 @@
                 <artifactId>easymock</artifactId>
                 <version>${easymock.version}</version>
             </dependency>
+
+            <!-- JClouds Dependencies -->
+            <dependency>
+                <groupId>org.jclouds</groupId>
+                <artifactId>jclouds-core</artifactId>
+                <version>${jclouds.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jclouds</groupId>
+                <artifactId>jclouds-compute</artifactId>
+                <version>${jclouds.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jclouds.api</groupId>
+                <artifactId>ec2</artifactId>
+                <version>${jclouds.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jclouds.driver</groupId>
+                <artifactId>jclouds-log4j</artifactId>
+                <version>${jclouds.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jclouds.driver</groupId>
+                <artifactId>jclouds-jsch</artifactId>
+                <version>${jclouds.version}</version>
+            </dependency>
+
+            <!-- Karaf Dependencies -->
+            <dependency>
+                <groupId>org.apache.karaf.shell</groupId>
+                <artifactId>org.apache.karaf.shell.console</artifactId>
+                <version>${karaf.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

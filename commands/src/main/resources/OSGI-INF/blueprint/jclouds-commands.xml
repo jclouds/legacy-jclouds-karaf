@@ -1,0 +1,62 @@
+<!--
+
+    Copyright (C) 2010 Progress Software, Inc. All rights reserved.
+    http://fusesource.com
+
+    The software in this package is published under the terms of the AGPL license
+    a copy of which has been included with this distribution in the license.txt file.
+
+-->
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+
+    <reference-list id="computeServices" interface="org.jclouds.compute.ComputeService" availability="optional" />
+
+    <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
+        <command name="jclouds/create">
+            <action class="org.jclouds.karaf.commands.CreateCommand">
+                <property name="services" ref="computeServices"/>
+            </action>
+        </command>
+        <command name="jclouds/destroy">
+            <action class="org.jclouds.karaf.commands.DestroyCommand">
+                <property name="services" ref="computeServices"/>
+            </action>
+        </command>
+        <command name="jclouds/suspend">
+            <action class="org.jclouds.karaf.commands.SuspendCommand">
+                <property name="services" ref="computeServices"/>
+            </action>
+        </command>
+        <command name="jclouds/resume">
+            <action class="org.jclouds.karaf.commands.ResumeCommand">
+                <property name="services" ref="computeServices"/>
+            </action>
+        </command>
+        <command name="jclouds/list">
+            <action class="org.jclouds.karaf.commands.ListCommand">
+                <property name="services" ref="computeServices"/>
+            </action>
+        </command>
+        <command name="jclouds/nodes">
+            <action class="org.jclouds.karaf.commands.NodesCommand">
+                <property name="services" ref="computeServices"/>
+            </action>
+        </command>
+        <command name="jclouds/hardwares">
+            <action class="org.jclouds.karaf.commands.HardwaresCommand">
+                <property name="services" ref="computeServices"/>
+            </action>
+        </command>
+        <command name="jclouds/locations">
+            <action class="org.jclouds.karaf.commands.LocationsCommand">
+                <property name="services" ref="computeServices"/>
+            </action>
+        </command>
+        <command name="jclouds/images">
+            <action class="org.jclouds.karaf.commands.ImagesCommand">
+                <property name="services" ref="computeServices"/>
+            </action>
+        </command>
+    </command-bundle>
+
+</blueprint>
