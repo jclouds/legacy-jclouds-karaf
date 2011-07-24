@@ -15,21 +15,21 @@
  * limitations under the License.
  * ====================================================================
  */
-package org.jclouds.karaf.commands;
+package org.jclouds.karaf.commands.compute;
 
 import org.apache.felix.gogo.commands.Argument;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-public class ResumeCommand extends JCloudsCommandSupport {
+public class SuspendCommand extends ComputeCommandSupport {
 
     @Argument
     private String id;
 
     @Override
     protected Object doExecute() throws Exception {
-        getComputeService().resumeNode(id);
+        getComputeService().suspendNode(id);
         return null;
     }
 }

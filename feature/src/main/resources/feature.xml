@@ -594,8 +594,16 @@
         <bundle>mvn:com.google.inject.extensions/guice-assistedinject/${guice.version}</bundle>
     </feature>
 
+    <feature name="jclouds-services" description="OSGi Service Factories for JClouds" version="${jclouds.version}" resolver="(obr)">
+        <feature version='${jclouds.version}'>jclouds</feature>
+        <feature version='${jclouds.version}'>jclouds-compute</feature>
+        <feature version='${jclouds.version}'>jclouds-driver-jsch</feature>
+        <bundle>mvn:org.jclouds.karaf/services/${project.version}</bundle>
+    </feature>
+
     <feature name="jclouds-commands" description="Karaf Commands for JClouds" version="${jclouds.version}" resolver="(obr)">
         <feature version='${jclouds.version}'>jclouds</feature>
+        <feature version='${jclouds.version}'>jclouds-services</feature>
         <feature version='${jclouds.version}'>jclouds-compute</feature>
         <feature version='${jclouds.version}'>jclouds-driver-jsch</feature>
         <bundle>mvn:org.jclouds.karaf/commands/${project.version}</bundle>

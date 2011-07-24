@@ -15,21 +15,28 @@
  * limitations under the License.
  * ====================================================================
  */
-package org.jclouds.karaf.commands;
+package org.jclouds.karaf.commands.compute;
 
-import org.apache.felix.gogo.commands.Argument;
+import org.apache.felix.gogo.commands.Option;
+import org.jclouds.compute.ComputeService;
+import org.jclouds.domain.Location;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-public class SuspendCommand extends JCloudsCommandSupport {
+public class LocationsCommand extends ComputeCommandSupport {
 
-    @Argument
-    private String id;
+    @Option(name = "--provider")
+    private String provider;
 
     @Override
     protected Object doExecute() throws Exception {
-        getComputeService().suspendNode(id);
+        for (ComputeService service : getComputeServices()) {
+            for (Location location : service.listAssignableLocations()) {
+                System.out.println(location.toString());
+            }
+        }
         return null;
     }
+
 }

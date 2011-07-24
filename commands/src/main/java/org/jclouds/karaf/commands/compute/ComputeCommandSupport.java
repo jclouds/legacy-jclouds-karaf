@@ -15,7 +15,7 @@
  * limitations under the License.
  * ====================================================================
  */
-package org.jclouds.karaf.commands;
+package org.jclouds.karaf.commands.compute;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +27,7 @@ import org.jclouds.compute.ComputeService;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-public abstract class JCloudsCommandSupport extends OsgiCommandSupport {
+public abstract class ComputeCommandSupport extends OsgiCommandSupport {
 
     private List<ComputeService> services;
 

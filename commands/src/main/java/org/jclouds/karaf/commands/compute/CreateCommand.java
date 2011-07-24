@@ -15,7 +15,7 @@
  * limitations under the License.
  * ====================================================================
  */
-package org.jclouds.karaf.commands;
+package org.jclouds.karaf.commands.compute;
 
 import java.util.List;
 import java.util.Set;
@@ -32,7 +32,7 @@ import org.jclouds.ec2.compute.options.EC2TemplateOptions;
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 @Command(scope = "jclouds", name = "create")
-public class CreateCommand extends JCloudsCommandSupport {
+public class CreateCommand extends ComputeCommandSupport {
 
     @Option(name = "--smallest")
     private boolean smallest;

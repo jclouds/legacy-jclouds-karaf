@@ -15,7 +15,7 @@
  * limitations under the License.
  * ====================================================================
  */
-package org.jclouds.karaf;
+package org.jclouds.karaf.services;
 
 import java.util.Dictionary;
 import java.util.Enumeration;

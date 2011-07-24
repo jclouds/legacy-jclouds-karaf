@@ -43,6 +43,10 @@
             <artifactId>jclouds-compute</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.jclouds</groupId>
+            <artifactId>jclouds-blobstore</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jclouds.driver</groupId>
             <artifactId>jclouds-log4j</artifactId>
         </dependency>
@@ -66,7 +70,12 @@
             <groupId>org.apache.karaf.shell</groupId>
             <artifactId>org.apache.karaf.shell.console</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -75,13 +84,12 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
-                        <Bundle-Activator>org.jclouds.karaf.Activator</Bundle-Activator>
-                        <Export-Package></Export-Package>
+                        <Export-Package>org.jclouds.karaf.commands.*</Export-Package>
                         <Import-Package>
+                            org.jclouds.blobstore;version=${jclouds.version};resolution:=optional,
+                            org.jclouds.compute;version=${jclouds.version};resolution:=optional,
                             org.jclouds.ec2*;version=${jclouds.version};resolution:=optional,
                             *</Import-Package>
-                        <Private-Package>org.jclouds.karaf,org.jclouds.karaf.commands</Private-Package>
-                        <Export-Service>org.jclouds.compute.ComputeService</Export-Service>
                     </instructions>
                 </configuration>
             </plugin>

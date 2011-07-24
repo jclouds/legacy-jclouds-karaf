@@ -15,7 +15,7 @@
  * limitations under the License.
  * ====================================================================
  */
-package org.jclouds.karaf;
+package org.jclouds.karaf.services;
 
 import java.util.Hashtable;
 
@@ -30,6 +30,18 @@ import org.osgi.service.cm.ManagedServiceFactory;
 public class Activator implements BundleActivator {
 
     public void start(BundleContext context) throws Exception {
+        registerComputeServiceFactory(context);
+        registerBlobstoreServiceFactory(context);
+    }
+
+    public void stop(BundleContext context) throws Exception {
+    }
+
+    /**
+     * Registers a {@link ManagedServiceFactory} for the jclouds compute.
+     * @param context
+     */
+    private void registerComputeServiceFactory(BundleContext context) {
         Hashtable<String, Object> properties = new Hashtable<String, Object>();
         properties.put(Constants.SERVICE_PID, "org.jclouds.compute");
         ComputeServiceFactory computeFactory = new ComputeServiceFactory(context);
@@ -37,6 +49,15 @@ public class Activator implements BundleActivator {
                 computeFactory, properties);
     }
 
-    public void stop(BundleContext context) throws Exception {
+    /**
+     * Registers a {@link ManagedServiceFactory} for the jclouds blobstore.
+     * @param context
+     */
+    private void registerBlobstoreServiceFactory(BundleContext context) {
+       Hashtable<String, Object> properties = new Hashtable<String, Object>();
+        properties.put(Constants.SERVICE_PID, "org.jclouds.blobstore");
+        BlobStoreServiceFactory blobStoreFactory = new BlobStoreServiceFactory(context);
+        context.registerService(ManagedServiceFactory.class.getName(),
+                blobStoreFactory, properties);
     }
 }

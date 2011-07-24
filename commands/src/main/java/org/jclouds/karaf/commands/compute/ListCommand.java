@@ -15,7 +15,7 @@
  * limitations under the License.
  * ====================================================================
  */
-package org.jclouds.karaf.commands;
+package org.jclouds.karaf.commands.compute;
 
 import java.io.PrintStream;
 import java.util.HashSet;
@@ -32,7 +32,7 @@ import org.jclouds.domain.Location;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-public class ListCommand extends JCloudsCommandSupport {
+public class ListCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {

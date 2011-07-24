@@ -89,6 +89,7 @@
     <modules>
         <module>commands</module>
         <module>feature</module>
+        <module>services</module>
     </modules>
 
     <properties>
@@ -272,6 +273,11 @@
             <dependency>
                 <groupId>org.jclouds</groupId>
                 <artifactId>jclouds-core</artifactId>
+                <version>${jclouds.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jclouds</groupId>
+                <artifactId>jclouds-blobstore</artifactId>
                 <version>${jclouds.version}</version>
             </dependency>
             <dependency>

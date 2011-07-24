@@ -10,51 +10,63 @@
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
     <reference-list id="computeServices" interface="org.jclouds.compute.ComputeService" availability="optional" />
+    <reference-list id="blobStoreServices" interface="org.jclouds.blobstore.BlobStore" availability="optional" />
 
     <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
         <command name="jclouds/create">
-            <action class="org.jclouds.karaf.commands.CreateCommand">
+            <action class="org.jclouds.karaf.commands.compute.CreateCommand">
                 <property name="services" ref="computeServices"/>
             </action>
         </command>
         <command name="jclouds/destroy">
-            <action class="org.jclouds.karaf.commands.DestroyCommand">
+            <action class="org.jclouds.karaf.commands.compute.DestroyCommand">
                 <property name="services" ref="computeServices"/>
             </action>
         </command>
         <command name="jclouds/suspend">
-            <action class="org.jclouds.karaf.commands.SuspendCommand">
+            <action class="org.jclouds.karaf.commands.compute.SuspendCommand">
                 <property name="services" ref="computeServices"/>
             </action>
         </command>
         <command name="jclouds/resume">
-            <action class="org.jclouds.karaf.commands.ResumeCommand">
+            <action class="org.jclouds.karaf.commands.compute.ResumeCommand">
                 <property name="services" ref="computeServices"/>
             </action>
         </command>
         <command name="jclouds/list">
-            <action class="org.jclouds.karaf.commands.ListCommand">
+            <action class="org.jclouds.karaf.commands.compute.ListCommand">
                 <property name="services" ref="computeServices"/>
             </action>
         </command>
         <command name="jclouds/nodes">
-            <action class="org.jclouds.karaf.commands.NodesCommand">
+            <action class="org.jclouds.karaf.commands.compute.NodesCommand">
                 <property name="services" ref="computeServices"/>
             </action>
         </command>
         <command name="jclouds/hardwares">
-            <action class="org.jclouds.karaf.commands.HardwaresCommand">
+            <action class="org.jclouds.karaf.commands.compute.HardwaresCommand">
                 <property name="services" ref="computeServices"/>
             </action>
         </command>
         <command name="jclouds/locations">
-            <action class="org.jclouds.karaf.commands.LocationsCommand">
+            <action class="org.jclouds.karaf.commands.compute.LocationsCommand">
                 <property name="services" ref="computeServices"/>
             </action>
         </command>
         <command name="jclouds/images">
-            <action class="org.jclouds.karaf.commands.ImagesCommand">
+            <action class="org.jclouds.karaf.commands.compute.ImagesCommand">
                 <property name="services" ref="computeServices"/>
+            </action>
+        </command>
+         <command name="jclouds/blobstore-write">
+            <action class="org.jclouds.karaf.commands.blobstore.WriteCommand">
+                <property name="blobStoreServices" ref="blobStoreServices"/>
+            </action>
+        </command>
+
+        <command name="jclouds/blobstore-read">
+            <action class="org.jclouds.karaf.commands.blobstore.ReadCommand">
+                <property name="blobStoreServices" ref="blobStoreServices"/>
             </action>
         </command>
     </command-bundle>

@@ -15,28 +15,21 @@
  * limitations under the License.
  * ====================================================================
  */
-package org.jclouds.karaf.commands;
+package org.jclouds.karaf.commands.compute;
 
-import org.apache.felix.gogo.commands.Option;
-import org.jclouds.compute.ComputeService;
-import org.jclouds.domain.Location;
+import org.apache.felix.gogo.commands.Argument;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-public class LocationsCommand extends JCloudsCommandSupport {
+public class DestroyCommand extends ComputeCommandSupport {
 
-    @Option(name = "--provider")
-    private String provider;
+    @Argument
+    private String id;
 
     @Override
     protected Object doExecute() throws Exception {
-        for (ComputeService service : getComputeServices()) {
-            for (Location location : service.listAssignableLocations()) {
-                System.out.println(location.toString());
-            }
-        }
+        getComputeService().destroyNode(id);
         return null;
     }
-
 }

@@ -15,28 +15,21 @@
  * limitations under the License.
  * ====================================================================
  */
-package org.jclouds.karaf.commands;
+package org.jclouds.karaf.commands.compute;
 
-import org.apache.felix.gogo.commands.Option;
-import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.domain.ComputeMetadata;
+import org.apache.felix.gogo.commands.Argument;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-public class NodesCommand extends JCloudsCommandSupport {
+public class ResumeCommand extends ComputeCommandSupport {
 
-    @Option(name = "--provider")
-    private String provider;
+    @Argument
+    private String id;
 
     @Override
     protected Object doExecute() throws Exception {
-        for (ComputeService service : getComputeServices()) {
-            for (ComputeMetadata node : service.listNodes()) {
-                System.out.println(node.toString());
-            }
-        }
+        getComputeService().resumeNode(id);
         return null;
     }
-
 }

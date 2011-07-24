@@ -15,7 +15,7 @@
  * limitations under the License.
  * ====================================================================
  */
-package org.jclouds.karaf.commands;
+package org.jclouds.karaf.commands.compute;
 
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.Hardware;
@@ -23,7 +23,7 @@ import org.jclouds.compute.domain.Hardware;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-public class HardwaresCommand extends JCloudsCommandSupport {
+public class HardwaresCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {

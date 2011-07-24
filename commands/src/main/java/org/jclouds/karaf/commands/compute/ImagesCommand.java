@@ -15,21 +15,24 @@
  * limitations under the License.
  * ====================================================================
  */
-package org.jclouds.karaf.commands;
+package org.jclouds.karaf.commands.compute;
 
-import org.apache.felix.gogo.commands.Argument;
+import org.jclouds.compute.ComputeService;
+import org.jclouds.compute.domain.Image;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-public class DestroyCommand extends JCloudsCommandSupport {
-
-    @Argument
-    private String id;
+public class ImagesCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        getComputeService().destroyNode(id);
+        for (ComputeService service : getComputeServices()) {
+            for (Image image : service.listImages()) {
+                System.out.println(image.toString());
+            }
+        }
         return null;
     }
+
 }
