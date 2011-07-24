@@ -77,7 +77,9 @@
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Activator>org.jclouds.karaf.Activator</Bundle-Activator>
                         <Export-Package></Export-Package>
-                        <Import-Package>*</Import-Package>
+                        <Import-Package>
+                            org.jclouds.ec2*;version=${jclouds.version};resolution:=optional,
+                            *</Import-Package>
                         <Private-Package>org.jclouds.karaf,org.jclouds.karaf.commands</Private-Package>
                         <Export-Service>org.jclouds.compute.ComputeService</Export-Service>
                     </instructions>
