@@ -96,7 +96,7 @@
         <osgi.version>4.2.0</osgi.version>
         <configadmin.version>1.2.8</configadmin.version>
         <karaf.version>2.2.0</karaf.version>
-        <jclouds.version>1.0.0</jclouds.version>
+        <jclouds.version>1.1.0-SNAPSHOT</jclouds.version>
         <felix.configadmin.version>1.2.8</felix.configadmin.version>
         <slf4j.version>1.5.8</slf4j.version>
         <junit.version>4.8.2</junit.version>
@@ -117,6 +117,8 @@
         <httpcore.version>4.1</httpcore.version>
         <jsch.bundle.version>0.1.44_2</jsch.bundle.version>
         <commons-io.bundle.version>1.4_2</commons-io.bundle.version>
+        <sshj.version>0.5.0</sshj.version>
+        <jzlib.version>1.0.7</jzlib.version>
 
         <!-- Plugin Versions -->
         <maven-bundle-plugin.version>2.1.0</maven-bundle-plugin.version>
@@ -243,6 +245,17 @@
                 <artifactId>guava-osgi</artifactId>
                 <version>${guava.bundle.version}</version>
             </dependency>
+            <!-- SSHJ -->
+            <dependency>
+                <groupId>net.schmizz</groupId>
+                <artifactId>sshj</artifactId>
+                <version>${sshj.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jcraft.jzlib</groupId>
+                <artifactId>com.springsource.com.jcraft.jzlib</artifactId>
+                <version>${jzlib.version}</version>
+            </dependency>
             <!-- Logging Dependencies -->
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -322,5 +335,9 @@
           <url>http://download.java.net/maven/2/</url>
           <layout>default</layout>
         </repository>
-    </repositories>
+        <repository>
+            <id>com.springsource.repository.bundles.external</id>
+            <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+            <url>http://repository.springsource.com/maven/bundles/external</url>
+        </repository>    </repositories>
 </project>

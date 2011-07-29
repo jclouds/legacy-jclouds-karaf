@@ -101,6 +101,7 @@
                             <features>
                                 <feature>jclouds</feature>
                                 <feature>guice</feature>
+                                <feature>jclouds-driver-sshj</feature>
                                 <feature>jclouds-aws-s3</feature>
                                 <feature>jclouds-aws-ec2</feature>
                             </features>
@@ -111,5 +112,12 @@
             </plugin>
         </plugins>
     </build>
+
+    <dependencies>
+            <dependency>
+                <groupId>com.jcraft.jzlib</groupId>
+                <artifactId>com.springsource.com.jcraft.jzlib</artifactId>
+            </dependency>
+    </dependencies>
 
 </project>
