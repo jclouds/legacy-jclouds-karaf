@@ -365,58 +365,6 @@
         <bundle>mvn:org.jclouds.provider/trmk-vcloudexpress/${jclouds.version}</bundle>
     </feature>
 
-    <!--feature name='jclouds-googlestorage' description='Google Storage' version='${jclouds.version}' resolver='(obr)'>
-        <feature version='${jclouds.version}'>jclouds</feature>
-        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
-        <bundle>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.provider/googlestorage/${jclouds.version}</bundle>
-    </feature-->
-
-    <!--feature name='jclouds-bluelock-vcdirector' description='vCloud implementation targeted to BlueLock' version='${jclouds.version}' resolver='(obr)'>
-        <feature version='${jclouds.version}'>jclouds</feature>
-        <feature version='${jclouds.version}'>jclouds-driver-sshj</feature>
-        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/vcloud/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.provider/bluelock-vcdirector/${jclouds.version}</bundle>
-    </feature-->
-
-        <!--feature name='jclouds-hosteurope-storage' description='Host Europe Cloud Storage' version='${jclouds.version}'
-             resolver='(obr)'>
-        <feature version='${jclouds.version}'>jclouds</feature>
-        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/scality-rs2/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.provider/hosteurope-storage/${jclouds.version}</bundle>
-    </feature-->
-
-    <!--feature name='jclouds-scaleup-storage' description='ScaleUp Cloud Storage' version='${jclouds.version}' resolver='(obr)'>
-        <feature version='${jclouds.version}'>jclouds</feature>
-        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/scality-rs2/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.provider/hosteurope-storage/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.provider/scaleup-storage/${jclouds.version}</bundle>
-    </feature-->
-
-    <!--feature name='jclouds-tiscali-storage' description='Tisali Cloud Storage'
-             version='${jclouds.version}'
-             resolver='(obr)'>
-        <feature version='${jclouds.version}'>jclouds</feature>
-        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/scality-rs2/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.provider/tiscali-storage/${jclouds.version}</bundle>
-    </feature-->
-
     <feature name="jclouds-services" description="OSGi Service Factories for JClouds" version="${jclouds.version}" resolver="(obr)">
         <feature version='${jclouds.version}'>jclouds</feature>
         <feature version='${jclouds.version}'>jclouds-compute</feature>
