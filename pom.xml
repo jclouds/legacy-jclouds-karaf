@@ -29,7 +29,7 @@
     <groupId>org.jclouds</groupId>
     <artifactId>jclouds-karaf</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.1.1-SNAPSHOT</version>
     <name>JClouds :: Karaf</name>
 
     <scm>
@@ -96,7 +96,7 @@
         <osgi.version>4.2.0</osgi.version>
         <configadmin.version>1.2.8</configadmin.version>
         <karaf.version>2.2.0</karaf.version>
-        <jclouds.version>1.1.0-SNAPSHOT</jclouds.version>
+        <jclouds.version>1.1.1</jclouds.version>
         <felix.configadmin.version>1.2.8</felix.configadmin.version>
         <slf4j.version>1.5.8</slf4j.version>
         <junit.version>4.8.2</junit.version>
@@ -119,6 +119,7 @@
         <commons-io.bundle.version>1.4_2</commons-io.bundle.version>
         <sshj.version>0.5.0</sshj.version>
         <jzlib.version>1.0.7</jzlib.version>
+        <jzlib.bundle.version>1.0.7_1-SNAPSHOT</jzlib.bundle.version>
 
         <!-- Plugin Versions -->
         <maven-bundle-plugin.version>2.1.0</maven-bundle-plugin.version>
@@ -197,6 +198,12 @@
             </dependency>
 
             <dependency>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.jzlib</artifactId>
+                <version>${jzlib.bundle.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.google.inject</groupId>
                 <artifactId>guice</artifactId>
                 <version>${guice.version}</version>
@@ -252,8 +259,8 @@
                 <version>${sshj.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.jcraft.jzlib</groupId>
-                <artifactId>com.springsource.com.jcraft.jzlib</artifactId>
+                <groupId>com.jcraft</groupId>
+                <artifactId>jzlib</artifactId>
                 <version>${jzlib.version}</version>
             </dependency>
             <!-- Logging Dependencies -->
@@ -335,9 +342,5 @@
           <url>http://download.java.net/maven/2/</url>
           <layout>default</layout>
         </repository>
-        <repository>
-            <id>com.springsource.repository.bundles.external</id>
-            <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
-            <url>http://repository.springsource.com/maven/bundles/external</url>
-        </repository>    </repositories>
+    </repositories>
 </project>
