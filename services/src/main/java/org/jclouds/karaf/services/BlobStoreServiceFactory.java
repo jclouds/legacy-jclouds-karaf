@@ -21,11 +21,8 @@ import com.google.common.collect.ImmutableSet;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.BlobStoreContextFactory;
-import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.ComputeServiceContext;
-import org.jclouds.compute.ComputeServiceContextFactory;
+
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
-import org.jclouds.ssh.jsch.config.JschSshClientModule;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
@@ -66,7 +63,7 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory {
                 String provider = (String) properties.get("provider");
                 String identity = (String) properties.get("identity");
                 String credential = (String) properties.get("credential");
-                BlobStoreContext context =  new BlobStoreContextFactory().createContext(provider, identity, credential,  ImmutableSet.of(new Log4JLoggingModule(), new JschSshClientModule()), props);
+                BlobStoreContext context =  new BlobStoreContextFactory().createContext(provider, identity, credential,  ImmutableSet.of(new Log4JLoggingModule()), props);
 
                 BlobStore blobStore = context.getBlobStore();
                 newRegistration = bundleContext.registerService(
