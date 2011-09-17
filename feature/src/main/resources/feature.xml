@@ -81,8 +81,6 @@
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-bouncycastle</feature>
         <bundle>mvn:org.jclouds.driver/jclouds-slf4j/${jclouds.version}</bundle>
-        <bundle>mvn:org.slf4j/slf4j-api/${slf4j.version}</bundle>
-        <bundle>mvn:org.slf4j/slf4j-simple/${slf4j.version}</bundle>
     </feature>
 
     <feature name='jclouds-driver-bouncycastle' description='JClouds - Drivers - Bouncycastle' version='${project.version}' resolver='(obr)'>
