@@ -120,7 +120,7 @@
         <commons-io.bundle.version>1.4_2</commons-io.bundle.version>
         <sshj.version>0.5.0</sshj.version>
         <jzlib.version>1.0.7</jzlib.version>
-        <jzlib.bundle.version>1.0.7_1-SNAPSHOT</jzlib.bundle.version>
+        <jzlib.bundle.version>1.0.7_1</jzlib.bundle.version>
 
         <!-- Plugin Versions -->
         <maven-bundle-plugin.version>2.1.0</maven-bundle-plugin.version>
