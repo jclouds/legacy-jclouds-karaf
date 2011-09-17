@@ -367,7 +367,7 @@
     <feature name="jclouds-services" description="OSGi Service Factories for JClouds" version="${project.version}" resolver="(obr)">
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-compute</feature>
-        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <feature version='${project.version}'>jclouds-driver-jsch</feature>
         <bundle>mvn:org.jclouds.karaf/services/${project.version}</bundle>
     </feature>
 
