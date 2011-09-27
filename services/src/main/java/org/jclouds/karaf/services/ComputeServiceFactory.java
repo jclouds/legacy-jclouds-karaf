@@ -39,6 +39,10 @@ import org.osgi.service.cm.ManagedServiceFactory;
  */
 public class ComputeServiceFactory implements ManagedServiceFactory {
 
+    public static final String PROVIDER = "provider";
+    public static final String IDENTITY = "identity";
+    public static final String CREDENTIAL = "credential";
+
     private final Map<String, ServiceRegistration> registrations =
             new ConcurrentHashMap<String, ServiceRegistration>();
 
@@ -63,9 +67,9 @@ public class ComputeServiceFactory implements ManagedServiceFactory {
                     Object val = properties.get(key);
                     props.put(key, val);
                 }
-                String provider = (String) properties.get("provider");
-                String identity = (String) properties.get("identity");
-                String credential = (String) properties.get("credential");
+                String provider = (String) properties.get(PROVIDER);
+                String identity = (String) properties.get(IDENTITY);
+                String credential = (String) properties.get(CREDENTIAL);
                 ComputeServiceContext context = new ComputeServiceContextFactory()
                         .createContext(provider, identity, credential,
                                 ImmutableSet.of(new Log4JLoggingModule(), new JschSshClientModule()), props);
