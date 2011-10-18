@@ -1,5 +1,15 @@
 .idea
+.checkstyle
+.classpath
+.pmd
+.project
+.ruleset
+.settings/
+target/
 *.iml
 *.iws
 *.ipr
 target
+velocity.log
+maven-eclipse.xml
+.externalToolBuilders
