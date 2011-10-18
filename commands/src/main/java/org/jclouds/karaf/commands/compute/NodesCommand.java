@@ -17,6 +17,7 @@
  */
 package org.jclouds.karaf.commands.compute;
 
+import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ComputeMetadata;
@@ -24,6 +25,7 @@ import org.jclouds.compute.domain.ComputeMetadata;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
+@Command(scope = "jclouds", name = "list-nodes")
 public class NodesCommand extends ComputeCommandSupport {
 
     @Option(name = "--provider")

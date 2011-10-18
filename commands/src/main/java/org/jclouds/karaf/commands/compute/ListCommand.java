@@ -21,6 +21,7 @@ import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.felix.gogo.commands.Command;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.Hardware;
@@ -32,6 +33,7 @@ import org.jclouds.domain.Location;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
+@Command(scope = "jclouds", name = "list")
 public class ListCommand extends ComputeCommandSupport {
 
     @Override

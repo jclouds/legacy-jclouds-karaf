@@ -17,12 +17,14 @@
  */
 package org.jclouds.karaf.commands.compute;
 
+import org.apache.felix.gogo.commands.Command;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.Hardware;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
+@Command(scope = "jclouds", name = "list-hardwares")
 public class HardwaresCommand extends ComputeCommandSupport {
 
     @Override

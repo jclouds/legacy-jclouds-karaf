@@ -43,17 +43,17 @@
                 <property name="services" ref="computeServices"/>
             </action>
         </command>
-        <command name="jclouds/hardwares">
+        <command name="jclouds/list-hardwares">
             <action class="org.jclouds.karaf.commands.compute.HardwaresCommand">
                 <property name="services" ref="computeServices"/>
             </action>
         </command>
-        <command name="jclouds/locations">
+        <command name="jclouds/list-locations">
             <action class="org.jclouds.karaf.commands.compute.LocationsCommand">
                 <property name="services" ref="computeServices"/>
             </action>
         </command>
-        <command name="jclouds/images">
+        <command name="jclouds/list-images">
             <action class="org.jclouds.karaf.commands.compute.ImagesCommand">
                 <property name="services" ref="computeServices"/>
             </action>

@@ -17,12 +17,14 @@
  */
 package org.jclouds.karaf.commands.compute;
 
+import org.apache.felix.gogo.commands.Command;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.Image;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
+@Command(scope = "jclouds", name = "list-images")
 public class ImagesCommand extends ComputeCommandSupport {
 
     @Override

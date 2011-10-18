@@ -18,10 +18,12 @@
 package org.jclouds.karaf.commands.compute;
 
 import org.apache.felix.gogo.commands.Argument;
+import org.apache.felix.gogo.commands.Command;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
+@Command(scope = "jclouds", name = "destroy")
 public class DestroyCommand extends ComputeCommandSupport {
 
     @Argument

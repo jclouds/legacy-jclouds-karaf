@@ -17,6 +17,7 @@
  */
 package org.jclouds.karaf.commands.compute;
 
+import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.domain.Location;
@@ -24,6 +25,7 @@ import org.jclouds.domain.Location;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
+@Command(scope = "jclouds", name = "list-locations")
 public class LocationsCommand extends ComputeCommandSupport {
 
     @Option(name = "--provider")
