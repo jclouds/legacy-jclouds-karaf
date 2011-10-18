@@ -22,7 +22,6 @@
 
     <feature name='guice' description='Google Guice' version='${guice.version}' resolver='(obr)'>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.javax-inject/${javax.inject.bundle.version}</bundle>
-        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jsr305/${jsr305.bundle.version}</bundle>
         <bundle dependency='true'>
             mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aopalliance/${aopalliance.bundle.version}
         </bundle>
@@ -32,7 +31,7 @@
 
     <feature name='jclouds' description='JClouds' version='${project.version}' resolver='(obr)'>
         <feature version='${guice.version}'>guice</feature>
-        <bundle dependency='true'>mvn:com.googlecode.guava-osgi/guava-osgi/${guava.bundle.version}</bundle>
+        <bundle dependency='true'>wrap:mvn:com.google.guava/guava/${guava.version}</bundle>
         <bundle dependency='true'>mvn:com.google.code.gson/gson/${gson.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.oauth-commons/${net.oauth.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.bcprov-jdk15/${bcprov.bundle.version}</bundle>
@@ -88,6 +87,14 @@
         <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.bcprov-jdk16/${bcprov.bundle.version}</bundle>
     </feature>
 
+    <feature name='jclouds-aws-cloudwatch' description='Amazon Web Service - Cloudwatch' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds</feature>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.api/cloudwatch/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/aws-cloudwatch/${jclouds.version}</bundle>
+    </feature>
+
     <feature name='jclouds-aws-ec2' description='Amazon Web Service - EC2' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
@@ -123,7 +130,7 @@
         <bundle>mvn:org.jclouds.provider/azureblob/${jclouds.version}</bundle>
     </feature>
 
-   <feature name='jclouds-bluelock-vcloud-vcenterprise' description='vCloud implementation targeted to Bluelock vCloud Enterprise' version='${project.version}' resolver='(obr)'>
+   <!--feature name='jclouds-bluelock-vcloud-vcenterprise' description='vCloud implementation targeted to Bluelock vCloud Enterprise' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
@@ -132,7 +139,7 @@
         <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/vcloud/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/bluelock-vcloud-vcenterprise/${jclouds.version}</bundle>
-    </feature>
+    </feature-->
  
     <feature name='jclouds-bluelock-vcloud-zone01' description='vCloud implementation targeted to Bluelock vCloud Zone01' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
@@ -263,7 +270,15 @@
         <bundle>mvn:org.jclouds.provider/gogrid/${jclouds.version}</bundle>
     </feature>
 
-    <feature name='jclouds-greenhousedata-element-vcloud' description=' Green House Data Element vCloud' version='${project.version}' resolver='(obr)'>
+    <feature name='jclouds-go2cloud-jhb1' description='Go2Cloud implementation targeted to Johannesburg1' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-jsch</feature>
+        <bundle>mvn:org.jclouds.api/elasticstack/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/go2cloud-jhb1/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name='jclouds-greenhousedata-element-vcloud' description='Green House Data Element vCloud' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-compute</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
@@ -320,6 +335,13 @@
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
         <bundle dependency='true'>mvn:org.jclouds.api/elasticstack/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/skalicloud-sdg-my/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name='jclouds-softlayer' description='Components to access SoftLayer' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-compute</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <bundle>mvn:org.jclouds.provider/softlayer/${jclouds.version}</bundle>
     </feature>
 
     <feature name='jclouds-slicehost' description='ComputeService implementation of Slicehost datacenters' version='${project.version}' resolver='(obr)'>
