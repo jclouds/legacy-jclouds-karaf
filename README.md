@@ -6,18 +6,18 @@ Installation Instructions
 -------------------------
 On Karaf 2.2.0 or later:
 
-1) Install JClouds AWS S3 Module
-karaf@root> feature:addurl mvn:org.jclouds.karaf/jclouds-karaf/1.1.1-SNAPSHOT/xml/features
-karaf@root> feature:install jclouds-aws-s3
+1) Install JClouds AWS Modules
+karaf@root> features:addurl mvn:org.jclouds.karaf/jclouds-karaf/1.2.1/xml/features
+karaf@root> features:install jclouds-aws-s3
+karaf@root> features:install jclouds-aws-ec2
 
 2) Install Karaf Commands
-karaf@root> feature:install jclouds-commands
+karaf@root> features:install jclouds-commands
 
 3) Create a sample blobstore service
 karaf@root> config:edit  org.jclouds.blobstore-s3
 karaf@root> config:propset provider aws-s3
-karaf@root> config:propset identiy XXXXXXXXX
-karaf@root> config:propset identiy XXXXXXXXX
+karaf@root> config:propset identity XXXXXXXXX
 karaf@root> config:propset credential XXXXXXXXX
 karaf@root> config:update
 
@@ -29,21 +29,18 @@ And it will display the payload
 5) Create a sample ec2 compute service
 karaf@root> config:edit  org.jclouds.compute-ec2
 karaf@root> config:propset provider aws-ec2
-karaf@root> config:propset identiy XXXXXXXXX
-karaf@root> config:propset identiy XXXXXXXXX
+karaf@root> config:propset identity XXXXXXXXX
 karaf@root> config:propset credential XXXXXXXXX
 karaf@root> config:propset jclouds.ec2.ami-owners  XXXXXXXXX
 karaf@root> config:update
 
 6) Use the compute service commands
 karaf@root> jclouds:create --imageId YOUR_IMAGE_ID --locationId YOUR_LOCATION_ID GROUPNAME
-Enjoy your new instance on EC2
 
-The sample is basic it will just display the content of the blob to the standard output.
+Enjoy your new instance on EC2
 
 ## License
 
-Copyright (C) 2011 Cloud Conscious, LLC. <info@cloudconscious.com>
+Copyright (C) 2009-2011 jclouds, Inc.
 
 Licensed under the Apache License, Version 2.0
-
