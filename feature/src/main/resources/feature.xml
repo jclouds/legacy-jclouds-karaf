@@ -31,7 +31,8 @@
 
     <feature name='jclouds' description='JClouds' version='${project.version}' resolver='(obr)'>
         <feature version='${guice.version}'>guice</feature>
-        <bundle dependency='true'>wrap:mvn:com.google.guava/guava/${guava.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.guava/${guava.bundle.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.oauth-commons/${net.oauth.bundle.version}</bundle>
         <bundle dependency='true'>mvn:com.google.code.gson/gson/${gson.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.oauth-commons/${net.oauth.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.bcprov-jdk15/${bcprov.bundle.version}</bundle>
@@ -110,7 +111,7 @@
         <feature version='${project.version}'>jclouds</feature>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>        <bundle dependency='true'>mvn:joda-time/joda-time/${joda.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.netty/${netty.bundle.version}</bundle>
-        <bundle dependency='true'>wrap:mvn:org.apache.httpcomponents/httpcore-osgi/${httpcore.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.httpcomponents/httpcore-osgi/${httpcore.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.httpcomponents/httpclient-osgi/${httpclient.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-joda/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-netty/${jclouds.version}</bundle>

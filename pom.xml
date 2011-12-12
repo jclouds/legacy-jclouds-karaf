@@ -142,10 +142,11 @@
         <guice.version>3.0</guice.version>
         <gson.version>1.7.1</gson.version>
         <guava.version>10.0.1</guava.version>
+        <guava.bundle.version>10.0.1_1</guava.bundle.version>
         <aopalliance.bundle.version>1.0_5</aopalliance.bundle.version>
         <netty.bundle.version>3.2.3.Final_2</netty.bundle.version>
         <net.oauth.bundle.version>20100527_1</net.oauth.bundle.version>
-        <bcprov.bundle.version>1.46_1</bcprov.bundle.version>
+        <bcprov.bundle.version>1.46_2</bcprov.bundle.version>
         <jersey.version>1.6</jersey.version>
         <java-xmlbuilder.bundle.version>0.3_1</java-xmlbuilder.bundle.version>
         <joda.version>1.6.2</joda.version>
