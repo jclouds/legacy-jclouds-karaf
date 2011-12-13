@@ -49,10 +49,33 @@
     </feature>
 
     <!-- APIS -->
+    <feature name='jclouds-api-filesystem' description='JClouds - API - FileSystem' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
+        <bundle>mvn:org.jclouds.api/filesystem/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name='jclouds-api-eucalyptus' description='JClouds - API - Eucalyptus' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
+        <bundle>mvn:org.jclouds.api/ec2/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.api/eucalyptus/${jclouds.version}</bundle>
+    </feature>
+
     <feature name='jclouds-api-elasticstack' description='JClouds - API - Elasticstack' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-jsch</feature>
         <bundle>mvn:org.jclouds.api/elasticstack/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name='jclouds-api-vcloud' description='JClouds - API - Vcloud' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds-compute</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
+        <bundle>mvn:org.jclouds.api/vcloud/${jclouds.version}</bundle>
     </feature>
 
 
@@ -79,8 +102,12 @@
 
     <feature name='jclouds-driver-slf4j' description='JClouds - Drivers - Slf4j' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
-        <feature version='${project.version}'>jclouds-driver-bouncycastle</feature>
         <bundle>mvn:org.jclouds.driver/jclouds-slf4j/${jclouds.version}</bundle>
+    </feature>
+
+      <feature name='jclouds-driver-log4j' description='JClouds - Drivers - Slf4j' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds</feature>
+        <bundle>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
     </feature>
 
     <feature name='jclouds-driver-bouncycastle' description='JClouds - Drivers - Bouncycastle' version='${project.version}' resolver='(obr)'>
@@ -90,7 +117,7 @@
 
     <feature name='jclouds-aws-cloudwatch' description='Amazon Web Service - Cloudwatch' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <bundle>mvn:org.jclouds.api/cloudwatch/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/aws-cloudwatch/${jclouds.version}</bundle>
@@ -98,10 +125,10 @@
 
     <feature name='jclouds-aws-ec2' description='Amazon Web Service - EC2' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.api/ec2/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/aws-ec2/${jclouds.version}</bundle>
@@ -109,6 +136,7 @@
 
     <feature name='jclouds-aws-s3' description='Amazon Web Service - S3' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>        <bundle dependency='true'>mvn:joda-time/joda-time/${joda.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.netty/${netty.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.httpcomponents/httpcore-osgi/${httpcore.version}</bundle>
@@ -118,7 +146,6 @@
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-bouncycastle/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-enterprise/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-apachehc/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/aws-s3/${jclouds.version}</bundle>
@@ -126,56 +153,56 @@
 
     <feature name='jclouds-azureblob' description='Azureblob' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <bundle dependency='true'>mvn:org.jclouds.common/azure-common/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/azureblob/${jclouds.version}</bundle>
     </feature>
 
    <!--feature name='jclouds-bluelock-vcloud-vcenterprise' description='vCloud implementation targeted to Bluelock vCloud Enterprise' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <feature version='${project.version}'>jclouds-api-vcloud</feature>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/vcloud/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/bluelock-vcloud-vcenterprise/${jclouds.version}</bundle>
     </feature-->
  
     <feature name='jclouds-bluelock-vcloud-zone01' description='vCloud implementation targeted to Bluelock vCloud Zone01' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <feature version='${project.version}'>jclouds-api-vcloud</feature>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/vcloud/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/bluelock-vcloud-zone01/${jclouds.version}</bundle>
     </feature>
 
     <feature name='jclouds-cloudfiles-uk' description='Cloudfiles UK' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/cloudfiles/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/swift/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/cloudfiles-uk/${jclouds.version}</bundle>
     </feature>
 
     <feature name='jclouds-cloudfiles-us' description='Cloudfiles US' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/cloudfiles/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/swift/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/cloudfiles-us/${jclouds.version}</bundle>
     </feature>
 
     <feature name='jclouds-cloudloadbalancers-us' description='Cloud Load Balancers US' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-loadbalancer/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/cloudloadbalancers-us/${jclouds.version}</bundle>
@@ -183,18 +210,18 @@
 
     <feature name='jclouds-cloudonestorage' description='Cloud One Storage' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <bundle dependency='true'>mvn:org.jclouds.api/atmos/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/cloudonestorage/${jclouds.version}</bundle>
     </feature>
 
 
     <feature name='jclouds-cloudserver-uk' description='Cloudservers UK' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
         <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/cloudservers/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/cloudservers-uk/${jclouds.version}</bundle>
@@ -245,20 +272,20 @@
 
     <feature name='jclouds-eucalyptus-s3' description='Eucalyptus Partner - S3' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/walrus/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/eucalyptus-partnercloud-s3/${jclouds.version}</bundle>
     </feature>
 
     <feature name='jclouds-eucalyptus-ec2' description='Eucalyptus Partner - EC2' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
-        <bundle dependency='true'>mvn:org.jclouds.api/eucalyptus/${jclouds.version}</bundle>
+        <feature version='${project.version}'>jclouds-api-eucalyptus</feature>
         <bundle dependency='true'>mvn:org.jclouds.api/ec2/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/eucalyptus-partnercloud-ec2/${jclouds.version}</bundle>
@@ -283,15 +310,15 @@
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-compute</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <feature version='${project.version}'>jclouds-api-vcloud</feature>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/vcloud/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/greenhousedata-element-vcloud/${jclouds.version}</bundle>
     </feature>
 
     <feature name='jclouds-ninefold-storage' description='Ninefold Storage' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <bundle dependency='true'>mvn:org.jclouds.api/atmos/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/ninefold-storage/${jclouds.version}</bundle>
     </feature>
 
@@ -355,8 +382,8 @@
 
     <feature name='jclouds-synaptic-storage' description='Synaptic Storage as a Service' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <bundle dependency='true'>mvn:org.jclouds.api/atmos/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/synaptic-storage/${jclouds.version}</bundle>
     </feature>
 
@@ -364,8 +391,8 @@
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-compute</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <feature version='${project.version}'>jclouds-api-vcloud</feature>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/vcloud/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/stratogen-vcloud-mycloud/${jclouds.version}</bundle>
     </feature>
 
@@ -389,6 +416,7 @@
 
     <feature name="jclouds-services" description="OSGi Service Factories for JClouds" version="${project.version}" resolver="(obr)">
         <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <feature version='${project.version}'>jclouds-compute</feature>
         <feature version='${project.version}'>jclouds-driver-jsch</feature>
         <bundle>mvn:org.jclouds.karaf/services/${project.version}</bundle>
@@ -396,6 +424,7 @@
 
     <feature name="jclouds-commands" description="Karaf Commands for JClouds" version="${project.version}" resolver="(obr)">
         <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <feature version='${project.version}'>jclouds-services</feature>
         <feature version='${project.version}'>jclouds-compute</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
