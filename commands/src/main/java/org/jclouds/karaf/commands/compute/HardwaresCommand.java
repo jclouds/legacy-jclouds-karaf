@@ -29,11 +29,7 @@ public class HardwaresCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        for (ComputeService service : getComputeServices()) {
-            for (Hardware hardware : service.listHardwareProfiles()) {
-                System.out.println(hardware.toString());
-            }
-        }
+        ComputeHelper.printNodes(getComputeService().listHardwareProfiles(),"",System.out);
         return null;
     }
 

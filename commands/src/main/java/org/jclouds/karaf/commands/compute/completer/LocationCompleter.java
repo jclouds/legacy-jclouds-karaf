@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2011, the original authors
  *
  * ====================================================================
@@ -15,24 +15,26 @@
  * limitations under the License.
  * ====================================================================
  */
-package org.jclouds.karaf.commands.compute;
 
-import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.Option;
+package org.jclouds.karaf.commands.compute.completer;
 
-/**
- * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
- */
-@Command(scope = "jclouds", name = "list-nodes")
-public class NodesCommand extends ComputeCommandSupport {
+import java.util.Set;
+import org.jclouds.compute.ComputeService;
+import org.jclouds.domain.Location;
 
-    @Option(name = "--provider")
-    private String provider;
+public class LocationCompleter extends ComputeCompleterSupport {
+
 
     @Override
-    protected Object doExecute() throws Exception {
-        ComputeHelper.printNodes(getComputeService().listNodes(), "", System.out);
-        return null;
+    public void updateCache() {
+        ComputeService service = getService();
+        if (service != null) {
+            Set<? extends Location> locations = service.listAssignableLocations();
+            if (locations != null) {
+                for (Location location : locations) {
+                    cache.add(location.getId());
+                }
+            }
+        }
     }
-
 }

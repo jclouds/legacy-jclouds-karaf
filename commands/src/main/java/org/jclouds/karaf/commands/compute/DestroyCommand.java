@@ -26,7 +26,7 @@ import org.apache.felix.gogo.commands.Command;
 @Command(scope = "jclouds", name = "destroy")
 public class DestroyCommand extends ComputeCommandSupport {
 
-    @Argument
+    @Argument(name = "id", description = "The id of the node.", required = true, multiValued = false)
     private String id;
 
     @Override

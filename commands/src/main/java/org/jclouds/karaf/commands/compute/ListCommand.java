@@ -48,87 +48,21 @@ public class ListCommand extends ComputeCommandSupport {
 
             System.out.println("  Locations");
             System.out.println("  ---------");
-            printLocations(service.listAssignableLocations(), "    ", System.out);
+            ComputeHelper.printLocations(service.listAssignableLocations(), "    ", System.out);
 
             System.out.println("  Images");
             System.out.println("  ------");
-            printImages(service.listImages(), "    ", System.out);
+            ComputeHelper.printImages(service.listImages(), "    ", System.out);
 
             System.out.println("  Hardware");
             System.out.println("  --------");
-            printHardwares(service.listHardwareProfiles(), "    ", System.out);
+            ComputeHelper.printHardwares(service.listHardwareProfiles(), "    ", System.out);
 
             System.out.println("  Nodes");
             System.out.println("  -----");
-            printNodes(service.listNodes(), "    ", System.out);
+            ComputeHelper.printNodes(service.listNodes(), "    ", System.out);
         }
         return null;
-    }
-
-    private void printNodes(Set<? extends ComputeMetadata> nodes, String indent, PrintStream out) {
-        out.println(String.format("%s%-30s %-20s %-20s %-20s", indent, "[id]", "[location]", "[hardware]", "[state]"));
-        for (ComputeMetadata metadata : nodes) {
-            NodeMetadata node = (NodeMetadata) metadata;
-            out.println(String.format("%s%-30s %-20s %-20s %-20s", indent, node.getId(), node.getLocation().getId(), node.getHardware().getId(), node.getState().toString().toLowerCase()));
-        }
-    }
-
-    private void printHardwares(Set<? extends Hardware> hardwares, String indent, PrintStream out) {
-        out.println(String.format("%s%-20s %5s %7s %6s", indent, "[id]", "[cpu]", "[cores]", "[ram]", "[disk]"));
-        for (Hardware hardware : hardwares) {
-            out.println(String.format("%s%-20s %5.1f %7.1f %6.0f", indent, hardware.getId(), getCpuUnits(hardware), getCpuCores(hardware), getMemory(hardware)));
-        }
-    }
-
-    private double getMemory(Hardware hardware) {
-        return hardware.getRam();
-    }
-
-    private double getCpuCores(Hardware hardware) {
-        int nb = 0;
-        for (Processor p : hardware.getProcessors()) {
-            nb += p.getCores();
-        }
-        return nb;
-    }
-
-    private double getCpuUnits(Hardware hardware) {
-        double nb = 0;
-        for (Processor p : hardware.getProcessors()) {
-            nb += p.getCores() * p.getSpeed();
-        }
-        return nb;
-    }
-
-    private void printImages(Set<? extends Image> images, String indent, PrintStream out) {
-        out.println(String.format("%s%-30s %-20s %s", indent, "[id]", "[location]", "[description]"));
-        for (Image image : images) {
-            out.println(String.format("%s%-30s %-20s %s", indent, image.getId(), image.getLocation().getId(), image.getDescription()));
-        }
-    }
-
-    private void printLocations(Set<? extends Location> locations, String indent, PrintStream out) {
-        out.println(String.format("%-30s %-9s %s", indent + "[id]", "[scope]", "[description]"));
-        printLocations(getAllLocations(locations), null, indent, out);
-    }
-
-    private void printLocations(Set<? extends Location> locations, Location parent, String indent, PrintStream out) {
-        for (Location location : locations) {
-            if (location.getParent() == parent) {
-                out.println(String.format("%-30s %-9s %s", indent + location.getId(), location.getScope(), location.getDescription()));
-                printLocations(locations, location, indent + "  ", out);
-            }
-        }
-    }
-
-    private Set<? extends Location> getAllLocations(Set<? extends Location> locations) {
-        Set<Location> all = new HashSet<Location>();
-        for (Location loc : locations) {
-            for (Location p = loc; p != null; p = p.getParent()) {
-                all.add( p );
-            }
-        }
-        return all;
     }
 
 }

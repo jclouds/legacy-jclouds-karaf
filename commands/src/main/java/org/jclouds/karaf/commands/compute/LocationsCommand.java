@@ -33,11 +33,7 @@ public class LocationsCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        for (ComputeService service : getComputeServices()) {
-            for (Location location : service.listAssignableLocations()) {
-                System.out.println(location.toString());
-            }
-        }
+        ComputeHelper.printLocations(getComputeService().listAssignableLocations(),"",System.out);
         return null;
     }
 

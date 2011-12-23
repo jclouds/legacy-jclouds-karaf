@@ -29,11 +29,7 @@ public class ImagesCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        for (ComputeService service : getComputeServices()) {
-            for (Image image : service.listImages()) {
-                System.out.println(image.toString());
-            }
-        }
+        ComputeHelper.printImages(getComputeService().listImages(),"",System.out);
         return null;
     }
 

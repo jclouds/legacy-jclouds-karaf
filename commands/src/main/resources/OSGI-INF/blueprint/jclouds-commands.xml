@@ -9,29 +9,41 @@
 -->
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-    <reference-list id="computeServices" interface="org.jclouds.compute.ComputeService" availability="optional" />
-    <reference-list id="blobStoreServices" interface="org.jclouds.blobstore.BlobStore" availability="optional" />
 
     <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
         <command name="jclouds/create">
             <action class="org.jclouds.karaf.commands.compute.CreateCommand">
                 <property name="services" ref="computeServices"/>
             </action>
+            <completers>
+                <ref component-id="imageCompleter"/>
+                <ref component-id="locationCompleter"/>
+                <null/>
+            </completers>
         </command>
         <command name="jclouds/destroy">
             <action class="org.jclouds.karaf.commands.compute.DestroyCommand">
                 <property name="services" ref="computeServices"/>
             </action>
+            <completers>
+                <ref component-id="activeNodeCompleter"/>
+            </completers>
         </command>
         <command name="jclouds/suspend">
             <action class="org.jclouds.karaf.commands.compute.SuspendCommand">
                 <property name="services" ref="computeServices"/>
             </action>
+            <completers>
+                <ref component-id="activeNodeCompleter"/>
+            </completers>
         </command>
         <command name="jclouds/resume">
             <action class="org.jclouds.karaf.commands.compute.ResumeCommand">
                 <property name="services" ref="computeServices"/>
             </action>
+            <completers>
+                <ref component-id="suspendedNodeCompleter"/>
+            </completers>
         </command>
         <command name="jclouds/list">
             <action class="org.jclouds.karaf.commands.compute.ListCommand">
@@ -70,5 +82,29 @@
             </action>
         </command>
     </command-bundle>
+
+    <reference-list id="computeServices" interface="org.jclouds.compute.ComputeService" availability="optional" />
+    <reference-list id="blobStoreServices" interface="org.jclouds.blobstore.BlobStore" availability="optional" />
+
+    <!-- Completers -->
+    <bean id="activeNodeCompleter" class="org.jclouds.karaf.commands.compute.completer.ActiveNodesCompleter">
+        <property name="services" ref="computeServices"/>
+    </bean>
+
+    <bean id="inActiveNodeCompleter" class="org.jclouds.karaf.commands.compute.completer.InactiveNodesCompleter">
+        <property name="services" ref="computeServices"/>
+    </bean>
+
+    <bean id="suspendedNodeCompleter" class="org.jclouds.karaf.commands.compute.completer.SuspendedNodesCompleter">
+        <property name="services" ref="computeServices"/>
+    </bean>
+
+    <bean id="imageCompleter" class="org.jclouds.karaf.commands.compute.completer.ImageCompleter">
+        <property name="services" ref="computeServices"/>
+    </bean>
+
+    <bean id="locationCompleter" class="org.jclouds.karaf.commands.compute.completer.LocationCompleter">
+        <property name="services" ref="computeServices"/>
+    </bean>
 
 </blueprint>

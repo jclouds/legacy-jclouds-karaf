@@ -24,6 +24,7 @@ import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.compute.ComputeService;
+import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.ec2.compute.options.EC2TemplateOptions;
@@ -43,12 +44,6 @@ public class CreateCommand extends ComputeCommandSupport {
     @Option(name = "--biggest")
     private boolean biggest;
 
-    @Option(name = "--locationId")
-    private String locationId;
-
-    @Option(name = "--imageId")
-    private String imageId;
-
     @Option(name = "--hardwareId")
     private String hardwareId;
 
@@ -61,8 +56,17 @@ public class CreateCommand extends ComputeCommandSupport {
     @Option(name = "--ec2-no-key-pair")
     private String ec2NoKeyPair;
 
-    @Argument(name = "group", index = 0, multiValued = false, required = true, description = "Node group")
+
+    @Argument(name = "group", index = 0, multiValued = false, required = true, description = "Image")
+    private String imageId;
+
+    @Argument(name = "group", index = 1, multiValued = false, required = true, description = "Location")
+    private String locationId;
+
+
+    @Argument(name = "group", index = 2, multiValued = false, required = true, description = "Node group")
     private String group;
+
 
     @Override
     protected Object doExecute() throws Exception {
@@ -98,9 +102,17 @@ public class CreateCommand extends ComputeCommandSupport {
             builder.build().getOptions().as(EC2TemplateOptions.class).noKeyPair();
         }
 
-        Set<? extends NodeMetadata> metadatas = service.createNodesInGroup(group, 1, builder.build());
-        for (NodeMetadata metadata : metadatas) {
-            System.out.println(metadata.toString());
+        Set<? extends NodeMetadata> metadatas = null;
+
+        try {
+            metadatas = service.createNodesInGroup(group, 1, builder.build());
+        } catch (RunNodesException ex) {
+            System.out.println("Failed to create nodes:" + ex.getMessage());
+        }
+
+        if (metadatas != null && !metadatas.isEmpty()) {
+            System.out.println("Created nodes:");
+            ComputeHelper.printNodes(metadatas, "", System.out);
         }
         return null;
     }

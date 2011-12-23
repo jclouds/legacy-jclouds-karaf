@@ -19,15 +19,16 @@ package org.jclouds.karaf.commands.compute;
 
 import java.util.Collections;
 import java.util.List;
-
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.jclouds.compute.ComputeService;
+
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 public abstract class ComputeCommandSupport extends OsgiCommandSupport {
+
 
     private List<ComputeService> services;
 
@@ -47,30 +48,8 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
     }
 
     protected ComputeService getComputeService() {
-        if (provider != null) {
-            ComputeService service = null;
-            for (ComputeService svc : services) {
-                if (provider.equals(service.getContext().getProviderSpecificContext().getId())) {
-                    service = svc;
-                    break;
-                }
-            }
-            if (service == null) {
-                throw new IllegalArgumentException("Provider " + provider + " not found");
-            }
-            return service;
-        } else {
-            if (services.size() != 1) {
-                StringBuilder sb = new StringBuilder();
-                for (ComputeService svc : services) {
-                    if (sb.length() > 0) {
-                        sb.append(", ");
-                    }
-                    sb.append(svc.getContext().getProviderSpecificContext().getId());
-                }
-                throw new IllegalArgumentException("Multiple providers are present, please select one using the --provider argument in the following values: " + sb.toString());
-            }
-            return services.get(0);
-        }
+        return ComputeHelper.getComputeService(provider, services);
     }
+
+
 }
