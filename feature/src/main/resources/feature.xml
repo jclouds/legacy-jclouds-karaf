@@ -52,6 +52,7 @@
     <feature name='jclouds-api-filesystem' description='JClouds - API - FileSystem' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-io/${commons-io.bundle.version}</bundle>
         <bundle>mvn:org.jclouds.api/filesystem/${jclouds.version}</bundle>
     </feature>
 
