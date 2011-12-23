@@ -23,8 +23,8 @@ import org.apache.felix.gogo.commands.Command;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "resume")
-public class ResumeCommand extends ComputeCommandSupport {
+@Command(scope = "jclouds", name = "node-resume")
+public class NodeResumeCommand extends ComputeCommandSupport {
 
     @Argument(name = "id", description = "The id of the node.", required = true, multiValued = false)
     private String id;

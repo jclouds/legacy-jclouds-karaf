@@ -24,12 +24,12 @@ import org.jclouds.compute.domain.Image;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "list-images")
-public class ImagesCommand extends ComputeCommandSupport {
+@Command(scope = "jclouds", name = "image-list")
+public class ImageListCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        ComputeHelper.printImages(getComputeService().listImages(),"",System.out);
+        ComputeHelper.printImages(getComputeService().listImages(), "", System.out);
         return null;
     }
 

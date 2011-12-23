@@ -33,8 +33,8 @@ import org.jclouds.domain.Location;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "list")
-public class ListCommand extends ComputeCommandSupport {
+@Command(scope = "jclouds", name = "provider-info")
+public class ProviderInfoCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {

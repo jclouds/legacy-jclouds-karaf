@@ -11,8 +11,8 @@
 
 
     <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
-        <command name="jclouds/create">
-            <action class="org.jclouds.karaf.commands.compute.CreateCommand">
+        <command name="jclouds/node-create">
+            <action class="org.jclouds.karaf.commands.compute.NodeCreateCommand">
                 <property name="services" ref="computeServices"/>
             </action>
             <completers>
@@ -21,52 +21,52 @@
                 <null/>
             </completers>
         </command>
-        <command name="jclouds/destroy">
-            <action class="org.jclouds.karaf.commands.compute.DestroyCommand">
+        <command name="jclouds/node-destroy">
+            <action class="org.jclouds.karaf.commands.compute.NodeDestroyCommand">
                 <property name="services" ref="computeServices"/>
             </action>
             <completers>
                 <ref component-id="activeNodeCompleter"/>
             </completers>
         </command>
-        <command name="jclouds/suspend">
-            <action class="org.jclouds.karaf.commands.compute.SuspendCommand">
+        <command name="jclouds/node-suspend">
+            <action class="org.jclouds.karaf.commands.compute.NodeSuspendCommand">
                 <property name="services" ref="computeServices"/>
             </action>
             <completers>
                 <ref component-id="activeNodeCompleter"/>
             </completers>
         </command>
-        <command name="jclouds/resume">
-            <action class="org.jclouds.karaf.commands.compute.ResumeCommand">
+        <command name="jclouds/node-resume">
+            <action class="org.jclouds.karaf.commands.compute.NodeResumeCommand">
                 <property name="services" ref="computeServices"/>
             </action>
             <completers>
                 <ref component-id="suspendedNodeCompleter"/>
             </completers>
         </command>
-        <command name="jclouds/list">
-            <action class="org.jclouds.karaf.commands.compute.ListCommand">
+        <command name="jclouds/provider-info">
+            <action class="org.jclouds.karaf.commands.compute.ProviderInfoCommand">
                 <property name="services" ref="computeServices"/>
             </action>
         </command>
-        <command name="jclouds/nodes">
-            <action class="org.jclouds.karaf.commands.compute.NodesCommand">
+        <command name="jclouds/node-list">
+            <action class="org.jclouds.karaf.commands.compute.NodeListCommand">
                 <property name="services" ref="computeServices"/>
             </action>
         </command>
-        <command name="jclouds/list-hardwares">
-            <action class="org.jclouds.karaf.commands.compute.HardwaresCommand">
+        <command name="jclouds/hardware-list">
+            <action class="org.jclouds.karaf.commands.compute.HardwareListCommand">
                 <property name="services" ref="computeServices"/>
             </action>
         </command>
-        <command name="jclouds/list-locations">
-            <action class="org.jclouds.karaf.commands.compute.LocationsCommand">
+        <command name="jclouds/location-list">
+            <action class="org.jclouds.karaf.commands.compute.LocationListCommand">
                 <property name="services" ref="computeServices"/>
             </action>
         </command>
-        <command name="jclouds/list-images">
-            <action class="org.jclouds.karaf.commands.compute.ImagesCommand">
+        <command name="jclouds/image-list">
+            <action class="org.jclouds.karaf.commands.compute.ImageListCommand">
                 <property name="services" ref="computeServices"/>
             </action>
         </command>

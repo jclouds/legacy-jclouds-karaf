@@ -17,22 +17,21 @@
  */
 package org.jclouds.karaf.commands.compute;
 
+import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.Option;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "list-nodes")
-public class NodesCommand extends ComputeCommandSupport {
+@Command(scope = "jclouds", name = "node-suspend")
+public class NodeSuspendCommand extends ComputeCommandSupport {
 
-    @Option(name = "--provider")
-    private String provider;
+    @Argument(name = "id", description = "The id of the node.", required = true, multiValued = false)
+    private String id;
 
     @Override
     protected Object doExecute() throws Exception {
-        ComputeHelper.printNodes(getComputeService().listNodes(), "", System.out);
+        getComputeService().suspendNode(id);
         return null;
     }
-
 }

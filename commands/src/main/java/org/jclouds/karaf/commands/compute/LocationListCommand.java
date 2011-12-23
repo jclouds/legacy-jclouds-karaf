@@ -18,18 +18,22 @@
 package org.jclouds.karaf.commands.compute;
 
 import org.apache.felix.gogo.commands.Command;
+import org.apache.felix.gogo.commands.Option;
 import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.domain.Hardware;
+import org.jclouds.domain.Location;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "list-hardwares")
-public class HardwaresCommand extends ComputeCommandSupport {
+@Command(scope = "jclouds", name = "location-list")
+public class LocationListCommand extends ComputeCommandSupport {
+
+    @Option(name = "--provider")
+    private String provider;
 
     @Override
     protected Object doExecute() throws Exception {
-        ComputeHelper.printNodes(getComputeService().listHardwareProfiles(),"",System.out);
+        ComputeHelper.printLocations(getComputeService().listAssignableLocations(), "", System.out);
         return null;
     }
 

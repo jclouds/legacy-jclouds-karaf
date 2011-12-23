@@ -32,8 +32,8 @@ import org.jclouds.ec2.compute.options.EC2TemplateOptions;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "create")
-public class CreateCommand extends ComputeCommandSupport {
+@Command(scope = "jclouds", name = "node-create")
+public class NodeCreateCommand extends ComputeCommandSupport {
 
     @Option(name = "--smallest")
     private boolean smallest;

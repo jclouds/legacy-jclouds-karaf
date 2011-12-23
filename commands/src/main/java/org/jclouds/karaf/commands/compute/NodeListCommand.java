@@ -17,21 +17,22 @@
  */
 package org.jclouds.karaf.commands.compute;
 
-import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.apache.felix.gogo.commands.Option;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "destroy")
-public class DestroyCommand extends ComputeCommandSupport {
+@Command(scope = "jclouds", name = "node-list")
+public class NodeListCommand extends ComputeCommandSupport {
 
-    @Argument(name = "id", description = "The id of the node.", required = true, multiValued = false)
-    private String id;
+    @Option(name = "--provider")
+    private String provider;
 
     @Override
     protected Object doExecute() throws Exception {
-        getComputeService().destroyNode(id);
+        ComputeHelper.printNodes(getComputeService().listNodes(), "", System.out);
         return null;
     }
+
 }

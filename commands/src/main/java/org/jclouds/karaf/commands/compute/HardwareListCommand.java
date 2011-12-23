@@ -17,21 +17,20 @@
  */
 package org.jclouds.karaf.commands.compute;
 
-import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.jclouds.compute.ComputeService;
+import org.jclouds.compute.domain.Hardware;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "suspend")
-public class SuspendCommand extends ComputeCommandSupport {
-
-    @Argument(name = "id", description = "The id of the node.", required = true, multiValued = false)
-    private String id;
+@Command(scope = "jclouds", name = "hardware-list")
+public class HardwareListCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        getComputeService().suspendNode(id);
+        ComputeHelper.printNodes(getComputeService().listHardwareProfiles(), "", System.out);
         return null;
     }
+
 }
