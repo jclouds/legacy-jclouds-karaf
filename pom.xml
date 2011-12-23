@@ -131,7 +131,7 @@
         <osgi.version>4.2.0</osgi.version>
         <configadmin.version>1.2.8</configadmin.version>
         <karaf.version>2.2.0</karaf.version>
-        <jclouds.version>1.2.1</jclouds.version>
+        <jclouds.version>1.2.2</jclouds.version>
         <felix.configadmin.version>1.2.8</felix.configadmin.version>
         <slf4j.version>1.5.8</slf4j.version>
         <junit.version>4.8.2</junit.version>
