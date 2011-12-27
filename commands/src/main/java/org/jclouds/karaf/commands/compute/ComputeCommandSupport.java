@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.jclouds.compute.ComputeService;
+import org.osgi.service.cm.ConfigurationAdmin;
 
 
 /**
@@ -29,11 +30,19 @@ import org.jclouds.compute.ComputeService;
  */
 public abstract class ComputeCommandSupport extends OsgiCommandSupport {
 
-
+    private ConfigurationAdmin configurationAdmin;
     private List<ComputeService> services;
 
     @Option(name = "--provider")
     protected String provider;
+
+    public ConfigurationAdmin getConfigurationAdmin() {
+        return configurationAdmin;
+    }
+
+    public void setConfigurationAdmin(ConfigurationAdmin configurationAdmin) {
+        this.configurationAdmin = configurationAdmin;
+    }
 
     public void setServices(List<ComputeService> services) {
         this.services = services;
@@ -50,6 +59,4 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
     protected ComputeService getComputeService() {
         return ComputeHelper.getComputeService(provider, services);
     }
-
-
 }

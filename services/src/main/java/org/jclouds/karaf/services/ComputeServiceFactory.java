@@ -22,13 +22,12 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
-
 import com.google.common.collect.ImmutableSet;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.ComputeServiceContextFactory;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
-import org.jclouds.ssh.jsch.config.JschSshClientModule;
+import org.jclouds.sshj.config.SshjSshClientModule;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
@@ -72,7 +71,7 @@ public class ComputeServiceFactory implements ManagedServiceFactory {
                 String credential = (String) properties.get(CREDENTIAL);
                 ComputeServiceContext context = new ComputeServiceContextFactory()
                         .createContext(provider, identity, credential,
-                                ImmutableSet.of(new Log4JLoggingModule(), new JschSshClientModule()), props);
+                                ImmutableSet.of(new Log4JLoggingModule(), new SshjSshClientModule()), props);
                 ComputeService client = context.getComputeService();
                 newRegistration = bundleContext.registerService(
                         ComputeService.class.getName(), client, properties);

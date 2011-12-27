@@ -63,9 +63,12 @@ public class NodeCreateCommand extends ComputeCommandSupport {
     @Argument(name = "group", index = 1, multiValued = false, required = true, description = "Location")
     private String locationId;
 
-
     @Argument(name = "group", index = 2, multiValued = false, required = true, description = "Node group")
     private String group;
+
+    @Argument(name = "number", index = 3, multiValued = false, required = false, description = "Number of nodes to create")
+    private Integer number  = 1;
+
 
 
     @Override
@@ -105,7 +108,7 @@ public class NodeCreateCommand extends ComputeCommandSupport {
         Set<? extends NodeMetadata> metadatas = null;
 
         try {
-            metadatas = service.createNodesInGroup(group, 1, builder.build());
+            metadatas = service.createNodesInGroup(group, number, builder.build());
         } catch (RunNodesException ex) {
             System.out.println("Failed to create nodes:" + ex.getMessage());
         }

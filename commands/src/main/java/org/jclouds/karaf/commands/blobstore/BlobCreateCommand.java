@@ -16,26 +16,26 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.compute.completer;
+package org.jclouds.karaf.commands.blobstore;
 
-import java.util.Set;
-import org.jclouds.compute.ComputeService;
-import org.jclouds.domain.Location;
+import java.util.List;
+import org.apache.felix.gogo.commands.Argument;
+import org.apache.felix.gogo.commands.Command;
 
-public class LocationCompleter extends ComputeCompleterSupport {
+/**
+ * @author: iocanel
+ */
+@Command(scope = "jclouds", name = "blobstore-create", description = "Creates a container")
+public class BlobCreateCommand extends BlobStoreCommandSupport {
 
+    @Argument(index = 0, name = "containerNames", description = "The name of the container", required = true, multiValued = true)
+    List<String> containerNames;
 
     @Override
-    public void updateCache() {
-        cache.clear();
-        ComputeService service = getService();
-        if (service != null) {
-            Set<? extends Location> locations = service.listAssignableLocations();
-            if (locations != null) {
-                for (Location location : locations) {
-                    cache.add(location.getId());
-                }
-            }
+    protected Object doExecute() throws Exception {
+        for (String container : containerNames) {
+            getBlobStore().createContainerInLocation(null, container);
         }
+        return null;
     }
 }

@@ -16,26 +16,19 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.compute.completer;
+package org.jclouds.karaf.commands.blobstore.completer;
 
-import java.util.Set;
-import org.jclouds.compute.ComputeService;
-import org.jclouds.domain.Location;
+import org.jclouds.blobstore.BlobStore;
+import org.jclouds.blobstore.domain.PageSet;
+import org.jclouds.blobstore.domain.StorageMetadata;
 
-public class LocationCompleter extends ComputeCompleterSupport {
-
+public class BlobCompleter extends BlobStoreCompleterSupport {
 
     @Override
     public void updateCache() {
         cache.clear();
-        ComputeService service = getService();
-        if (service != null) {
-            Set<? extends Location> locations = service.listAssignableLocations();
-            if (locations != null) {
-                for (Location location : locations) {
-                    cache.add(location.getId());
-                }
-            }
+        for (String container : listContainers()) {
+            cache.addAll(listBlobs(container));
         }
     }
 }

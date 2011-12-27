@@ -45,6 +45,14 @@
                 <ref component-id="suspendedNodeCompleter"/>
             </completers>
         </command>
+         <command name="jclouds/node-runscript">
+            <action class="org.jclouds.karaf.commands.compute.NodeRunScriptCommand">
+                <property name="services" ref="computeServices"/>
+            </action>
+            <completers>
+                <ref component-id="activeNodeCompleter"/>
+            </completers>
+        </command>
         <command name="jclouds/provider-info">
             <action class="org.jclouds.karaf.commands.compute.ProviderInfoCommand">
                 <property name="services" ref="computeServices"/>
@@ -71,22 +79,59 @@
             </action>
         </command>
          <command name="jclouds/blobstore-write">
-            <action class="org.jclouds.karaf.commands.blobstore.WriteCommand">
+            <action class="org.jclouds.karaf.commands.blobstore.BlobWriteCommand">
                 <property name="blobStoreServices" ref="blobStoreServices"/>
             </action>
+            <completers>
+                <ref component-id="containerCompleter"/>
+                <ref component-id="blobCompleter"/>
+                <null/>
+            </completers>
         </command>
 
         <command name="jclouds/blobstore-read">
-            <action class="org.jclouds.karaf.commands.blobstore.ReadCommand">
+            <action class="org.jclouds.karaf.commands.blobstore.BlobReadCommand">
                 <property name="blobStoreServices" ref="blobStoreServices"/>
             </action>
+            <completers>
+                <ref component-id="containerCompleter"/>
+                <ref component-id="blobCompleter"/>
+                <null/>
+            </completers>
+        </command>
+        <command name="jclouds/blobstore-list">
+            <action class="org.jclouds.karaf.commands.blobstore.BlobListCommand">
+                <property name="blobStoreServices" ref="blobStoreServices"/>
+            </action>
+        </command>
+        <command name="jclouds/blobstore-create">
+            <action class="org.jclouds.karaf.commands.blobstore.BlobCreateCommand">
+                <property name="blobStoreServices" ref="blobStoreServices"/>
+            </action>
+        </command>
+        <command name="jclouds/blobstore-delete">
+            <action class="org.jclouds.karaf.commands.blobstore.BlobDeleteCommand">
+                <property name="blobStoreServices" ref="blobStoreServices"/>
+            </action>
+            <completers>
+                <ref component-id="containerCompleter"/>
+            </completers>
         </command>
     </command-bundle>
 
     <reference-list id="computeServices" interface="org.jclouds.compute.ComputeService" availability="optional" />
     <reference-list id="blobStoreServices" interface="org.jclouds.blobstore.BlobStore" availability="optional" />
 
-    <!-- Completers -->
+    <!-- Blob Completers -->
+    <bean id="containerCompleter" class="org.jclouds.karaf.commands.blobstore.completer.ContainerCompleter">
+        <property name="services" ref="blobStoreServices"/>
+    </bean>
+
+    <bean id="blobCompleter" class="org.jclouds.karaf.commands.blobstore.completer.BlobCompleter">
+        <property name="services" ref="blobStoreServices"/>
+    </bean>
+
+    <!-- Compute Completers -->
     <bean id="activeNodeCompleter" class="org.jclouds.karaf.commands.compute.completer.ActiveNodesCompleter">
         <property name="services" ref="computeServices"/>
     </bean>

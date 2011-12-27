@@ -57,96 +57,72 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
     }
 
     protected BlobStore getBlobStore() {
-        if (provider != null) {
-            BlobStore service = null;
-            for (BlobStore svc : services) {
-                if (provider.equals(service.getContext().getProviderSpecificContext().getId())) {
-                    service = svc;
-                    break;
-                }
-            }
-            if (service == null) {
-                throw new IllegalArgumentException("Provider " + provider + " not found");
-            }
-            return service;
-        } else {
-            if (services.size() != 1) {
-                StringBuilder sb = new StringBuilder();
-                for (BlobStore svc : services) {
-                    if (sb.length() > 0) {
-                        sb.append(", ");
-                    }
-                    sb.append(svc.getContext().getProviderSpecificContext().getId());
-                }
-                throw new IllegalArgumentException("Multiple providers are present, please select one using the --provider argument in the following values: " + sb.toString());
-            }
-            return services.get(0);
-        }
+        return BlobStoreHelper.getBlobStore(provider, services);
     }
 
-       public Object read(String bucket, String blobName) {
+    public Object read(String bucket, String blobName) {
         Object result = null;
         ObjectInputStream ois = null;
 
-            BlobStore blobStore = getBlobStore();
-            blobStore.createContainerInLocation(null, bucket);
+        BlobStore blobStore = getBlobStore();
+        blobStore.createContainerInLocation(null, bucket);
 
-            InputStream is = blobStore.getBlob(bucket, blobName).getPayload().getInput();
+        InputStream is = blobStore.getBlob(bucket, blobName).getPayload().getInput();
 
-            try {
-                ois = new ObjectInputStream(is);
-                result = ois.readObject();
-            } catch (IOException e) {
-                logger.error("Error reading object.",e);
-            } catch (ClassNotFoundException e) {
-                logger.error("Error reading object.", e);
-            } finally {
-                if (ois != null) {
-                    try {
-                        ois.close();
-                    } catch (IOException e) {
-                    }
-                }
-
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (IOException e) {
-                    }
+        try {
+            ois = new ObjectInputStream(is);
+            result = ois.readObject();
+        } catch (IOException e) {
+            logger.error("Error reading object.", e);
+        } catch (ClassNotFoundException e) {
+            logger.error("Error reading object.", e);
+        } finally {
+            if (ois != null) {
+                try {
+                    ois.close();
+                } catch (IOException e) {
                 }
             }
+
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                }
+            }
+        }
         return result;
     }
 
 
     public void write(String bucket, String blobName, Object object) {
-            BlobStore blobStore = getBlobStore();
-            Blob blob = blobStore.blobBuilder(blobName).build();
+        BlobStore blobStore = getBlobStore();
+        Blob blob = blobStore.blobBuilder(blobName).build();
 
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = null;
 
-            try {
-                oos = new ObjectOutputStream(baos);
-                oos.writeObject(object);
-                blob.setPayload(baos.toByteArray());
-                blobStore.putBlob(bucket, blob);
-            } catch (IOException e) {
-                logger.error("Error while writing blob", e);
-            } finally {
-                if (oos != null) {
-                    try {
-                        oos.close();
-                    } catch (IOException e) {
-                    }
-                }
-
-                if (baos != null) {
-                    try {
-                        baos.close();
-                    } catch (IOException e) {
-                    }
+        try {
+            oos = new ObjectOutputStream(baos);
+            oos.writeObject(object);
+            blob.setPayload(baos.toByteArray());
+            blobStore.putBlob(bucket, blob);
+        } catch (IOException e) {
+            logger.error("Error while writing blob", e);
+        } finally {
+            if (oos != null) {
+                try {
+                    oos.close();
+                } catch (IOException e) {
                 }
             }
+
+            if (baos != null) {
+                try {
+                    baos.close();
+                } catch (IOException e) {
+                }
+            }
+        }
     }
 }

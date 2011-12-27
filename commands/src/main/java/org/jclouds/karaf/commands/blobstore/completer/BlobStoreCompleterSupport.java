@@ -16,7 +16,7 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.compute.completer;
+package org.jclouds.karaf.commands.blobstore.completer;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -25,12 +25,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.karaf.shell.console.Completer;
 import org.apache.karaf.shell.console.completer.StringsCompleter;
-import org.jclouds.compute.ComputeService;
-import org.jclouds.karaf.commands.compute.ComputeHelper;
+import org.jclouds.blobstore.BlobStore;
+import org.jclouds.blobstore.domain.PageSet;
+import org.jclouds.blobstore.domain.StorageMetadata;
+import org.jclouds.karaf.commands.blobstore.BlobStoreHelper;
 
-public abstract class ComputeCompleterSupport implements Completer, Runnable  {
+public abstract class BlobStoreCompleterSupport implements Completer, Runnable {
 
-    private List<ComputeService> services;
+    private List<BlobStore> services;
 
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -46,10 +48,10 @@ public abstract class ComputeCompleterSupport implements Completer, Runnable  {
         lastUpdate = System.currentTimeMillis();
     }
 
-    protected ComputeService getService() {
-        ComputeService service = null;
+    protected BlobStore getBlobStore() {
+        BlobStore service = null;
         try {
-            service = ComputeHelper.getComputeService(null, services);
+            service = BlobStoreHelper.getBlobStore(null, services);
         } catch (IllegalArgumentException ex) {
             //Ignore and skip completion;
         }
@@ -86,13 +88,44 @@ public abstract class ComputeCompleterSupport implements Completer, Runnable  {
     }
 
 
+    protected Set<String> listContainers() {
+        Set<String> containers = new LinkedHashSet<String>();
+        BlobStore blobStore = getBlobStore();
+        if (blobStore != null) {
+            PageSet<? extends StorageMetadata> storageMetadatas = blobStore.list();
+            if (storageMetadatas != null && !storageMetadatas.isEmpty()) {
+                for (StorageMetadata metadata : storageMetadatas) {
+                    containers.add(metadata.getName());
+                }
+            }
+        }
+        return containers;
+    }
+
+    protected Set<String> listBlobs(String container) {
+        Set<String> blobs = new LinkedHashSet<String>();
+        BlobStore blobStore = getBlobStore();
+        if (blobStore != null) {
+            if (blobStore.containerExists(container)) {
+                PageSet<? extends StorageMetadata> storageMetadatas = blobStore.list(container);
+                if (storageMetadatas != null && !storageMetadatas.isEmpty()) {
+                    for (StorageMetadata metadata : storageMetadatas) {
+                        blobs.add(metadata.getName());
+                    }
+                }
+            }
+        }
+        return blobs;
+    }
+
+
     public abstract void updateCache();
 
-    public List<ComputeService> getServices() {
+    public List<BlobStore> getServices() {
         return services;
     }
 
-    public void setServices(List<ComputeService> services) {
+    public void setServices(List<BlobStore> services) {
         this.services = services;
         executorService.execute(this);
     }

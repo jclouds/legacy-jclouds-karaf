@@ -28,6 +28,7 @@ public class ImageCompleter extends ComputeCompleterSupport implements Completer
 
     @Override
     public void updateCache() {
+        cache.clear();
         ComputeService service = getService();
         if (service != null) {
             Set<? extends Image> images = service.listImages();
