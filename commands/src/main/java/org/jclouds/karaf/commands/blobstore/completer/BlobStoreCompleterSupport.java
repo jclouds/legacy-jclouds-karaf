@@ -105,13 +105,11 @@ public abstract class BlobStoreCompleterSupport implements Completer, Runnable {
     protected Set<String> listBlobs(String container) {
         Set<String> blobs = new LinkedHashSet<String>();
         BlobStore blobStore = getBlobStore();
-        if (blobStore != null) {
-            if (blobStore.containerExists(container)) {
-                PageSet<? extends StorageMetadata> storageMetadatas = blobStore.list(container);
-                if (storageMetadatas != null && !storageMetadatas.isEmpty()) {
-                    for (StorageMetadata metadata : storageMetadatas) {
-                        blobs.add(metadata.getName());
-                    }
+        if (blobStore != null && blobStore.containerExists(container)) {
+            PageSet<? extends StorageMetadata> storageMetadatas = blobStore.list(container);
+            if (storageMetadatas != null && !storageMetadatas.isEmpty()) {
+                for (StorageMetadata metadata : storageMetadatas) {
+                    blobs.add(metadata.getName());
                 }
             }
         }

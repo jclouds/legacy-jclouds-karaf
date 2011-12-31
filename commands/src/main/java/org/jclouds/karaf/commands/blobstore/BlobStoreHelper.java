@@ -37,7 +37,9 @@ public class BlobStoreHelper {
             }
             return service;
         } else {
-            if (services.size() != 1) {
+            if (services.size() == 0) {
+                throw new IllegalArgumentException("No providers are present.");
+            } else if (services.size() != 1) {
                 StringBuilder sb = new StringBuilder();
                 for (BlobStore svc : services) {
                     if (sb.length() > 0) {
@@ -47,7 +49,13 @@ public class BlobStoreHelper {
                 }
                 throw new IllegalArgumentException("Multiple providers are present, please select one using the --provider argument in the following values: " + sb.toString());
             }
-            return services.get(0);
+            else {
+                return services.get(0);
+            }
         }
+    }
+
+    private BlobStoreHelper() {
+        //Utility Class
     }
 }

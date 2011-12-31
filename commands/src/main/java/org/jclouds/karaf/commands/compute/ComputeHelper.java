@@ -52,7 +52,10 @@ public class ComputeHelper {
             }
             return service;
         } else {
-            if (services.size() != 1) {
+            if (services.size() == 0) {
+                throw new IllegalArgumentException("No providers are present.");
+            }
+            else if (services.size() != 1) {
                 StringBuilder sb = new StringBuilder();
                 for (ComputeService svc : services) {
                     if (sb.length() > 0) {
@@ -61,8 +64,9 @@ public class ComputeHelper {
                     sb.append(svc.getContext().getProviderSpecificContext().getId());
                 }
                 throw new IllegalArgumentException("Multiple providers are present, please select one using the --provider argument in the following values: " + sb.toString());
+            } else {
+                return services.get(0);
             }
-            return services.get(0);
         }
     }
 
@@ -133,5 +137,9 @@ public class ComputeHelper {
             nb += p.getCores() * p.getSpeed();
         }
         return nb;
+    }
+
+    private ComputeHelper() {
+        //Utility Class
     }
 }

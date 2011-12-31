@@ -17,6 +17,16 @@
  */
 package org.jclouds.karaf.commands.blobstore;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.jclouds.blobstore.BlobStore;
@@ -24,21 +34,13 @@ import org.jclouds.blobstore.domain.Blob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * @author iocanel
  */
 public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
 
-    private static final Logger logger = LoggerFactory.getLogger(BlobStoreCommandSupport.class);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(BlobStoreCommandSupport.class);
+    private static final int SIZE = 32 * 1024;
     private List<BlobStore> services;
 
     @Option(name = "--provider")
@@ -60,6 +62,13 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
         return BlobStoreHelper.getBlobStore(provider, services);
     }
 
+    /**
+     * Reads an Object from the blob store.
+     *
+     * @param bucket
+     * @param blobName
+     * @return
+     */
     public Object read(String bucket, String blobName) {
         Object result = null;
         ObjectInputStream ois = null;
@@ -73,9 +82,9 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
             ois = new ObjectInputStream(is);
             result = ois.readObject();
         } catch (IOException e) {
-            logger.error("Error reading object.", e);
+            LOGGER.error("Error reading object.", e);
         } catch (ClassNotFoundException e) {
-            logger.error("Error reading object.", e);
+            LOGGER.error("Error reading object.", e);
         } finally {
             if (ois != null) {
                 try {
@@ -95,9 +104,54 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
     }
 
 
+    /**
+     * Returns an InputStream to a {@link Blob}.
+     * @param bucket
+     * @param blobName
+     * @return
+     */
+    public InputStream getBlobInputStream(String bucket, String blobName) {
+      return  getBlobStore().getBlob(bucket, blobName).getPayload().getInput();
+    }
+
+    /**
+     * Writes to the {@link Blob} by serializing an Object.
+     * @param bucket
+     * @param blobName
+     * @param object
+     */
     public void write(String bucket, String blobName, Object object) {
         BlobStore blobStore = getBlobStore();
         Blob blob = blobStore.blobBuilder(blobName).build();
+        blob.setPayload(toBytes(object));
+        blobStore.putBlob(bucket, blob);
+    }
+
+    /**
+     * Writes to the {@link Blob} using an InputStream.
+     * @param bucket
+     * @param blobName
+     * @param is
+     */
+    public void write(String bucket, String blobName, InputStream is) {
+        BlobStore blobStore = getBlobStore();
+        Blob blob = blobStore.blobBuilder(blobName).build();
+        blob.setPayload(is);
+        blobStore.putBlob(bucket, blob);
+
+        try {
+            is.close();
+        } catch (Exception ex) {
+            LOGGER.warn("Error closing input stream.", ex);
+        }
+    }
+
+    public byte[] toBytes(Object object) {
+        byte[] result = null;
+
+        if (object instanceof byte[]) {
+            return (byte[]) object;
+        }
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = null;
@@ -105,10 +159,9 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
         try {
             oos = new ObjectOutputStream(baos);
             oos.writeObject(object);
-            blob.setPayload(baos.toByteArray());
-            blobStore.putBlob(bucket, blob);
+            result = baos.toByteArray();
         } catch (IOException e) {
-            logger.error("Error while writing blob", e);
+            LOGGER.error("Error while writing blob", e);
         } finally {
             if (oos != null) {
                 try {
@@ -121,6 +174,87 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
                 try {
                     baos.close();
                 } catch (IOException e) {
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Reads a bye[] from a URL.
+     *
+     * @param url
+     * @return
+     */
+    public byte[] readFromUrl(URL url) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataInputStream dis = null;
+        try {
+            dis = new DataInputStream(url.openStream());
+            int size = 0;
+            while ((size = dis.available()) > 0) {
+                byte[] buffer = new byte[size];
+                baos.write(buffer);
+            }
+            return baos.toByteArray();
+        } catch (IOException e) {
+            LOGGER.warn("Failed to read from stream.", e);
+        } finally {
+            if (dis != null) {
+                try {
+                    dis.close();
+                } catch (Exception e) {
+                    //Ignore
+                }
+            }
+
+            if (baos != null) {
+                try {
+                    baos.close();
+                } catch (Exception e) {
+                    //Ignore
+                }
+            }
+
+        }
+        return new byte[0];
+    }
+
+
+    /**
+     * Copies data from {@link InputStream} to {@link OutputStream}.
+     *
+     * @param is Source {@link InputStream}.
+     * @param os Target {@link OutputStream}.
+     */
+    public void copy(InputStream is, OutputStream os) {
+        byte[] buffer = new byte[SIZE];
+        int read = 0;
+        try {
+            read = is.read(buffer);
+            while (read >= 0) {
+                if (read > 0) {
+                    os.write(buffer, 0, read);
+                }
+                read = is.read(buffer);
+            }
+        } catch (IOException e) {
+
+        } finally {
+
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (Exception ex) {
+                    //Ignore
+                }
+            }
+
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (Exception ex) {
+                    //Ignore
                 }
             }
         }

@@ -19,6 +19,8 @@
 package org.jclouds.karaf.commands.blobstore;
 
 
+import java.io.File;
+import java.io.FileOutputStream;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 
@@ -34,10 +36,20 @@ public class BlobReadCommand extends BlobStoreCommandSupport {
     @Argument(index = 1, name = "blobName", description = "The name of the blob", required = true, multiValued = false)
     String blobName;
 
+    @Argument(index = 2, name = "file", description = "The file to store the blob", required = false, multiValued = false)
+    String file;
+
     @Override
     protected Object doExecute() throws Exception {
-        Object payload = read(containerName, blobName);
-        System.out.printf("%s\n", payload);
+        if (file == null) {
+            Object payload = read(containerName, blobName);
+            System.out.printf("%s\n", payload);
+        } else {
+            File f = new File(file);
+            if (!f.exists() && f.createNewFile()) {
+                copy(getBlobInputStream(containerName, blobName), new FileOutputStream(f));
+            }
+        }
         return null;
     }
 }

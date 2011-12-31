@@ -17,7 +17,6 @@
  */
 package org.jclouds.karaf.commands.compute;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -30,13 +29,10 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.compute.domain.ExecResponse;
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.options.RunScriptOptions;
 import org.jclouds.domain.Credentials;
 
 
-import static org.jclouds.compute.predicates.NodePredicates.runningInGroup;
 import static org.jclouds.compute.options.RunScriptOptions.Builder.overrideCredentialsWith;
-import static org.jclouds.compute.options.TemplateOptions.Builder;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>

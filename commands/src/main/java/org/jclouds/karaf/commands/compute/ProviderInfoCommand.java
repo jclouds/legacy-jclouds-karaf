@@ -17,18 +17,8 @@
  */
 package org.jclouds.karaf.commands.compute;
 
-import java.io.PrintStream;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.felix.gogo.commands.Command;
 import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.domain.ComputeMetadata;
-import org.jclouds.compute.domain.Hardware;
-import org.jclouds.compute.domain.Image;
-import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.domain.Processor;
-import org.jclouds.domain.Location;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>

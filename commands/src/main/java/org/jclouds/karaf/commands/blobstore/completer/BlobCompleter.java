@@ -18,10 +18,6 @@
 
 package org.jclouds.karaf.commands.blobstore.completer;
 
-import org.jclouds.blobstore.BlobStore;
-import org.jclouds.blobstore.domain.PageSet;
-import org.jclouds.blobstore.domain.StorageMetadata;
-
 public class BlobCompleter extends BlobStoreCompleterSupport {
 
     @Override

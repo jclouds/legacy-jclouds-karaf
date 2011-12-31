@@ -26,9 +26,6 @@ import org.apache.felix.gogo.commands.Option;
 @Command(scope = "jclouds", name = "node-list")
 public class NodeListCommand extends ComputeCommandSupport {
 
-    @Option(name = "--provider")
-    private String provider;
-
     @Override
     protected Object doExecute() throws Exception {
         ComputeHelper.printNodes(getComputeService().listNodes(), "", System.out);

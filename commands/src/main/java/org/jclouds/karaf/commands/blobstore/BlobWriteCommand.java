@@ -18,8 +18,10 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
+import java.net.URL;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.apache.felix.gogo.commands.Option;
 
 /**
  * @author: iocanel
@@ -33,13 +35,25 @@ public class BlobWriteCommand extends BlobStoreCommandSupport {
     @Argument(index = 1, name = "blobName", description = "The name of the blob", required = true, multiValued = false)
     String blobName;
 
-    @Argument(index = 2, name = "payload", description = "The payload", required = true, multiValued = false)
+    @Argument(index = 2, name = "payload", description = "A url pointing to a payload, or just a string payload", required = true, multiValued = false)
     String payload;
 
+    @Option(name = "--store-url", description = "Option to store in the blob the url itself", required = false, multiValued = false)
+    boolean storeUrl;
 
     @Override
     protected Object doExecute() throws Exception {
-        write(containerName, blobName, payload);
+        URL url = null;
+        try {
+            url = new URL(payload);
+        } catch (Exception e) {
+            //Ignore
+        }
+        if (url == null || storeUrl) {
+            write(containerName, blobName, payload);
+        } else {
+            write(containerName, blobName, url.openStream());
+        }
         return null;
     }
 }

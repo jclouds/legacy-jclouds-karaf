@@ -18,7 +18,6 @@
 
 package org.jclouds.karaf.commands.compute.completer;
 
-import java.util.List;
 import java.util.Set;
 import org.apache.karaf.shell.console.Completer;
 import org.jclouds.compute.ComputeService;
