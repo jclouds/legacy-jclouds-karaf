@@ -130,7 +130,7 @@
     <properties>
         <osgi.version>4.2.0</osgi.version>
         <configadmin.version>1.2.8</configadmin.version>
-        <karaf.version>2.2.0</karaf.version>
+        <karaf.version>2.2.5</karaf.version>
         <jclouds.version>1.2.2</jclouds.version>
         <felix.configadmin.version>1.2.8</felix.configadmin.version>
         <slf4j.version>1.5.8</slf4j.version>
@@ -146,7 +146,7 @@
         <aopalliance.bundle.version>1.0_5</aopalliance.bundle.version>
         <netty.bundle.version>3.2.3.Final_2</netty.bundle.version>
         <net.oauth.bundle.version>20100527_1</net.oauth.bundle.version>
-        <bcprov.bundle.version>1.46_2</bcprov.bundle.version>
+        <bcprov.version>1.46</bcprov.version>
         <jersey.version>1.6</jersey.version>
         <java-xmlbuilder.bundle.version>0.3_1</java-xmlbuilder.bundle.version>
         <joda.version>1.6.2</joda.version>
@@ -154,7 +154,7 @@
         <httpcore.version>4.1</httpcore.version>
         <jsch.bundle.version>0.1.44_2</jsch.bundle.version>
         <commons-io.bundle.version>1.4_2</commons-io.bundle.version>
-        <sshj.version>0.6.1</sshj.version>
+        <sshj.version>0.7.0-SNAPSHOT</sshj.version>
         <jzlib.version>1.0.7</jzlib.version>
         <jzlib.bundle.version>1.0.7_1</jzlib.bundle.version>
 
@@ -217,9 +217,15 @@
             </dependency>
 
             <dependency>
-                <groupId>org.apache.servicemix.bundles</groupId>
-                <artifactId>org.apache.servicemix.bundles.bcprov-jdk15</artifactId>
-                <version>${bcprov.bundle.version}</version>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15</artifactId>
+                <version>${bcprov.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk16</artifactId>
+                <version>${bcprov.version}</version>
             </dependency>
 
             <dependency>
