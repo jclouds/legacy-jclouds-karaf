@@ -25,7 +25,7 @@
                         <Import-Package>
                             org.jclouds.ec2*;version=${jclouds.version};resolution:=optional,
                             *</Import-Package>
-                        <Private-Package>org.jclouds.karaf.services</Private-Package>
+                        <Private-Package>org.jclouds.karaf.services*</Private-Package>
                         <Export-Service>org.jclouds.compute.ComputeService,org.jclouds.blobstore.BlobStore</Export-Service>
                     </instructions>
                 </configuration>
