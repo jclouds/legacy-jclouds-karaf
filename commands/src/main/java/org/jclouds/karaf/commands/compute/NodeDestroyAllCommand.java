@@ -17,42 +17,33 @@
  */
 package org.jclouds.karaf.commands.compute;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Map;
+import java.util.Set;
 import javax.annotation.Nullable;
 import com.google.common.base.Predicate;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.Option;
-import org.jclouds.compute.domain.ExecResponse;
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.domain.Credentials;
-
-
-import static org.jclouds.compute.options.RunScriptOptions.Builder.overrideCredentialsWith;
+import org.jclouds.karaf.commands.cache.CacheProvider;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "node-runscript")
-public class NodeRunScriptCommand extends NodeRunScriptSupport {
-
-    @Argument(index = 0, name = "id", description = "The id of the node.", required = true, multiValued = false)
-    private String id;
+@Command(scope = "jclouds", name = "node-destroy-all")
+public class NodeDestroyAllCommand extends ComputeCommandSupport {
 
     @Override
-    public String getId() {
-        return id;
-    }
+    protected Object doExecute() throws Exception {
+        Set<? extends NodeMetadata> nodeMetadatas = getComputeService().destroyNodesMatching(new Predicate<NodeMetadata>() {
+            @Override
+            public boolean apply(@Nullable NodeMetadata input) {
+                return true;
+            }
+        });
 
-    @Override
-    public String getGroup() {
+        if (nodeMetadatas != null && !nodeMetadatas.isEmpty()) {
+            System.out.println("Destroyed nodes:");
+            ComputeHelper.printNodes(nodeMetadatas, "", System.out);
+        }
         return null;
     }
 }

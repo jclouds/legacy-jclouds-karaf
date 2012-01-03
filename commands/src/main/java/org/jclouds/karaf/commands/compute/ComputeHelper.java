@@ -29,10 +29,11 @@ import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Processor;
 import org.jclouds.domain.Location;
+import org.jclouds.karaf.commands.cache.CacheProvider;
 
 public class ComputeHelper {
 
-    public static final String NODEFORMAT = "%s%-30s %-20s %-20s %-20s";
+    public static final String NODEFORMAT = "%s%-30s %-20s %-20s %-20s %-20s";
     public static final String HARDWAREFORMAT = "%s%-20s %5s %7s %6s";
     public static final String IMAGEFORMAT = "%s%-30s %-20s %s";
     public static final String LOCATIONFORMAT = "%-30s %-9s %s";
@@ -53,7 +54,7 @@ public class ComputeHelper {
             return service;
         } else {
             if (services.size() == 0) {
-                throw new IllegalArgumentException("No providers are present.");
+                throw new IllegalArgumentException("No providers are present.  Note: It takes a couple of seconds for the provider to initialize.");
             }
             else if (services.size() != 1) {
                 StringBuilder sb = new StringBuilder();
@@ -72,10 +73,12 @@ public class ComputeHelper {
 
 
     public static void printNodes(Set<? extends ComputeMetadata> nodes, String indent, PrintStream out) {
-        out.println(String.format(NODEFORMAT, indent, "[id]", "[location]", "[hardware]", "[state]"));
+        out.println(String.format(NODEFORMAT, indent, "[id]", "[location]", "[hardware]", "[group]", "[state]"));
         for (ComputeMetadata metadata : nodes) {
             NodeMetadata node = (NodeMetadata) metadata;
-            out.println(String.format("%s%-30s %-20s %-20s %-20s", indent, node.getId(), node.getLocation().getId(), node.getHardware().getId(), node.getState().toString().toLowerCase()));
+            out.println(String.format(NODEFORMAT, indent, node.getId(), node.getLocation().getId(), node.getHardware().getId(), node.getGroup(), node.getState().toString().toLowerCase()));
+            CacheProvider.getCache("node").add(node.getId());
+            CacheProvider.getCache("group").add(node.getGroup());
         }
     }
 
@@ -91,6 +94,7 @@ public class ComputeHelper {
         out.println(String.format(IMAGEFORMAT, indent, "[id]", "[location]", "[description]"));
         for (Image image : images) {
             out.println(String.format(IMAGEFORMAT, indent, image.getId(), image.getLocation().getId(), image.getDescription()));
+            CacheProvider.getCache("image").add(image.getId());
         }
     }
 
@@ -113,6 +117,7 @@ public class ComputeHelper {
         for (Location loc : locations) {
             for (Location p = loc; p != null; p = p.getParent()) {
                 all.add(p);
+                CacheProvider.getCache("location").add(p.getId());
             }
         }
         return all;

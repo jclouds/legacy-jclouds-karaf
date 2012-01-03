@@ -40,19 +40,19 @@ import static org.jclouds.compute.options.RunScriptOptions.Builder.overrideCrede
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "node-runscript")
-public class NodeRunScriptCommand extends NodeRunScriptSupport {
+@Command(scope = "jclouds", name = "group-runscript")
+public class GroupRunScriptCommand extends NodeRunScriptSupport {
 
-    @Argument(index = 0, name = "id", description = "The id of the node.", required = true, multiValued = false)
-    private String id;
+    @Argument(index = 0, name = "group", description = "The group of nodes.", required = true, multiValued = false)
+    private String group;
 
     @Override
     public String getId() {
-        return id;
+        return null;
     }
 
     @Override
     public String getGroup() {
-        return null;
+        return group;
     }
 }

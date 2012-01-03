@@ -18,7 +18,13 @@
 
 package org.jclouds.karaf.commands.blobstore.completer;
 
+import org.jclouds.karaf.commands.cache.CacheProvider;
+
 public class ContainerCompleter extends BlobStoreCompleterSupport {
+
+    public ContainerCompleter() {
+        cache = CacheProvider.getCache("container");
+    }
 
     @Override
     public void updateCache() {

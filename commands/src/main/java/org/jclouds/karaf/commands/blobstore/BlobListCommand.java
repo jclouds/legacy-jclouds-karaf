@@ -21,6 +21,7 @@ package org.jclouds.karaf.commands.blobstore;
 import org.apache.felix.gogo.commands.Command;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
+import org.jclouds.karaf.commands.cache.CacheProvider;
 
 /**
  * @author: iocanel
@@ -35,11 +36,17 @@ public class BlobListCommand extends BlobStoreCommandSupport {
         System.out.println(String.format(LISTFORMAT, "[Container]", "[Blob]"));
         for (StorageMetadata containerMetadata : getBlobStore().list()) {
             String containerName = containerMetadata.getName();
+
+            CacheProvider.getCache("container").add(containerName);
+
             PageSet<? extends StorageMetadata> blobStoreMetadatas = getBlobStore().list(containerName);
 
             if (blobStoreMetadatas == null || !blobStoreMetadatas.isEmpty()) {
                 for (StorageMetadata blobMetadata : blobStoreMetadatas) {
                     String blobName = blobMetadata.getName();
+
+                    CacheProvider.getCache("blob").add(blobName);
+
                     System.out.println(String.format(LISTFORMAT, containerName, blobName));
                     containerName = "";
                 }

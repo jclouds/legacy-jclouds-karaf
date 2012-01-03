@@ -22,6 +22,7 @@ import java.net.URL;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
+import org.jclouds.karaf.commands.cache.CacheProvider;
 
 /**
  * @author: iocanel
@@ -53,6 +54,8 @@ public class BlobWriteCommand extends BlobStoreCommandSupport {
             write(containerName, blobName, payload);
         } else {
             write(containerName, blobName, url.openStream());
+            CacheProvider.getCache("container").remove(containerName);
+            CacheProvider.getCache("blob").remove(blobName);
         }
         return null;
     }

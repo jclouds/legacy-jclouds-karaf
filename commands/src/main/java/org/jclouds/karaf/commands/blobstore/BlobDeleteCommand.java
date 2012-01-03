@@ -23,6 +23,7 @@ import java.util.List;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
+import org.jclouds.karaf.commands.cache.CacheProvider;
 
 /**
  * @author: iocanel
@@ -44,10 +45,12 @@ public class BlobDeleteCommand extends BlobStoreCommandSupport {
                 for (String blobName : blobNames) {
                     if (getBlobStore().directoryExists(container, blobName)) {
                         getBlobStore().deleteDirectory(container, blobName);
+                        CacheProvider.getCache("blob").remove(blobName);
                     }
                 }
             } else {
                 getBlobStore().deleteContainer(container);
+                CacheProvider.getCache("container").remove(container);
             }
         }
         return null;

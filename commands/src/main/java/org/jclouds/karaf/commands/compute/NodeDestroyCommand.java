@@ -19,6 +19,7 @@ package org.jclouds.karaf.commands.compute;
 
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.jclouds.karaf.commands.cache.CacheProvider;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>

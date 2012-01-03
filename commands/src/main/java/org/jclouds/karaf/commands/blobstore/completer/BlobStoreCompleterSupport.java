@@ -37,7 +37,7 @@ public abstract class BlobStoreCompleterSupport implements Completer, Runnable {
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     protected final StringsCompleter delegate = new StringsCompleter();
-    protected Set<String> cache = new LinkedHashSet<String>();
+    protected Set<String> cache;
 
     private Long lastUpdate = System.currentTimeMillis();
 
@@ -62,7 +62,7 @@ public abstract class BlobStoreCompleterSupport implements Completer, Runnable {
     public int complete(String buffer, int cursor, List<String> candidates) {
         boolean isCached = false;
 
-        if (System.currentTimeMillis() - lastUpdate > 60000) {
+        if (System.currentTimeMillis() - lastUpdate > 5 * 60000) {
             executorService.submit(this);
         }
 
@@ -74,7 +74,7 @@ public abstract class BlobStoreCompleterSupport implements Completer, Runnable {
             }
         }
 
-        if (!isCached) {
+/*        if (!isCached) {
             updateCache();
             //Do an other try.
             for (String item : cache) {
@@ -83,7 +83,7 @@ public abstract class BlobStoreCompleterSupport implements Completer, Runnable {
                 }
             }
 
-        }
+        }*/
         return delegate.complete(buffer, cursor, candidates);
     }
 
@@ -126,5 +126,13 @@ public abstract class BlobStoreCompleterSupport implements Completer, Runnable {
     public void setServices(List<BlobStore> services) {
         this.services = services;
         executorService.execute(this);
+    }
+
+    public Set<String> getCache() {
+        return cache;
+    }
+
+    public void setCache(Set<String> cache) {
+        this.cache = cache;
     }
 }

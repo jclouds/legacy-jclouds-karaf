@@ -22,8 +22,13 @@ import java.util.Set;
 import org.apache.karaf.shell.console.Completer;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.Image;
+import org.jclouds.karaf.commands.cache.CacheProvider;
 
 public class ImageCompleter extends ComputeCompleterSupport implements Completer {
+
+    public ImageCompleter() {
+        cache = CacheProvider.getCache("image");
+    }
 
     @Override
     public void updateCache() {

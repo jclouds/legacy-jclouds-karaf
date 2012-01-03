@@ -16,21 +16,24 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.blobstore.completer;
+package org.jclouds.karaf.commands.cache;
 
-import org.jclouds.karaf.commands.cache.CacheProvider;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class BlobCompleter extends BlobStoreCompleterSupport {
+public class CacheProvider {
 
-    public BlobCompleter() {
-        cache = CacheProvider.getCache("blob");
-    }
+    private static Map<String,Set<String>> caches = new ConcurrentHashMap<String, Set<String>>();
 
-    @Override
-    public void updateCache() {
-        cache.clear();
-        for (String container : listContainers()) {
-            cache.addAll(listBlobs(container));
+    public static synchronized Set<String> getCache(String name) {
+        if  (caches.containsKey(name)) {
+            return caches.get(name);
+        } else {
+            Set<String> cache = new LinkedHashSet<String>();
+            caches.put(name, cache);
+            return cache;
         }
     }
 }

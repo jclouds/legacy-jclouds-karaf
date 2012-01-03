@@ -29,6 +29,19 @@
                 <ref component-id="activeNodeCompleter"/>
             </completers>
         </command>
+        <command name="jclouds/node-destroy-all">
+            <action class="org.jclouds.karaf.commands.compute.NodeDestroyAllCommand">
+                <property name="services" ref="computeServices"/>
+            </action>
+        </command>
+        <command name="jclouds/group-destroy">
+            <action class="org.jclouds.karaf.commands.compute.GroupDestroyCommand">
+                <property name="services" ref="computeServices"/>
+            </action>
+            <completers>
+                <ref component-id="groupCompleter"/>
+            </completers>
+        </command>
         <command name="jclouds/node-suspend">
             <action class="org.jclouds.karaf.commands.compute.NodeSuspendCommand">
                 <property name="services" ref="computeServices"/>
@@ -45,12 +58,20 @@
                 <ref component-id="suspendedNodeCompleter"/>
             </completers>
         </command>
-         <command name="jclouds/node-runscript">
+        <command name="jclouds/node-runscript">
             <action class="org.jclouds.karaf.commands.compute.NodeRunScriptCommand">
                 <property name="services" ref="computeServices"/>
             </action>
             <completers>
                 <ref component-id="activeNodeCompleter"/>
+            </completers>
+        </command>
+        <command name="jclouds/group-node-runscript">
+            <action class="org.jclouds.karaf.commands.compute.GroupRunScriptCommand">
+                <property name="services" ref="computeServices"/>
+            </action>
+            <completers>
+                <ref component-id="groupCompleter"/>
             </completers>
         </command>
         <command name="jclouds/provider-info">
@@ -137,6 +158,10 @@
     </bean>
 
     <bean id="inActiveNodeCompleter" class="org.jclouds.karaf.commands.compute.completer.InactiveNodesCompleter">
+        <property name="services" ref="computeServices"/>
+    </bean>
+
+    <bean id="groupCompleter" class="org.jclouds.karaf.commands.compute.completer.GroupCompleter">
         <property name="services" ref="computeServices"/>
     </bean>
 

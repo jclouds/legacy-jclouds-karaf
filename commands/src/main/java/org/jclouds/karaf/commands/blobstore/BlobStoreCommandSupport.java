@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.jclouds.blobstore.BlobStore;
@@ -41,7 +42,10 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BlobStoreCommandSupport.class);
     private static final int SIZE = 32 * 1024;
+
     private List<BlobStore> services;
+    private Set<String> containerCache;
+    private Set<String> blobCache;
 
     @Option(name = "--provider")
     protected String provider;
@@ -65,18 +69,18 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
     /**
      * Reads an Object from the blob store.
      *
-     * @param bucket
+     * @param containerName
      * @param blobName
      * @return
      */
-    public Object read(String bucket, String blobName) {
+    public Object read(String containerName, String blobName) {
         Object result = null;
         ObjectInputStream ois = null;
 
         BlobStore blobStore = getBlobStore();
-        blobStore.createContainerInLocation(null, bucket);
+        blobStore.createContainerInLocation(null, containerName);
 
-        InputStream is = blobStore.getBlob(bucket, blobName).getPayload().getInput();
+        InputStream is = blobStore.getBlob(containerName, blobName).getPayload().getInput();
 
         try {
             ois = new ObjectInputStream(is);
@@ -106,25 +110,25 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
 
     /**
      * Returns an InputStream to a {@link Blob}.
-     * @param bucket
+     * @param containerName
      * @param blobName
      * @return
      */
-    public InputStream getBlobInputStream(String bucket, String blobName) {
-      return  getBlobStore().getBlob(bucket, blobName).getPayload().getInput();
+    public InputStream getBlobInputStream(String containerName, String blobName) {
+      return  getBlobStore().getBlob(containerName, blobName).getPayload().getInput();
     }
 
     /**
      * Writes to the {@link Blob} by serializing an Object.
-     * @param bucket
+     * @param containerName
      * @param blobName
      * @param object
      */
-    public void write(String bucket, String blobName, Object object) {
+    public void write(String containerName, String blobName, Object object) {
         BlobStore blobStore = getBlobStore();
         Blob blob = blobStore.blobBuilder(blobName).build();
         blob.setPayload(toBytes(object));
-        blobStore.putBlob(bucket, blob);
+        blobStore.putBlob(containerName, blob);
     }
 
     /**
@@ -258,5 +262,21 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
                 }
             }
         }
+    }
+
+    public Set<String> getContainerCache() {
+        return containerCache;
+    }
+
+    public void setContainerCache(Set<String> containerCache) {
+        this.containerCache = containerCache;
+    }
+
+    public Set<String> getBlobCache() {
+        return blobCache;
+    }
+
+    public void setBlobCache(Set<String> blobCache) {
+        this.blobCache = blobCache;
     }
 }

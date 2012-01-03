@@ -38,7 +38,7 @@ public class BlobStoreHelper {
             return service;
         } else {
             if (services.size() == 0) {
-                throw new IllegalArgumentException("No providers are present.");
+                throw new IllegalArgumentException("No providers are present. Note: It takes a couple of seconds for the provider to initialize.");
             } else if (services.size() != 1) {
                 StringBuilder sb = new StringBuilder();
                 for (BlobStore svc : services) {

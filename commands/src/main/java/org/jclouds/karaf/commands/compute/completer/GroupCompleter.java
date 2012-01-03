@@ -19,14 +19,16 @@
 package org.jclouds.karaf.commands.compute.completer;
 
 import java.util.Set;
+import org.apache.karaf.shell.console.Completer;
 import org.jclouds.compute.ComputeService;
-import org.jclouds.domain.Location;
+import org.jclouds.compute.domain.ComputeMetadata;
+import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.karaf.commands.cache.CacheProvider;
 
-public class LocationCompleter extends ComputeCompleterSupport {
+public class GroupCompleter extends ComputeCompleterSupport implements Completer {
 
-    public LocationCompleter() {
-        cache = CacheProvider.getCache("location");
+    public GroupCompleter() {
+        cache = CacheProvider.getCache("group");
     }
 
     @Override
@@ -34,12 +36,19 @@ public class LocationCompleter extends ComputeCompleterSupport {
         cache.clear();
         ComputeService service = getService();
         if (service != null) {
-            Set<? extends Location> locations = service.listAssignableLocations();
-            if (locations != null) {
-                for (Location location : locations) {
-                    cache.add(location.getId());
+            Set<? extends ComputeMetadata> computeMetadatas = service.listNodes();
+            if (computeMetadatas != null) {
+                for (ComputeMetadata compute : computeMetadatas) {
+                    NodeMetadata node = (NodeMetadata) compute;
+                    if (apply(node)) {
+                        cache.add(node.getGroup());
+                    }
                 }
             }
         }
+    }
+
+    public boolean apply(NodeMetadata node) {
+        return true;
     }
 }

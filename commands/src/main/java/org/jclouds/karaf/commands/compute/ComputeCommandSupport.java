@@ -19,6 +19,7 @@ package org.jclouds.karaf.commands.compute;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.jclouds.compute.ComputeService;
@@ -32,6 +33,10 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
 
     private ConfigurationAdmin configurationAdmin;
     private List<ComputeService> services;
+    private Set<String> nodeCache;
+    private Set<String> groupCache;
+    private Set<String> imageCache;
+    private Set<String> locationCache;
 
     @Option(name = "--provider")
     protected String provider;
@@ -58,5 +63,37 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
 
     protected ComputeService getComputeService() {
         return ComputeHelper.getComputeService(provider, services);
+    }
+
+    public Set<String> getNodeCache() {
+        return nodeCache;
+    }
+
+    public void setNodeCache(Set<String> nodeCache) {
+        this.nodeCache = nodeCache;
+    }
+
+    public Set<String> getGroupCache() {
+        return groupCache;
+    }
+
+    public void setGroupCache(Set<String> groupCache) {
+        this.groupCache = groupCache;
+    }
+
+    public Set<String> getImageCache() {
+        return imageCache;
+    }
+
+    public void setImageCache(Set<String> imageCache) {
+        this.imageCache = imageCache;
+    }
+
+    public Set<String> getLocationCache() {
+        return locationCache;
+    }
+
+    public void setLocationCache(Set<String> locationCache) {
+        this.locationCache = locationCache;
     }
 }
