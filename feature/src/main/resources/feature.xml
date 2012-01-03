@@ -416,6 +416,7 @@
     </feature>
 
     <feature name="jclouds-services" description="OSGi Service Factories for JClouds" version="${project.version}" resolver="(obr)">
+        <configfile finalname="/etc/org.jclouds.credentials.cfg">mvn:org.jclouds.karaf/jclouds-karaf/${project.version}/cfg/credentials</configfile>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <feature version='${project.version}'>jclouds-compute</feature>

@@ -43,7 +43,6 @@ public class ConfigurationAdminCredentialStore extends AbstractModule {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationAdminCredentialStore.class);
     public static final String CREDENTIAL_STORE_PID = "org.jclouds.credentials";
-    private static final String FILENAMEPROPERTY = "felix.fileinstall.filename";
 
 
     private Configuration configuration;
@@ -102,7 +101,6 @@ public class ConfigurationAdminCredentialStore extends AbstractModule {
 
         public Dictionary newDisctionary() {
             Dictionary dictionary = new Properties();
-            dictionary.put(FILENAMEPROPERTY, System.getProperty("karaf.home") + File.separatorChar + "etc" + CREDENTIAL_STORE_PID + ".cfg");
             return dictionary;
         }
 

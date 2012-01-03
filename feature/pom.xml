@@ -54,6 +54,11 @@
                                     <type>xml</type>
                                     <classifier>features</classifier>
                                 </artifact>
+                                <artifact>
+                                    <file>target/credentials.cfg</file>
+                                    <type>cfg</type>
+                                    <classifier>credentials</classifier>
+                                </artifact>
                             </artifacts>
                         </configuration>
                     </execution>
