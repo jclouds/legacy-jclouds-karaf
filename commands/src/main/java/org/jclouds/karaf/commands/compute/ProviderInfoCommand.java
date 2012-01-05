@@ -19,6 +19,7 @@ package org.jclouds.karaf.commands.compute;
 
 import org.apache.felix.gogo.commands.Command;
 import org.jclouds.compute.ComputeService;
+import org.jclouds.karaf.utils.compute.ComputeHelper;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
@@ -38,19 +39,19 @@ public class ProviderInfoCommand extends ComputeCommandSupport {
 
             System.out.println("  Locations");
             System.out.println("  ---------");
-            ComputeHelper.printLocations(service.listAssignableLocations(), "    ", System.out);
+            printLocations(service.listAssignableLocations(), "    ", System.out);
 
             System.out.println("  Images");
             System.out.println("  ------");
-            ComputeHelper.printImages(service.listImages(), "    ", System.out);
+            printImages(service.listImages(), "    ", System.out);
 
             System.out.println("  Hardware");
             System.out.println("  --------");
-            ComputeHelper.printHardwares(service.listHardwareProfiles(), "    ", System.out);
+            printHardwares(service.listHardwareProfiles(), "    ", System.out);
 
             System.out.println("  Nodes");
             System.out.println("  -----");
-            ComputeHelper.printNodes(service.listNodes(), "    ", System.out);
+            printNodes(service.listNodes(), "    ", System.out);
         }
         return null;
     }

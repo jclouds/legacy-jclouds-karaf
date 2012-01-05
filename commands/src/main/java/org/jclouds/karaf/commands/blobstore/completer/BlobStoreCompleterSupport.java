@@ -28,7 +28,7 @@ import org.apache.karaf.shell.console.completer.StringsCompleter;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
-import org.jclouds.karaf.commands.blobstore.BlobStoreHelper;
+import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
 
 public abstract class BlobStoreCompleterSupport implements Completer, Runnable {
 

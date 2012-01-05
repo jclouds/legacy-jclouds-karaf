@@ -16,17 +16,19 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.blobstore;
+package org.jclouds.karaf.utils.compute;
 
 import java.util.List;
-import org.jclouds.blobstore.BlobStore;
+import org.jclouds.compute.ComputeService;
 
-public class BlobStoreHelper {
+public class ComputeHelper {
 
-    public static BlobStore getBlobStore(String provider, List<BlobStore> services) {
+
+
+    public static ComputeService getComputeService(String provider, List<ComputeService> services) {
         if (provider != null) {
-            BlobStore service = null;
-            for (BlobStore svc : services) {
+            ComputeService service = null;
+            for (ComputeService svc : services) {
                 if (provider.equals(service.getContext().getProviderSpecificContext().getId())) {
                     service = svc;
                     break;
@@ -38,24 +40,24 @@ public class BlobStoreHelper {
             return service;
         } else {
             if (services.size() == 0) {
-                throw new IllegalArgumentException("No providers are present. Note: It takes a couple of seconds for the provider to initialize.");
-            } else if (services.size() != 1) {
+                throw new IllegalArgumentException("No providers are present.  Note: It takes a couple of seconds for the provider to initialize.");
+            }
+            else if (services.size() != 1) {
                 StringBuilder sb = new StringBuilder();
-                for (BlobStore svc : services) {
+                for (ComputeService svc : services) {
                     if (sb.length() > 0) {
                         sb.append(", ");
                     }
                     sb.append(svc.getContext().getProviderSpecificContext().getId());
                 }
                 throw new IllegalArgumentException("Multiple providers are present, please select one using the --provider argument in the following values: " + sb.toString());
-            }
-            else {
+            } else {
                 return services.get(0);
             }
         }
     }
 
-    private BlobStoreHelper() {
+    private ComputeHelper() {
         //Utility Class
     }
 }

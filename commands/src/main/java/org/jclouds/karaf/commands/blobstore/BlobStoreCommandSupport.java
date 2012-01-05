@@ -32,6 +32,7 @@ import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -142,7 +143,6 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
         Blob blob = blobStore.blobBuilder(blobName).build();
         blob.setPayload(is);
         blobStore.putBlob(bucket, blob);
-
         try {
             is.close();
         } catch (Exception ex) {

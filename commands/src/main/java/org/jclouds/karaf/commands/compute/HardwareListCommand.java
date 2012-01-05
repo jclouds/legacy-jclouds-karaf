@@ -18,6 +18,7 @@
 package org.jclouds.karaf.commands.compute;
 
 import org.apache.felix.gogo.commands.Command;
+import org.jclouds.karaf.utils.compute.ComputeHelper;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
@@ -27,7 +28,7 @@ public class HardwareListCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        ComputeHelper.printNodes(getComputeService().listHardwareProfiles(), "", System.out);
+        printHardwares(getComputeService().listHardwareProfiles(), "", System.out);
         return null;
     }
 

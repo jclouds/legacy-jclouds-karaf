@@ -34,6 +34,13 @@
     <name>JClouds :: Karaf :: Commands</name>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.jclouds.karaf</groupId>
+            <artifactId>utils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.jclouds</groupId>
             <artifactId>jclouds-core</artifactId>
@@ -93,7 +100,9 @@
                             org.jclouds.blobstore;version=${jclouds.version};resolution:=optional,
                             org.jclouds.compute;version=${jclouds.version};resolution:=optional,
                             org.jclouds.ec2*;version=${jclouds.version};resolution:=optional,
-                            *</Import-Package>
+                            *
+                        </Import-Package>
+                        <Private-Package>org.jclouds.karaf.utils*</Private-Package>
                     </instructions>
                 </configuration>
             </plugin>

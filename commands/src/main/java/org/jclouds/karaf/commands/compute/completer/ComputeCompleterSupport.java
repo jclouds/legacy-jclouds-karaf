@@ -18,7 +18,6 @@
 
 package org.jclouds.karaf.commands.compute.completer;
 
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -26,7 +25,7 @@ import java.util.concurrent.Executors;
 import org.apache.karaf.shell.console.Completer;
 import org.apache.karaf.shell.console.completer.StringsCompleter;
 import org.jclouds.compute.ComputeService;
-import org.jclouds.karaf.commands.compute.ComputeHelper;
+import org.jclouds.karaf.utils.compute.ComputeHelper;
 
 public abstract class ComputeCompleterSupport implements Completer, Runnable  {
 

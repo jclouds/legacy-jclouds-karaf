@@ -18,7 +18,7 @@
 package org.jclouds.karaf.commands.compute;
 
 import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.Option;
+import org.jclouds.karaf.utils.compute.ComputeHelper;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
@@ -28,7 +28,7 @@ public class NodeListCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        ComputeHelper.printNodes(getComputeService().listNodes(), "", System.out);
+        printNodes(getComputeService().listNodes(), "", System.out);
         return null;
     }
 
