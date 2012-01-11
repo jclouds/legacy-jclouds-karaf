@@ -156,7 +156,7 @@
         <httpcore.version>4.1</httpcore.version>
         <jsch.bundle.version>0.1.44_2</jsch.bundle.version>
         <commons-io.bundle.version>1.4_2</commons-io.bundle.version>
-        <sshj.version>0.7.0-SNAPSHOT</sshj.version>
+        <sshj.version>0.7.0</sshj.version>
         <jzlib.version>1.0.7</jzlib.version>
         <jzlib.bundle.version>1.0.7_1</jzlib.bundle.version>
 
