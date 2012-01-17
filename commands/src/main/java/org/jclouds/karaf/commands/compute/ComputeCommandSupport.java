@@ -42,10 +42,10 @@ import org.osgi.service.cm.ConfigurationAdmin;
 public abstract class ComputeCommandSupport extends OsgiCommandSupport {
 
 
-    public static final String NODEFORMAT = "%s%-30s %-20s %-20s %-20s %-20s";
+    public static final String NODEFORMAT = "%s%-30s %-32s %-20s %-12s %-12s";
     public static final String HARDWAREFORMAT = "%s%-20s %5s %7s %6s";
-    public static final String IMAGEFORMAT = "%s%-30s %-20s %s";
-    public static final String LOCATIONFORMAT = "%-30s %-9s %s";
+    public static final String IMAGEFORMAT = "%s%-30s %-32s %s";
+    public static final String LOCATIONFORMAT = "%-32s %-9s %s";
 
     private ConfigurationAdmin configurationAdmin;
     private List<ComputeService> services;
@@ -76,7 +76,10 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
     protected void printImages(Set<? extends Image> images, String indent, PrintStream out) {
         out.println(String.format(IMAGEFORMAT, indent, "[id]", "[location]", "[description]"));
         for (Image image : images) {
-            out.println(String.format(IMAGEFORMAT, indent, image.getId(), image.getLocation().getId(), image.getDescription()));
+            String id = image.getId();
+            String location = image.getLocation() != null ? image.getLocation().getId() : "";
+            String description = image.getDescription();
+            out.println(String.format(IMAGEFORMAT, indent, id, location, description));
             CacheProvider.getCache("image").add(image.getId());
         }
     }
