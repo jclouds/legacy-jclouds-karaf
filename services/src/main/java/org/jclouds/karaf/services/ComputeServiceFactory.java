@@ -36,11 +36,15 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedServiceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 public class ComputeServiceFactory implements ManagedServiceFactory {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ComputeServiceFactory.class);
 
     public static final String PROVIDER = "provider";
     public static final String IDENTITY = "identity";
@@ -95,8 +99,8 @@ public class ComputeServiceFactory implements ManagedServiceFactory {
                 newRegistration = bundleContext.registerService(
                         ComputeService.class.getName(), client, properties);
             }
-        } catch (IOException ex) {
-            throw new ConfigurationException("Error creating managed compute service.",ex.getMessage());
+        } catch (Exception ex) {
+            LOGGER.error("Error creating compute service.",ex);
         }
         finally {
             ServiceRegistration oldRegistration = (newRegistration == null)

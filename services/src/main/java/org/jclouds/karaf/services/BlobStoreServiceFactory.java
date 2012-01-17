@@ -27,6 +27,8 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedServiceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -35,6 +37,8 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BlobStoreServiceFactory implements ManagedServiceFactory {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BlobStoreServiceFactory.class);
 
     private final Map<String, ServiceRegistration> registrations =
             new ConcurrentHashMap<String, ServiceRegistration>();
@@ -69,7 +73,10 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory {
                 newRegistration = bundleContext.registerService(
                         BlobStore.class.getName(), blobStore, properties);
             }
-        } finally {
+        } catch (Exception ex) {
+            LOGGER.error("Error creating blob store service.",ex);
+        }
+        finally {
             ServiceRegistration oldRegistration = (newRegistration == null)
                     ? registrations.remove(pid)
                     : registrations.put(pid, newRegistration);
