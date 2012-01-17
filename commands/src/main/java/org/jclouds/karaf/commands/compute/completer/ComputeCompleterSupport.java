@@ -20,35 +20,23 @@ package org.jclouds.karaf.commands.compute.completer;
 
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.apache.karaf.shell.console.Completer;
 import org.apache.karaf.shell.console.completer.StringsCompleter;
 import org.jclouds.compute.ComputeService;
+import org.jclouds.karaf.commands.cache.Cacheable;
 import org.jclouds.karaf.utils.compute.ComputeHelper;
 
-public abstract class ComputeCompleterSupport implements Completer, Runnable  {
+public abstract class ComputeCompleterSupport implements Completer, Cacheable<ComputeService> {
 
-    private List<ComputeService> services;
-
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private List<ComputeService> computeServices;
 
     protected final StringsCompleter delegate = new StringsCompleter();
     protected Set<String> cache;
 
-    private Long lastUpdate = System.currentTimeMillis();
-
-
-    @Override
-    public void run() {
-        updateCache();
-        lastUpdate = System.currentTimeMillis();
-    }
-
     protected ComputeService getService() {
         ComputeService service = null;
         try {
-            service = ComputeHelper.getComputeService(null, services);
+            service = ComputeHelper.getComputeService(null, computeServices);
         } catch (IllegalArgumentException ex) {
             //Ignore and skip completion;
         }
@@ -57,43 +45,30 @@ public abstract class ComputeCompleterSupport implements Completer, Runnable  {
 
     @Override
     public int complete(String buffer, int cursor, List<String> candidates) {
-            boolean isCached = false;
-
-        if (System.currentTimeMillis() - lastUpdate > 5 * 60000) {
-            executorService.submit(this);
-        }
-
         delegate.getStrings().clear();
         for (String item : cache) {
             if (buffer == null || item.startsWith(buffer)) {
                 delegate.getStrings().add(item);
-                isCached = true;
             }
         }
 
-        /*if (!isCached) {
-            updateCache();
-            //Do an other try.
-            for (String item : cache) {
-                if (buffer == null || item.startsWith(buffer)) {
-                    delegate.getStrings().add(item);
-                }
-            }
-
-        }*/
         return delegate.complete(buffer, cursor, candidates);
     }
 
-
-    public abstract void updateCache();
-
-    public List<ComputeService> getServices() {
-        return services;
+    @Override
+    public void updateCache() {
+        cache.clear();
+        for (ComputeService computeService : computeServices) {
+            updateCache(computeService);
+        }
     }
 
-    public void setServices(List<ComputeService> services) {
-        this.services = services;
-        executorService.execute(this);
+    public List<ComputeService> getComputeServices() {
+        return computeServices;
+    }
+
+    public void setComputeServices(List<ComputeService> computeServices) {
+        this.computeServices = computeServices;
     }
 
     public Set<String> getCache() {

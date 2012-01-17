@@ -16,29 +16,10 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.compute.completer;
+package org.jclouds.karaf.commands.cache;
 
-import java.util.Set;
-import org.apache.karaf.shell.console.Completer;
 import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.domain.Image;
-import org.jclouds.karaf.commands.cache.CacheProvider;
 
-public class ImageCompleter extends ComputeCompleterSupport implements Completer {
+public class ComputeCacheManager<C extends ComputeService> extends CacheManager<C> {
 
-    public ImageCompleter() {
-        cache = CacheProvider.getCache("image");
-    }
-
-    @Override
-    public void updateCache(ComputeService computeService) {
-        if (computeService != null) {
-            Set<? extends Image> images = computeService.listImages();
-            if (images != null) {
-                for (Image image : images) {
-                    cache.add(image.getId());
-                }
-            }
-        }
-    }
 }

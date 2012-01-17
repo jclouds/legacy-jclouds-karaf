@@ -21,37 +21,25 @@ package org.jclouds.karaf.commands.blobstore.completer;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.apache.karaf.shell.console.Completer;
 import org.apache.karaf.shell.console.completer.StringsCompleter;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
+import org.jclouds.karaf.commands.cache.Cacheable;
 import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
 
-public abstract class BlobStoreCompleterSupport implements Completer, Runnable {
+public abstract class BlobStoreCompleterSupport implements Completer, Cacheable<BlobStore> {
 
-    private List<BlobStore> services;
-
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private List<BlobStore> blobStoreServices;
 
     protected final StringsCompleter delegate = new StringsCompleter();
     protected Set<String> cache;
 
-    private Long lastUpdate = System.currentTimeMillis();
-
-
-    @Override
-    public void run() {
-        updateCache();
-        lastUpdate = System.currentTimeMillis();
-    }
-
     protected BlobStore getBlobStore() {
         BlobStore service = null;
         try {
-            service = BlobStoreHelper.getBlobStore(null, services);
+            service = BlobStoreHelper.getBlobStore(null, blobStoreServices);
         } catch (IllegalArgumentException ex) {
             //Ignore and skip completion;
         }
@@ -60,37 +48,38 @@ public abstract class BlobStoreCompleterSupport implements Completer, Runnable {
 
     @Override
     public int complete(String buffer, int cursor, List<String> candidates) {
-        boolean isCached = false;
-
-        if (System.currentTimeMillis() - lastUpdate > 5 * 60000) {
-            executorService.submit(this);
-        }
-
         delegate.getStrings().clear();
         for (String item : cache) {
             if (buffer == null || item.startsWith(buffer)) {
                 delegate.getStrings().add(item);
-                isCached = true;
             }
         }
-
-/*        if (!isCached) {
-            updateCache();
-            //Do an other try.
-            for (String item : cache) {
-                if (buffer == null || item.startsWith(buffer)) {
-                    delegate.getStrings().add(item);
-                }
-            }
-
-        }*/
         return delegate.complete(buffer, cursor, candidates);
     }
 
 
+
+    @Override
+    public void updateCache() {
+        cache.clear();
+        for (BlobStore blobStore : getBlobStoreServices()) {
+            updateCache(blobStore);
+        }
+    }
+
+
+
     protected Set<String> listContainers() {
         Set<String> containers = new LinkedHashSet<String>();
-        BlobStore blobStore = getBlobStore();
+        for (BlobStore blobStore : blobStoreServices) {
+            containers.addAll(listContainers(blobStore));
+        }
+        return containers;
+    }
+
+
+     protected Set<String> listContainers(BlobStore blobStore) {
+        Set<String> containers = new LinkedHashSet<String>();
         if (blobStore != null) {
             PageSet<? extends StorageMetadata> storageMetadatas = blobStore.list();
             if (storageMetadatas != null && !storageMetadatas.isEmpty()) {
@@ -104,7 +93,14 @@ public abstract class BlobStoreCompleterSupport implements Completer, Runnable {
 
     protected Set<String> listBlobs(String container) {
         Set<String> blobs = new LinkedHashSet<String>();
-        BlobStore blobStore = getBlobStore();
+        for (BlobStore blobStore : blobStoreServices) {
+            blobs.addAll(listBlobs(blobStore, container));
+        }
+        return blobs;
+    }
+
+     protected Set<String> listBlobs(BlobStore blobStore, String container) {
+        Set<String> blobs = new LinkedHashSet<String>();
         if (blobStore != null && blobStore.containerExists(container)) {
             PageSet<? extends StorageMetadata> storageMetadatas = blobStore.list(container);
             if (storageMetadatas != null && !storageMetadatas.isEmpty()) {
@@ -117,15 +113,12 @@ public abstract class BlobStoreCompleterSupport implements Completer, Runnable {
     }
 
 
-    public abstract void updateCache();
-
-    public List<BlobStore> getServices() {
-        return services;
+    public List<BlobStore> getBlobStoreServices() {
+        return blobStoreServices;
     }
 
-    public void setServices(List<BlobStore> services) {
-        this.services = services;
-        executorService.execute(this);
+    public void setBlobStoreServices(List<BlobStore> blobStoreServices) {
+        this.blobStoreServices = blobStoreServices;
     }
 
     public Set<String> getCache() {

@@ -16,29 +16,17 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.compute.completer;
+package org.jclouds.karaf.commands.compute;
 
-import java.util.Set;
-import org.apache.karaf.shell.console.Completer;
+import org.apache.felix.gogo.commands.Command;
 import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.domain.Image;
-import org.jclouds.karaf.commands.cache.CacheProvider;
 
-public class ImageCompleter extends ComputeCompleterSupport implements Completer {
-
-    public ImageCompleter() {
-        cache = CacheProvider.getCache("image");
-    }
+@Command(scope = "jclouds", name = "compute-provider-list")
+public class ComputeListCommand extends ComputeCommandSupport  {
 
     @Override
-    public void updateCache(ComputeService computeService) {
-        if (computeService != null) {
-            Set<? extends Image> images = computeService.listImages();
-            if (images != null) {
-                for (Image image : images) {
-                    cache.add(image.getId());
-                }
-            }
-        }
+    protected Object doExecute() throws Exception {
+        printComputeProviders(getComputeServices(),"",System.out);
+        return null;
     }
 }

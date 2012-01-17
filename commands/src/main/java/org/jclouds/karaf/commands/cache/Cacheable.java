@@ -16,20 +16,10 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.blobstore.completer;
+package org.jclouds.karaf.commands.cache;
 
-import org.jclouds.blobstore.BlobStore;
-import org.jclouds.karaf.commands.cache.CacheProvider;
+public interface Cacheable<S>  {
 
-public class ContainerCompleter extends BlobStoreCompleterSupport {
-
-    public ContainerCompleter() {
-        cache = CacheProvider.getCache("container");
-    }
-
-
-    @Override
-    public void updateCache(BlobStore blobStore) {
-        cache.addAll(listContainers(blobStore));
-    }
+    public void updateCache();
+    public void updateCache(S service);
 }

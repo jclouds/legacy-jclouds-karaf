@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +33,7 @@ import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.compute.ComputeService;
 import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +45,8 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BlobStoreCommandSupport.class);
     private static final int SIZE = 32 * 1024;
+
+    public static final String PROVIDERFORMAT = "%-16s %s";
 
     private List<BlobStore> services;
     private Set<String> containerCache;
@@ -261,6 +265,13 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
                     //Ignore
                 }
             }
+        }
+    }
+
+     protected void printBlobStoreProviders(List<BlobStore> blobStores, String indent, PrintStream out) {
+        out.println(String.format(PROVIDERFORMAT, "[id]", "[type]"));
+        for (BlobStore blobStore : blobStores) {
+            out.println(String.format(PROVIDERFORMAT, blobStore.getContext().getProviderSpecificContext().getId(), "blob"));
         }
     }
 

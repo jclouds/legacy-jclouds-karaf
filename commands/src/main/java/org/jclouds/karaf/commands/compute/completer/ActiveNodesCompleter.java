@@ -21,7 +21,7 @@ package org.jclouds.karaf.commands.compute.completer;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeState;
 
-public class ActiveNodesCompleter extends NodesCompleter {
+public class ActiveNodesCompleter extends NodesCompleter  {
 
     @Override
     public boolean apply(NodeMetadata node) {

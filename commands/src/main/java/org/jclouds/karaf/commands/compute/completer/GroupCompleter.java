@@ -32,11 +32,9 @@ public class GroupCompleter extends ComputeCompleterSupport implements Completer
     }
 
     @Override
-    public void updateCache() {
-        cache.clear();
-        ComputeService service = getService();
-        if (service != null) {
-            Set<? extends ComputeMetadata> computeMetadatas = service.listNodes();
+    public void updateCache(ComputeService computeService) {
+        if (computeService != null) {
+            Set<? extends ComputeMetadata> computeMetadatas = computeService.listNodes();
             if (computeMetadatas != null) {
                 for (ComputeMetadata compute : computeMetadatas) {
                     NodeMetadata node = (NodeMetadata) compute;

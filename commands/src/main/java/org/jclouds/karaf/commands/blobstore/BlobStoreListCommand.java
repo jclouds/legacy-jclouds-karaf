@@ -16,29 +16,17 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.compute.completer;
+package org.jclouds.karaf.commands.blobstore;
 
-import java.util.Set;
-import org.apache.karaf.shell.console.Completer;
-import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.domain.Image;
-import org.jclouds.karaf.commands.cache.CacheProvider;
+import org.apache.felix.gogo.commands.Command;
+import org.jclouds.karaf.commands.compute.ComputeCommandSupport;
 
-public class ImageCompleter extends ComputeCompleterSupport implements Completer {
-
-    public ImageCompleter() {
-        cache = CacheProvider.getCache("image");
-    }
+@Command(scope = "jclouds", name = "blobstore-provider-list")
+public class BlobStoreListCommand extends BlobStoreCommandSupport  {
 
     @Override
-    public void updateCache(ComputeService computeService) {
-        if (computeService != null) {
-            Set<? extends Image> images = computeService.listImages();
-            if (images != null) {
-                for (Image image : images) {
-                    cache.add(image.getId());
-                }
-            }
-        }
+    protected Object doExecute() throws Exception {
+        printBlobStoreProviders(getBlobStoreServices(),"",System.out);
+        return null;
     }
 }

@@ -29,7 +29,7 @@ public class ComputeHelper {
         if (provider != null) {
             ComputeService service = null;
             for (ComputeService svc : services) {
-                if (provider.equals(service.getContext().getProviderSpecificContext().getId())) {
+                if (provider.equals(svc.getContext().getProviderSpecificContext().getId())) {
                     service = svc;
                     break;
                 }

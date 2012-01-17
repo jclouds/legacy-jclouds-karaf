@@ -20,6 +20,7 @@ package org.jclouds.karaf.commands.compute.completer;
 
 import java.util.Set;
 import org.apache.karaf.shell.console.Completer;
+import org.jclouds.blobstore.BlobStore;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -32,11 +33,9 @@ public class NodesCompleter extends ComputeCompleterSupport implements Completer
     }
 
     @Override
-    public void updateCache() {
-        cache.clear();
-        ComputeService service = getService();
-        if (service != null) {
-            Set<? extends ComputeMetadata> computeMetadatas = service.listNodes();
+    public void updateCache(ComputeService computeService) {
+        if (computeService != null) {
+            Set<? extends ComputeMetadata> computeMetadatas = computeService.listNodes();
             if (computeMetadatas != null) {
                 for (ComputeMetadata compute : computeMetadatas) {
                     NodeMetadata node = (NodeMetadata) compute;

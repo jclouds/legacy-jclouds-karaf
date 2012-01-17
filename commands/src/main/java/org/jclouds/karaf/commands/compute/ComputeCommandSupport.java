@@ -46,14 +46,22 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
     public static final String HARDWAREFORMAT = "%s%-20s %5s %7s %6s";
     public static final String IMAGEFORMAT = "%s%-30s %-32s %s";
     public static final String LOCATIONFORMAT = "%-32s %-9s %s";
+    public static final String PROVIDERFORMAT = "%-16s %s";
 
     private ConfigurationAdmin configurationAdmin;
-    private List<ComputeService> services;
+    private List<ComputeService> computeServices;
 
     @Option(name = "--provider")
     protected String provider;
 
 
+
+     protected void printComputeProviders(List<ComputeService> computeServices, String indent, PrintStream out) {
+        out.println(String.format(PROVIDERFORMAT, "[id]", "[type]"));
+        for (ComputeService computeService : computeServices) {
+            out.println(String.format(PROVIDERFORMAT, computeService.getContext().getProviderSpecificContext().getId(), "compute"));
+        }
+    }
 
     protected void printNodes(Set<? extends ComputeMetadata> nodes, String indent, PrintStream out) {
         out.println(String.format(NODEFORMAT, indent, "[id]", "[location]", "[hardware]", "[group]", "[state]"));
@@ -139,19 +147,19 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
         this.configurationAdmin = configurationAdmin;
     }
 
-    public void setServices(List<ComputeService> services) {
-        this.services = services;
+    public void setComputeServices(List<ComputeService> computeServices) {
+        this.computeServices = computeServices;
     }
 
     protected List<ComputeService> getComputeServices() {
         if (provider == null) {
-            return services;
+            return computeServices;
         } else {
             return Collections.singletonList(getComputeService());
         }
     }
 
     protected ComputeService getComputeService() {
-        return ComputeHelper.getComputeService(provider, services);
+        return ComputeHelper.getComputeService(provider, computeServices);
     }
 }

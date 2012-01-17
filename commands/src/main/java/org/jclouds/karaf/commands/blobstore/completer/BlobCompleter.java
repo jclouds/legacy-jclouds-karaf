@@ -18,6 +18,7 @@
 
 package org.jclouds.karaf.commands.blobstore.completer;
 
+import org.jclouds.blobstore.BlobStore;
 import org.jclouds.karaf.commands.cache.CacheProvider;
 
 public class BlobCompleter extends BlobStoreCompleterSupport {
@@ -29,8 +30,15 @@ public class BlobCompleter extends BlobStoreCompleterSupport {
     @Override
     public void updateCache() {
         cache.clear();
-        for (String container : listContainers()) {
-            cache.addAll(listBlobs(container));
+        for (BlobStore blobStore : getBlobStoreServices()) {
+            updateCache(blobStore);
+        }
+    }
+
+    @Override
+    public void updateCache(BlobStore blobStore) {
+        for (String container : listContainers(blobStore)) {
+            cache.addAll(listBlobs(blobStore,container));
         }
     }
 }

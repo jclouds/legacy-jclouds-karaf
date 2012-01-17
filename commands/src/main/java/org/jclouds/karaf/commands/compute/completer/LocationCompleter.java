@@ -30,11 +30,9 @@ public class LocationCompleter extends ComputeCompleterSupport {
     }
 
     @Override
-    public void updateCache() {
-        cache.clear();
-        ComputeService service = getService();
-        if (service != null) {
-            Set<? extends Location> locations = service.listAssignableLocations();
+    public void updateCache(ComputeService  computeService) {
+        if (computeService != null) {
+            Set<? extends Location> locations = computeService.listAssignableLocations();
             if (locations != null) {
                 for (Location location : locations) {
                     cache.add(location.getId());
