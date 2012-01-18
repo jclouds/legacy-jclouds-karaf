@@ -23,15 +23,15 @@ import org.apache.felix.gogo.commands.Command;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "destroy")
-public class DestroyCommand extends ComputeCommandSupport {
+@Command(scope = "jclouds", name = "node-suspend")
+public class NodeSuspendCommand extends ComputeCommandSupport {
 
-    @Argument
+    @Argument(name = "id", description = "The id of the node.", required = true, multiValued = false)
     private String id;
 
     @Override
     protected Object doExecute() throws Exception {
-        getComputeService().destroyNode(id);
+        getComputeService().suspendNode(id);
         return null;
     }
 }

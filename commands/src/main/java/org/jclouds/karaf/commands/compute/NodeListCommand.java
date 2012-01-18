@@ -17,21 +17,19 @@
  */
 package org.jclouds.karaf.commands.compute;
 
-import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.jclouds.karaf.utils.compute.ComputeHelper;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "resume")
-public class ResumeCommand extends ComputeCommandSupport {
-
-    @Argument
-    private String id;
+@Command(scope = "jclouds", name = "node-list")
+public class NodeListCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        getComputeService().resumeNode(id);
+        printNodes(getComputeService().listNodes(), "", System.out);
         return null;
     }
+
 }

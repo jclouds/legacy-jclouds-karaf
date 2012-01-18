@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2011, the original authors
  *
  * ====================================================================
@@ -15,26 +15,21 @@
  * limitations under the License.
  * ====================================================================
  */
-package org.jclouds.karaf.commands.compute;
 
-import org.apache.felix.gogo.commands.Command;
-import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.domain.Hardware;
+package org.jclouds.karaf.commands.blobstore.completer;
 
-/**
- * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
- */
-@Command(scope = "jclouds", name = "list-hardwares")
-public class HardwaresCommand extends ComputeCommandSupport {
+import org.jclouds.blobstore.BlobStore;
+import org.jclouds.karaf.commands.cache.CacheProvider;
 
-    @Override
-    protected Object doExecute() throws Exception {
-        for (ComputeService service : getComputeServices()) {
-            for (Hardware hardware : service.listHardwareProfiles()) {
-                System.out.println(hardware.toString());
-            }
-        }
-        return null;
+public class ContainerCompleter extends BlobStoreCompleterSupport {
+
+    public ContainerCompleter() {
+        cache = CacheProvider.getCache("container");
     }
 
+
+    @Override
+    public void updateCache(BlobStore blobStore) {
+        cache.addAll(listContainers(blobStore));
+    }
 }

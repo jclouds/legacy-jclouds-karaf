@@ -17,29 +17,40 @@
  */
 package org.jclouds.karaf.commands.blobstore;
 
-import org.apache.felix.gogo.commands.Option;
-import org.apache.karaf.shell.console.OsgiCommandSupport;
-import org.jclouds.blobstore.BlobStore;
-import org.jclouds.blobstore.domain.Blob;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import org.apache.felix.gogo.commands.Option;
+import org.apache.karaf.shell.console.OsgiCommandSupport;
+import org.jclouds.blobstore.BlobStore;
+import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.compute.ComputeService;
+import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author iocanel
  */
 public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
 
-    private static final Logger logger = LoggerFactory.getLogger(BlobStoreCommandSupport.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BlobStoreCommandSupport.class);
+    private static final int SIZE = 32 * 1024;
+
+    public static final String PROVIDERFORMAT = "%-16s %s";
 
     private List<BlobStore> services;
+    private Set<String> containerCache;
+    private Set<String> blobCache;
 
     @Option(name = "--provider")
     protected String provider;
@@ -57,96 +68,226 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
     }
 
     protected BlobStore getBlobStore() {
-        if (provider != null) {
-            BlobStore service = null;
-            for (BlobStore svc : services) {
-                if (provider.equals(service.getContext().getProviderSpecificContext().getId())) {
-                    service = svc;
-                    break;
-                }
-            }
-            if (service == null) {
-                throw new IllegalArgumentException("Provider " + provider + " not found");
-            }
-            return service;
-        } else {
-            if (services.size() != 1) {
-                StringBuilder sb = new StringBuilder();
-                for (BlobStore svc : services) {
-                    if (sb.length() > 0) {
-                        sb.append(", ");
-                    }
-                    sb.append(svc.getContext().getProviderSpecificContext().getId());
-                }
-                throw new IllegalArgumentException("Multiple providers are present, please select one using the --provider argument in the following values: " + sb.toString());
-            }
-            return services.get(0);
-        }
+        return BlobStoreHelper.getBlobStore(provider, services);
     }
 
-       public Object read(String bucket, String blobName) {
+    /**
+     * Reads an Object from the blob store.
+     *
+     * @param containerName
+     * @param blobName
+     * @return
+     */
+    public Object read(String containerName, String blobName) {
         Object result = null;
         ObjectInputStream ois = null;
 
-            BlobStore blobStore = getBlobStore();
-            blobStore.createContainerInLocation(null, bucket);
+        BlobStore blobStore = getBlobStore();
+        blobStore.createContainerInLocation(null, containerName);
 
-            InputStream is = blobStore.getBlob(bucket, blobName).getPayload().getInput();
+        InputStream is = blobStore.getBlob(containerName, blobName).getPayload().getInput();
 
-            try {
-                ois = new ObjectInputStream(is);
-                result = ois.readObject();
-            } catch (IOException e) {
-                logger.error("Error reading object.",e);
-            } catch (ClassNotFoundException e) {
-                logger.error("Error reading object.", e);
-            } finally {
-                if (ois != null) {
-                    try {
-                        ois.close();
-                    } catch (IOException e) {
-                    }
-                }
-
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (IOException e) {
-                    }
+        try {
+            ois = new ObjectInputStream(is);
+            result = ois.readObject();
+        } catch (IOException e) {
+            LOGGER.error("Error reading object.", e);
+        } catch (ClassNotFoundException e) {
+            LOGGER.error("Error reading object.", e);
+        } finally {
+            if (ois != null) {
+                try {
+                    ois.close();
+                } catch (IOException e) {
                 }
             }
+
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                }
+            }
+        }
         return result;
     }
 
 
-    public void write(String bucket, String blobName, Object object) {
-            BlobStore blobStore = getBlobStore();
-            Blob blob = blobStore.blobBuilder(blobName).build();
+    /**
+     * Returns an InputStream to a {@link Blob}.
+     * @param containerName
+     * @param blobName
+     * @return
+     */
+    public InputStream getBlobInputStream(String containerName, String blobName) {
+      return  getBlobStore().getBlob(containerName, blobName).getPayload().getInput();
+    }
 
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = null;
+    /**
+     * Writes to the {@link Blob} by serializing an Object.
+     * @param containerName
+     * @param blobName
+     * @param object
+     */
+    public void write(String containerName, String blobName, Object object) {
+        BlobStore blobStore = getBlobStore();
+        Blob blob = blobStore.blobBuilder(blobName).build();
+        blob.setPayload(toBytes(object));
+        blobStore.putBlob(containerName, blob);
+    }
 
-            try {
-                oos = new ObjectOutputStream(baos);
-                oos.writeObject(object);
-                blob.setPayload(baos.toByteArray());
-                blobStore.putBlob(bucket, blob);
-            } catch (IOException e) {
-                logger.error("Error while writing blob", e);
-            } finally {
-                if (oos != null) {
-                    try {
-                        oos.close();
-                    } catch (IOException e) {
-                    }
-                }
+    /**
+     * Writes to the {@link Blob} using an InputStream.
+     * @param bucket
+     * @param blobName
+     * @param is
+     */
+    public void write(String bucket, String blobName, InputStream is) {
+        BlobStore blobStore = getBlobStore();
+        Blob blob = blobStore.blobBuilder(blobName).build();
+        blob.setPayload(is);
+        blobStore.putBlob(bucket, blob);
+        try {
+            is.close();
+        } catch (Exception ex) {
+            LOGGER.warn("Error closing input stream.", ex);
+        }
+    }
 
-                if (baos != null) {
-                    try {
-                        baos.close();
-                    } catch (IOException e) {
-                    }
+    public byte[] toBytes(Object object) {
+        byte[] result = null;
+
+        if (object instanceof byte[]) {
+            return (byte[]) object;
+        }
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = null;
+
+        try {
+            oos = new ObjectOutputStream(baos);
+            oos.writeObject(object);
+            result = baos.toByteArray();
+        } catch (IOException e) {
+            LOGGER.error("Error while writing blob", e);
+        } finally {
+            if (oos != null) {
+                try {
+                    oos.close();
+                } catch (IOException e) {
                 }
             }
+
+            if (baos != null) {
+                try {
+                    baos.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Reads a bye[] from a URL.
+     *
+     * @param url
+     * @return
+     */
+    public byte[] readFromUrl(URL url) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataInputStream dis = null;
+        try {
+            dis = new DataInputStream(url.openStream());
+            int size = 0;
+            while ((size = dis.available()) > 0) {
+                byte[] buffer = new byte[size];
+                baos.write(buffer);
+            }
+            return baos.toByteArray();
+        } catch (IOException e) {
+            LOGGER.warn("Failed to read from stream.", e);
+        } finally {
+            if (dis != null) {
+                try {
+                    dis.close();
+                } catch (Exception e) {
+                    //Ignore
+                }
+            }
+
+            if (baos != null) {
+                try {
+                    baos.close();
+                } catch (Exception e) {
+                    //Ignore
+                }
+            }
+
+        }
+        return new byte[0];
+    }
+
+
+    /**
+     * Copies data from {@link InputStream} to {@link OutputStream}.
+     *
+     * @param is Source {@link InputStream}.
+     * @param os Target {@link OutputStream}.
+     */
+    public void copy(InputStream is, OutputStream os) {
+        byte[] buffer = new byte[SIZE];
+        int read = 0;
+        try {
+            read = is.read(buffer);
+            while (read >= 0) {
+                if (read > 0) {
+                    os.write(buffer, 0, read);
+                }
+                read = is.read(buffer);
+            }
+        } catch (IOException e) {
+
+        } finally {
+
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (Exception ex) {
+                    //Ignore
+                }
+            }
+
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (Exception ex) {
+                    //Ignore
+                }
+            }
+        }
+    }
+
+     protected void printBlobStoreProviders(List<BlobStore> blobStores, String indent, PrintStream out) {
+        out.println(String.format(PROVIDERFORMAT, "[id]", "[type]"));
+        for (BlobStore blobStore : blobStores) {
+            out.println(String.format(PROVIDERFORMAT, blobStore.getContext().getProviderSpecificContext().getId(), "blob"));
+        }
+    }
+
+    public Set<String> getContainerCache() {
+        return containerCache;
+    }
+
+    public void setContainerCache(Set<String> containerCache) {
+        this.containerCache = containerCache;
+    }
+
+    public Set<String> getBlobCache() {
+        return blobCache;
+    }
+
+    public void setBlobCache(Set<String> blobCache) {
+        this.blobCache = blobCache;
     }
 }

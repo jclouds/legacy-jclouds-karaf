@@ -35,7 +35,7 @@
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.oauth-commons/${net.oauth.bundle.version}</bundle>
         <bundle dependency='true'>mvn:com.google.code.gson/gson/${gson.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.oauth-commons/${net.oauth.bundle.version}</bundle>
-        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.bcprov-jdk15/${bcprov.bundle.version}</bundle>
+        <bundle dependency='true'>mvn:org.bouncycastle/bcprov-jdk15/${bcprov.version}</bundle>
         <bundle dependency='true'>mvn:com.sun.jersey/jersey-core/${jersey.version}</bundle>
         <bundle>mvn:org.jclouds/jclouds-core/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds/jclouds-blobstore/${jclouds.version}</bundle>
@@ -52,6 +52,7 @@
     <feature name='jclouds-api-filesystem' description='JClouds - API - FileSystem' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-io/${commons-io.bundle.version}</bundle>
         <bundle>mvn:org.jclouds.api/filesystem/${jclouds.version}</bundle>
     </feature>
 
@@ -77,7 +78,6 @@
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
         <bundle>mvn:org.jclouds.api/vcloud/${jclouds.version}</bundle>
     </feature>
-
 
     <!-- Drivers -->
     <feature name='jclouds-driver-jsch' description='JClouds - Drivers - Jsch' version='${project.version}'
@@ -112,7 +112,7 @@
 
     <feature name='jclouds-driver-bouncycastle' description='JClouds - Drivers - Bouncycastle' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
-        <bundle>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.bcprov-jdk16/${bcprov.bundle.version}</bundle>
+        <bundle dependency='true'>mvn:org.bouncycastle/bcprov-jdk15/${bcprov.version}</bundle>
     </feature>
 
     <feature name='jclouds-aws-cloudwatch' description='Amazon Web Service - Cloudwatch' version='${project.version}' resolver='(obr)'>
@@ -240,6 +240,7 @@
         <feature version='${project.version}'>jclouds-compute</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
         <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.api/cloudsigma/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/cloudsigma-zrh/${jclouds.version}</bundle>
     </feature>
 
@@ -415,6 +416,7 @@
     </feature>
 
     <feature name="jclouds-services" description="OSGi Service Factories for JClouds" version="${project.version}" resolver="(obr)">
+        <configfile finalname="/etc/org.jclouds.credentials.cfg">mvn:org.jclouds.karaf/jclouds-karaf/${project.version}/cfg/credentials</configfile>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <feature version='${project.version}'>jclouds-compute</feature>
@@ -429,6 +431,11 @@
         <feature version='${project.version}'>jclouds-compute</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
         <bundle>mvn:org.jclouds.karaf/commands/${project.version}</bundle>
+    </feature>
+
+     <feature name="jclouds-url-handler" description="Url Handler for JClouds Blobs" version="${project.version}" resolver="(obr)">
+        <feature version='${project.version}'>jclouds</feature>
+        <bundle>mvn:org.jclouds.karaf/urlhandler/${project.version}</bundle>
     </feature>
 
 </features>

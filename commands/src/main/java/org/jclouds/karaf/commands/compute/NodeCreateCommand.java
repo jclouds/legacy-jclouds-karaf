@@ -24,15 +24,17 @@ import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.compute.ComputeService;
+import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.ec2.compute.options.EC2TemplateOptions;
+import org.jclouds.karaf.utils.compute.ComputeHelper;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "create")
-public class CreateCommand extends ComputeCommandSupport {
+@Command(scope = "jclouds", name = "node-create")
+public class NodeCreateCommand extends ComputeCommandSupport {
 
     @Option(name = "--smallest")
     private boolean smallest;
@@ -42,12 +44,6 @@ public class CreateCommand extends ComputeCommandSupport {
 
     @Option(name = "--biggest")
     private boolean biggest;
-
-    @Option(name = "--locationId")
-    private String locationId;
-
-    @Option(name = "--imageId")
-    private String imageId;
 
     @Option(name = "--hardwareId")
     private String hardwareId;
@@ -61,8 +57,20 @@ public class CreateCommand extends ComputeCommandSupport {
     @Option(name = "--ec2-no-key-pair")
     private String ec2NoKeyPair;
 
-    @Argument(name = "group", index = 0, multiValued = false, required = true, description = "Node group")
+
+    @Argument(name = "imageId", index = 0, multiValued = false, required = true, description = "Image")
+    private String imageId;
+
+    @Argument(name = "locationId", index = 1, multiValued = false, required = true, description = "Location")
+    private String locationId;
+
+    @Argument(name = "group", index = 2, multiValued = false, required = true, description = "Node group")
     private String group;
+
+    @Argument(name = "number", index = 3, multiValued = false, required = false, description = "Number of nodes to create")
+    private Integer number  = 1;
+
+
 
     @Override
     protected Object doExecute() throws Exception {
@@ -98,9 +106,17 @@ public class CreateCommand extends ComputeCommandSupport {
             builder.build().getOptions().as(EC2TemplateOptions.class).noKeyPair();
         }
 
-        Set<? extends NodeMetadata> metadatas = service.createNodesInGroup(group, 1, builder.build());
-        for (NodeMetadata metadata : metadatas) {
-            System.out.println(metadata.toString());
+        Set<? extends NodeMetadata> metadatas = null;
+
+        try {
+            metadatas = service.createNodesInGroup(group, number, builder.build());
+        } catch (RunNodesException ex) {
+            System.out.println("Failed to create nodes:" + ex.getMessage());
+        }
+
+        if (metadatas != null && !metadatas.isEmpty()) {
+            System.out.println("Created nodes:");
+            printNodes(metadatas, "", System.out);
         }
         return null;
     }

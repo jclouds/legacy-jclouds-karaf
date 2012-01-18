@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2011, the original authors
  *
  * ====================================================================
@@ -17,28 +17,42 @@
  */
 package org.jclouds.karaf.commands.compute;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Map;
+import javax.annotation.Nullable;
+import com.google.common.base.Predicate;
+import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
-import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.domain.ComputeMetadata;
+import org.jclouds.compute.domain.ExecResponse;
+import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.domain.Credentials;
+
+
+import static org.jclouds.compute.options.RunScriptOptions.Builder.overrideCredentialsWith;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "list-nodes")
-public class NodesCommand extends ComputeCommandSupport {
+@Command(scope = "jclouds", name = "group-runscript")
+public class GroupRunScriptCommand extends NodeRunScriptSupport {
 
-    @Option(name = "--provider")
-    private String provider;
+    @Argument(index = 0, name = "group", description = "The group of nodes.", required = true, multiValued = false)
+    private String group;
 
     @Override
-    protected Object doExecute() throws Exception {
-        for (ComputeService service : getComputeServices()) {
-            for (ComputeMetadata node : service.listNodes()) {
-                System.out.println(node.toString());
-            }
-        }
+    public String getId() {
         return null;
     }
 
+    @Override
+    public String getGroup() {
+        return group;
+    }
 }

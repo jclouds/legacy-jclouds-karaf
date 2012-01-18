@@ -3,7 +3,7 @@
     <parent>
         <artifactId>jclouds-karaf-pom</artifactId>
         <groupId>org.jclouds</groupId>
-        <version>1.2.1_4-SNAPSHOT</version>
+        <version>1.2.3-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -25,7 +25,7 @@
                         <Import-Package>
                             org.jclouds.ec2*;version=${jclouds.version};resolution:=optional,
                             *</Import-Package>
-                        <Private-Package>org.jclouds.karaf.services</Private-Package>
+                        <Private-Package>org.jclouds.karaf.services*</Private-Package>
                         <Export-Service>org.jclouds.compute.ComputeService,org.jclouds.blobstore.BlobStore</Export-Service>
                     </instructions>
                 </configuration>
@@ -48,7 +48,7 @@
         </dependency>
         <dependency>
             <groupId>org.jclouds.driver</groupId>
-            <artifactId>jclouds-jsch</artifactId>
+            <artifactId>jclouds-sshj</artifactId>
         </dependency>
         <dependency>
             <groupId>org.osgi</groupId>

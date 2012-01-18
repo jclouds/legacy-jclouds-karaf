@@ -17,39 +17,58 @@
  */
 package org.jclouds.karaf.services;
 
+import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
-
 import com.google.common.collect.ImmutableSet;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.ComputeServiceContextFactory;
+import org.jclouds.karaf.services.modules.ConfigurationAdminCredentialStore;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
-import org.jclouds.ssh.jsch.config.JschSshClientModule;
+import org.jclouds.sshj.config.SshjSshClientModule;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedServiceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 public class ComputeServiceFactory implements ManagedServiceFactory {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ComputeServiceFactory.class);
+
     public static final String PROVIDER = "provider";
     public static final String IDENTITY = "identity";
     public static final String CREDENTIAL = "credential";
 
-    private final Map<String, ServiceRegistration> registrations =
-            new ConcurrentHashMap<String, ServiceRegistration>();
+
+    private final Map<String, ServiceRegistration> registrations = new ConcurrentHashMap<String, ServiceRegistration>();
 
     private final BundleContext bundleContext;
+    private ConfigurationAdmin configurationAdmin;
+    private ServiceReference configurationAdminReference;
+
 
     public ComputeServiceFactory(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
+    }
+
+    public void init() {
+        configurationAdminReference = bundleContext.getServiceReference(ConfigurationAdmin.class.getName());
+        configurationAdmin = (ConfigurationAdmin) bundleContext.getService(configurationAdminReference);
+    }
+
+    public void destroy() {
+      bundleContext.ungetService(configurationAdminReference);
     }
 
     public String getName() {
@@ -70,14 +89,20 @@ public class ComputeServiceFactory implements ManagedServiceFactory {
                 String provider = (String) properties.get(PROVIDER);
                 String identity = (String) properties.get(IDENTITY);
                 String credential = (String) properties.get(CREDENTIAL);
+
+                ConfigurationAdminCredentialStore credentialStore = new ConfigurationAdminCredentialStore(configurationAdmin.getConfiguration(ConfigurationAdminCredentialStore.CREDENTIAL_STORE_PID));
                 ComputeServiceContext context = new ComputeServiceContextFactory()
                         .createContext(provider, identity, credential,
-                                ImmutableSet.of(new Log4JLoggingModule(), new JschSshClientModule()), props);
+                                ImmutableSet.of(new Log4JLoggingModule(), new SshjSshClientModule(), credentialStore), props);
                 ComputeService client = context.getComputeService();
+
                 newRegistration = bundleContext.registerService(
                         ComputeService.class.getName(), client, properties);
             }
-        } finally {
+        } catch (Exception ex) {
+            LOGGER.error("Error creating compute service.",ex);
+        }
+        finally {
             ServiceRegistration oldRegistration = (newRegistration == null)
                     ? registrations.remove(pid)
                     : registrations.put(pid, newRegistration);
@@ -86,7 +111,6 @@ public class ComputeServiceFactory implements ManagedServiceFactory {
                 oldRegistration.unregister();
             }
         }
-
     }
 
     public void deleted(String pid) {
@@ -96,4 +120,5 @@ public class ComputeServiceFactory implements ManagedServiceFactory {
             oldRegistration.unregister();
         }
     }
+
 }

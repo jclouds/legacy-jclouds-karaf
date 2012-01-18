@@ -23,7 +23,7 @@
     <parent>
         <artifactId>jclouds-karaf-pom</artifactId>
         <groupId>org.jclouds</groupId>
-        <version>1.2.1_4-SNAPSHOT</version>
+        <version>1.2.3-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -53,6 +53,11 @@
                                     <file>target/feature.xml</file>
                                     <type>xml</type>
                                     <classifier>features</classifier>
+                                </artifact>
+                                <artifact>
+                                    <file>target/credentials.cfg</file>
+                                    <type>cfg</type>
+                                    <classifier>credentials</classifier>
                                 </artifact>
                             </artifacts>
                         </configuration>

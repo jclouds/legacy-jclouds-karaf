@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2011, the original authors
  *
  * ====================================================================
@@ -17,21 +17,42 @@
  */
 package org.jclouds.karaf.commands.compute;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Map;
+import javax.annotation.Nullable;
+import com.google.common.base.Predicate;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.apache.felix.gogo.commands.Option;
+import org.jclouds.compute.domain.ExecResponse;
+import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.domain.Credentials;
+
+
+import static org.jclouds.compute.options.RunScriptOptions.Builder.overrideCredentialsWith;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "suspend")
-public class SuspendCommand extends ComputeCommandSupport {
+@Command(scope = "jclouds", name = "node-runscript")
+public class NodeRunScriptCommand extends NodeRunScriptSupport {
 
-    @Argument
+    @Argument(index = 0, name = "id", description = "The id of the node.", required = true, multiValued = false)
     private String id;
 
     @Override
-    protected Object doExecute() throws Exception {
-        getComputeService().suspendNode(id);
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public String getGroup() {
         return null;
     }
 }

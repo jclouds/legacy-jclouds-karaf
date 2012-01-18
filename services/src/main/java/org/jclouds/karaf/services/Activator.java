@@ -29,12 +29,16 @@ import org.osgi.service.cm.ManagedServiceFactory;
  */
 public class Activator implements BundleActivator {
 
+    ComputeServiceFactory computeFactory;
+    BlobStoreServiceFactory blobStoreFactory;
+
     public void start(BundleContext context) throws Exception {
         registerComputeServiceFactory(context);
         registerBlobstoreServiceFactory(context);
     }
 
     public void stop(BundleContext context) throws Exception {
+        computeFactory.destroy();
     }
 
     /**
@@ -44,7 +48,8 @@ public class Activator implements BundleActivator {
     private void registerComputeServiceFactory(BundleContext context) {
         Hashtable<String, Object> properties = new Hashtable<String, Object>();
         properties.put(Constants.SERVICE_PID, "org.jclouds.compute");
-        ComputeServiceFactory computeFactory = new ComputeServiceFactory(context);
+        computeFactory = new ComputeServiceFactory(context);
+        computeFactory.init();
         context.registerService(ManagedServiceFactory.class.getName(),
                 computeFactory, properties);
     }
@@ -56,7 +61,7 @@ public class Activator implements BundleActivator {
     private void registerBlobstoreServiceFactory(BundleContext context) {
        Hashtable<String, Object> properties = new Hashtable<String, Object>();
         properties.put(Constants.SERVICE_PID, "org.jclouds.blobstore");
-        BlobStoreServiceFactory blobStoreFactory = new BlobStoreServiceFactory(context);
+        blobStoreFactory = new BlobStoreServiceFactory(context);
         context.registerService(ManagedServiceFactory.class.getName(),
                 blobStoreFactory, properties);
     }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2011, the original authors
  *
  * ====================================================================
@@ -15,30 +15,30 @@
  * limitations under the License.
  * ====================================================================
  */
-package org.jclouds.karaf.commands.compute;
 
-import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.Option;
+package org.jclouds.karaf.commands.compute.completer;
+
+import java.util.Set;
+import org.apache.karaf.shell.console.Completer;
 import org.jclouds.compute.ComputeService;
-import org.jclouds.domain.Location;
+import org.jclouds.compute.domain.Image;
+import org.jclouds.karaf.commands.cache.CacheProvider;
 
-/**
- * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
- */
-@Command(scope = "jclouds", name = "list-locations")
-public class LocationsCommand extends ComputeCommandSupport {
+public class ImageCompleter extends ComputeCompleterSupport implements Completer {
 
-    @Option(name = "--provider")
-    private String provider;
-
-    @Override
-    protected Object doExecute() throws Exception {
-        for (ComputeService service : getComputeServices()) {
-            for (Location location : service.listAssignableLocations()) {
-                System.out.println(location.toString());
-            }
-        }
-        return null;
+    public ImageCompleter() {
+        cache = CacheProvider.getCache("image");
     }
 
+    @Override
+    public void updateCache(ComputeService computeService) {
+        if (computeService != null) {
+            Set<? extends Image> images = computeService.listImages();
+            if (images != null) {
+                for (Image image : images) {
+                    cache.add(image.getId());
+                }
+            }
+        }
+    }
 }

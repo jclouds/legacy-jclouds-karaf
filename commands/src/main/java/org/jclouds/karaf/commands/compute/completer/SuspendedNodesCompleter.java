@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2011, the original authors
  *
  * ====================================================================
@@ -15,26 +15,18 @@
  * limitations under the License.
  * ====================================================================
  */
-package org.jclouds.karaf.commands.compute;
 
-import org.apache.felix.gogo.commands.Command;
-import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.domain.Image;
+package org.jclouds.karaf.commands.compute.completer;
 
-/**
- * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
- */
-@Command(scope = "jclouds", name = "list-images")
-public class ImagesCommand extends ComputeCommandSupport {
+import java.util.List;
+import org.apache.karaf.shell.console.Completer;
+import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.NodeState;
+
+public class SuspendedNodesCompleter extends NodesCompleter implements Completer {
 
     @Override
-    protected Object doExecute() throws Exception {
-        for (ComputeService service : getComputeServices()) {
-            for (Image image : service.listImages()) {
-                System.out.println(image.toString());
-            }
-        }
-        return null;
+    public boolean apply(NodeMetadata node) {
+        return node.getState().equals(NodeState.SUSPENDED);
     }
-
 }
