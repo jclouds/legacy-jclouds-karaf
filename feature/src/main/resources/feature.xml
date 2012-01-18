@@ -241,6 +241,7 @@
         <feature version='${project.version}'>jclouds-compute</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
         <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.api/cloudsigma/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/cloudsigma-zrh/${jclouds.version}</bundle>
     </feature>
 
