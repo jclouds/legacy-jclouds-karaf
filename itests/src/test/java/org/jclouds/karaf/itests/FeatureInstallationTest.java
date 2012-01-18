@@ -43,7 +43,7 @@ public class FeatureInstallationTest extends JcloudsKarafTestSupport {
 
     @Before
     public void setUp() {
-        System.err.println(executeCommand("features:addurl mvn:org.jclouds.karaf/jclouds-karaf/1.3.0-SNAPSHOT/xml/features"));
+        System.err.println(executeCommand("features:addurl mvn:org.jclouds.karaf/jclouds-karaf/1.3.1-SNAPSHOT/xml/features"));
     }
 
     @After
