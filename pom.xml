@@ -127,38 +127,38 @@
         <module>feature</module>
         <module>services</module>
         <module>urlhandler</module>
+        <module>itests</module>
     </modules>
 
     <properties>
-        <osgi.version>4.2.0</osgi.version>
+        <aopalliance.bundle.version>1.0_5</aopalliance.bundle.version>
+        <bcprov.version>1.46</bcprov.version>
+        <commons-io.bundle.version>1.4_2</commons-io.bundle.version>
         <configadmin.version>1.2.8</configadmin.version>
-        <karaf.version>2.2.5</karaf.version>
-        <jclouds.version>1.3.0</jclouds.version>
-        <felix.configadmin.version>1.2.8</felix.configadmin.version>
-        <slf4j.version>1.5.8</slf4j.version>
-        <junit.version>4.8.2</junit.version>
         <easymock.version>3.0</easymock.version>
-
-        <javax.inject.bundle.version>1_1</javax.inject.bundle.version>
-        <jsr305.bundle.version>1.3.9_1</jsr305.bundle.version>
-        <guice.version>3.0</guice.version>
+        <felix.configadmin.version>1.2.8</felix.configadmin.version>
         <gson.version>2.1</gson.version>
         <guava.version>11.0</guava.version>
         <guava.bundle.version>11.0.0</guava.bundle.version>
-        <aopalliance.bundle.version>1.0_5</aopalliance.bundle.version>
-        <netty.bundle.version>3.2.3.Final_2</netty.bundle.version>
-        <net.oauth.bundle.version>20100527_1</net.oauth.bundle.version>
-        <bcprov.version>1.46</bcprov.version>
-        <jersey.version>1.6</jersey.version>
-        <java-xmlbuilder.bundle.version>0.3_1</java-xmlbuilder.bundle.version>
-        <joda.version>1.6.2</joda.version>
+        <guice.version>3.0</guice.version>
         <httpclient.version>4.1.1</httpclient.version>
         <httpcore.version>4.1</httpcore.version>
+        <java-xmlbuilder.bundle.version>0.3_1</java-xmlbuilder.bundle.version>
+        <javax.inject.bundle.version>1_1</javax.inject.bundle.version>
+        <jclouds.version>1.3.0</jclouds.version>
+        <jersey.version>1.6</jersey.version>
+        <joda.version>1.6.2</joda.version>
         <jsch.bundle.version>0.1.44_2</jsch.bundle.version>
-        <commons-io.bundle.version>1.4_2</commons-io.bundle.version>
-        <sshj.version>0.7.0</sshj.version>
-        <jzlib.version>1.0.7</jzlib.version>
+        <jsr305.bundle.version>1.3.9_1</jsr305.bundle.version>
+        <junit.version>4.8.2</junit.version>
         <jzlib.bundle.version>1.0.7_1</jzlib.bundle.version>
+        <jzlib.version>1.0.7</jzlib.version>
+        <karaf.version>2.2.5</karaf.version>
+        <net.oauth.bundle.version>20100527_1</net.oauth.bundle.version>
+        <netty.bundle.version>3.2.3.Final_2</netty.bundle.version>
+        <osgi.version>4.2.0</osgi.version>
+        <slf4j.version>1.5.8</slf4j.version>
+        <sshj.version>0.7.0</sshj.version>
 
         <!-- Plugin Versions -->
         <maven-bundle-plugin.version>2.1.0</maven-bundle-plugin.version>
