@@ -206,6 +206,7 @@
         <bundle dependency='true'>mvn:org.jclouds/jclouds-loadbalancer/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.api/cloudloadbalancers/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/cloudloadbalancers-us/${jclouds.version}</bundle>
     </feature>
 
