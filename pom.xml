@@ -113,6 +113,13 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <configuration>
+                    <executable>${gpg.command}</executable>
+                    <passphrase>${gpg.passphrase}</passphrase>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
