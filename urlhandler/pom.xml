@@ -29,7 +29,6 @@
 
     <groupId>org.jclouds.karaf</groupId>
     <artifactId>urlhandler</artifactId>
-    <version>1.2.3-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>JClouds :: Karaf :: URL Handler</name>
 
