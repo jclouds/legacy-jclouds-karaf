@@ -122,7 +122,7 @@
         <module>feature</module>
         <module>services</module>
         <module>urlhandler</module>
-        <module>itests</module>
+        <!--module>itests</module-->
     </modules>
 
     <properties>
