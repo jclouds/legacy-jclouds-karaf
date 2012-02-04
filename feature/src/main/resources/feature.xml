@@ -31,10 +31,9 @@
 
     <feature name='jclouds' description='JClouds' version='${project.version}' resolver='(obr)'>
         <feature version='${guice.version}'>guice</feature>
-        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.guava/${guava.bundle.version}</bundle>
+        <bundle dependency='true'>mvn:com.googlecode.guava-osgi/guava-osgi/${guava.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.oauth-commons/${net.oauth.bundle.version}</bundle>
         <bundle dependency='true'>mvn:com.google.code.gson/gson/${gson.version}</bundle>
-        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.oauth-commons/${net.oauth.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.bouncycastle/bcprov-jdk15/${bcprov.version}</bundle>
         <bundle dependency='true'>mvn:com.sun.jersey/jersey-core/${jersey.version}</bundle>
         <bundle>mvn:org.jclouds/jclouds-core/${jclouds.version}</bundle>
@@ -79,10 +78,25 @@
         <bundle>mvn:org.jclouds.api/vcloud/${jclouds.version}</bundle>
     </feature>
 
+    <feature name='jclouds-api-byon' description='JClouds - API - Byon' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds-compute</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
+        <bundle dependency='true'>mvn:org.yaml/snakeyaml/${snakeyaml.version}</bundle>
+        <bundle>mvn:org.jclouds.api/byon/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name='jclouds-api-nova' description='JClouds - API - Nova' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds-compute</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
+        <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.api/nova/${jclouds.version}</bundle>
+    </feature>
+
 
     <!-- Drivers -->
-    <feature name='jclouds-driver-jsch' description='JClouds - Drivers - Jsch' version='${project.version}'
-             resolver='(obr)'>
+    <feature name='jclouds-driver-jsch' description='JClouds - Drivers - Jsch' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-compute</feature>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jsch/${jsch.bundle.version}</bundle>
@@ -159,7 +173,7 @@
         <bundle>mvn:org.jclouds.provider/azureblob/${jclouds.version}</bundle>
     </feature>
 
-   <!--feature name='jclouds-bluelock-vcloud-vcenterprise' description='vCloud implementation targeted to Bluelock vCloud Enterprise' version='${project.version}' resolver='(obr)'>
+<!--   <feature name='jclouds-bluelock-vcloud-vcenterprise' description='vCloud implementation targeted to Bluelock vCloud Enterprise' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
@@ -168,7 +182,7 @@
         <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/bluelock-vcloud-vcenterprise/${jclouds.version}</bundle>
-    </feature-->
+    </feature>-->
  
     <feature name='jclouds-bluelock-vcloud-zone01' description='vCloud implementation targeted to Bluelock vCloud Zone01' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
@@ -246,6 +260,15 @@
         <bundle>mvn:org.jclouds.provider/cloudsigma-zrh/${jclouds.version}</bundle>
     </feature>
 
+    <feature name='jclouds-cloudsigma-lvs' description='CloudSigma ZRH' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-compute</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.api/cloudsigma/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/cloudsigma-lvs/${jclouds.version}</bundle>
+    </feature>
+
     <feature name='jclouds-elastichosts-lon-b' description='Elastichosts Bluesquare London' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-compute</feature>
@@ -271,6 +294,24 @@
         <bundle dependency='true'>mvn:org.jclouds.api/elasticstack/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/elastichosts-sat-p/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name='jclouds-elastichosts-lax-p' description='Elastichosts Peer1 Los Angeles' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-compute</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <bundle dependency='true'>mvn:org.jclouds.api/elasticstack/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/elastichosts-lax-p/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name='jclouds-elastichosts-tor-p' description='Elastichosts Peer1 Toronto' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-compute</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <bundle dependency='true'>mvn:org.jclouds.api/elasticstack/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/elastichosts-tor-p/${jclouds.version}</bundle>
     </feature>
 
     <feature name='jclouds-eucalyptus-s3' description='Eucalyptus Partner - S3' version='${project.version}' resolver='(obr)'>
@@ -318,11 +359,28 @@
         <bundle>mvn:org.jclouds.provider/greenhousedata-element-vcloud/${jclouds.version}</bundle>
     </feature>
 
+    <feature name='jclouds-hpcloud-objectstorage-lvs' description='HP Cloud Object Storage in Las Vegas' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
+        <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/swift/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/hpcloud-objectstorage-lvs/${jclouds.version}</bundle>
+    </feature>
+
     <feature name='jclouds-ninefold-storage' description='Ninefold Storage' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <bundle dependency='true'>mvn:org.jclouds.api/atmos/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/ninefold-storage/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name='jclouds-ninefold-compute' description='Ninefold Compute' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-compute</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <bundle dependency='true'>mvn:org.jclouds.api/cloudstack/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/ninefold-compute/${jclouds.version}</bundle>
     </feature>
 
     <feature name='jclouds-openhosting-east1' description='Open Hosting for East1' version='${project.version}' resolver='(obr)'>

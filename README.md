@@ -10,7 +10,7 @@ Install JClouds AWS Modules
 ----------------------------
 Install the feature and a provider for blobstore and compute service:
    
-    karaf@root> features:addurl mvn:org.jclouds.karaf/jclouds-karaf/1.2.2/xml/features
+    karaf@root> features:addurl mvn:org.jclouds.karaf/jclouds-karaf/1.3.0-SNAPSHOT/xml/features
     karaf@root> features:install jclouds-aws-s3
     karaf@root> features:install jclouds-aws-ec2
 
