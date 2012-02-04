@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import org.apache.felix.service.command.CommandProcessor;
 import org.apache.felix.service.command.CommandSession;
 import org.ops4j.pax.exam.CoreOptions;
+import org.ops4j.pax.exam.MavenUtils;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.TestProbeBuilder;
 import org.ops4j.pax.exam.junit.ProbeBuilder;
@@ -47,6 +48,7 @@ import org.osgi.util.tracker.ServiceTracker;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
+import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.editConfigurationFileExtend;
 import static org.ops4j.pax.exam.CoreOptions.maven;
 
 public class JcloudsKarafTestSupport {
@@ -77,8 +79,6 @@ public class JcloudsKarafTestSupport {
         return probe;
     }
 
-
-
     /**
      * Create an {@link Option} for using Apache Karaf distribution.
      *
@@ -89,6 +89,26 @@ public class JcloudsKarafTestSupport {
                 maven().groupId(KARAF_GROUP_ID).artifactId(KARAF_ARTIFACT_ID).versionAsInProject().type("tar.gz"))
                 .karafVersion(getKarafVersion()).name("Apache Karaf Distro").unpackDirectory(new File("target/paxexam/unpack/"));
     }
+
+
+    /**
+     * Sets a System property.
+     * @param propertyName
+     * @return
+     */
+    public static Option systemProperty(String propertyName, String propertyValue) {
+        return editConfigurationFileExtend("etc/system.properties", propertyName, propertyValue != null ? propertyValue : "");
+    }
+
+    /**
+     * Copies the actual System property to the container properties.
+     * @param propertyName
+     * @return
+     */
+    public static Option systemProperty(String propertyName) {
+        return systemProperty(propertyName, System.getProperty(propertyName));
+    }
+
 
     /**
      * Executes the command and returns the output as a String.
@@ -232,13 +252,12 @@ public class JcloudsKarafTestSupport {
         return CoreOptions.mavenBundle(groupId, artifactId).version(version);
     }
 
-
     /**
      * Returns the Version of Karaf to be used.
      *
      * @return
      */
     protected String getKarafVersion() {
-        return "2.2.5";
+        return MavenUtils.getArtifactVersion(KARAF_GROUP_ID, KARAF_ARTIFACT_ID);
     }
 }
