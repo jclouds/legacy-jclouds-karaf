@@ -126,6 +126,14 @@
                     <passphrase>${gpg.passphrase}</passphrase>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release-plugin.version}</version>
+                <configuration>
+                    <preparationGoals>clean install</preparationGoals>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -181,6 +189,7 @@
         <maven-dependency-plugin.version>2.3</maven-dependency-plugin.version>
         <maven-war-plugin.version>2.1.1</maven-war-plugin.version>
         <maven-resources-plugin.version>2.4.3</maven-resources-plugin.version>
+        <maven-release-plugin.version>2.2.2</maven-release-plugin.version>
         <maven-surefire-plugin.version>2.10</maven-surefire-plugin.version>
         <build-helper-maven-plugin.version>1.5</build-helper-maven-plugin.version>
     </properties>
