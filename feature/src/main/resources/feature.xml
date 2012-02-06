@@ -27,6 +27,7 @@
         </bundle>
         <bundle>mvn:com.google.inject/guice/${guice.version}</bundle>
         <bundle>mvn:com.google.inject.extensions/guice-assistedinject/${guice.version}</bundle>
+        <bundle>mvn:org.99soft.guice/rocoto/${rocoto.version}</bundle>
     </feature>
 
     <feature name='jclouds' description='JClouds' version='${project.version}' resolver='(obr)'>
