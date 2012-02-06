@@ -30,7 +30,7 @@
     <groupId>org.jclouds</groupId>
     <artifactId>jclouds-karaf-pom</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.5.0-SNAPSHOT</version>
     <name>JClouds :: Karaf</name>
 
     <description>Jclouds Karaf Integration Project</description>
@@ -155,7 +155,7 @@
         <httpcore.version>4.1</httpcore.version>
         <java-xmlbuilder.bundle.version>0.3_1</java-xmlbuilder.bundle.version>
         <javax.inject.bundle.version>1_1</javax.inject.bundle.version>
-        <jclouds.version>1.4.0-rc.1</jclouds.version>
+        <jclouds.version>1.5.0-SNAPSHOT</jclouds.version>
         <jersey.version>1.6</jersey.version>
         <joda.version>1.6.2</joda.version>
         <jsch.bundle.version>0.1.44_2</jsch.bundle.version>
