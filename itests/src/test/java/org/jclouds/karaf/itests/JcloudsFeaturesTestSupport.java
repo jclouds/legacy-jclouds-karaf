@@ -30,8 +30,8 @@ import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.l
 
 public class JcloudsFeaturesTestSupport extends JcloudsKarafTestSupport {
 
-    static final String JCLOUDS_FEATURE_FORMAT = "mvn:org.jclouds.karaf/jclouds-karaf/%s/xml/features";
-    static final String JCLOUDS_FEATURE_VERSION_PROPERTY =  "jclouds.feature.version";
+    public static final String JCLOUDS_FEATURE_FORMAT = "mvn:org.jclouds.karaf/jclouds-karaf/%s/xml/features";
+    public static final String JCLOUDS_FEATURE_VERSION_PROPERTY =  "jclouds.feature.version";
 
     /**
      * Returns the URL of the jclouds-karaf feature.
