@@ -23,14 +23,13 @@
     <parent>
         <artifactId>jclouds-karaf-pom</artifactId>
         <groupId>org.jclouds</groupId>
-        <version>1.4.0-SNAPSHOT</version>
+        <version>1.5.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.jclouds.karaf</groupId>
     <artifactId>itests</artifactId>
-    <version>1.4.0-SNAPSHOT</version>
     <name>JClouds :: Karaf :: Integration Tests</name>
 
     <dependencies>
@@ -53,6 +52,14 @@
             <type>tar.gz</type>
         </dependency>
 
+        <dependency>
+            <groupId>org.jclouds.karaf</groupId>
+            <artifactId>jclouds-karaf</artifactId>
+            <version>${project.version}</version>
+            <type>xml</type>
+            <classifier>features</classifier>
+        </dependency>
+
 
         <dependency>
             <groupId>org.openengsb.labs.paxexam.karaf</groupId>
@@ -65,6 +72,14 @@
             <groupId>org.ops4j.pax.exam</groupId>
             <artifactId>pax-exam-junit4</artifactId>
             <version>${pax-exam.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Pax Exam needs an older Guava version -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.test.version}</version>
             <scope>test</scope>
         </dependency>
 
