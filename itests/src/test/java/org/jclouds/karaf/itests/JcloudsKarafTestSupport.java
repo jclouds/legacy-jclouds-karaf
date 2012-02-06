@@ -53,14 +53,14 @@ import static org.ops4j.pax.exam.CoreOptions.maven;
 
 public class JcloudsKarafTestSupport {
 
-    static final Long DEFAULT_TIMEOUT = 10000L;
-    static final Long DEFAULT_WAIT = 10000L;
+    public static final Long DEFAULT_TIMEOUT = 10000L;
+    public static final Long DEFAULT_WAIT = 10000L;
 
-    static final String KARAF_GROUP_ID = "org.apache.karaf";
-    static final String KARAF_ARTIFACT_ID = "apache-karaf";
+    public static final String KARAF_GROUP_ID = "org.apache.karaf";
+    public static final String KARAF_ARTIFACT_ID = "apache-karaf";
 
-    static final String JCLOUDS_GROUP_ID = "org.jclouds.karaf";
-    static final String JCLOUDS_ARTIFACT_ID = "jclouds-karaf";
+    public static final String JCLOUDS_GROUP_ID = "org.jclouds.karaf";
+    public static final String JCLOUDS_ARTIFACT_ID = "jclouds-karaf";
 
     @Inject
     protected BundleContext bundleContext;
@@ -131,6 +131,33 @@ public class JcloudsKarafTestSupport {
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
+        return byteArrayOutputStream.toString();
+    }
+
+
+    /**
+     * Executes multiple commands inside a Single Session.
+     * Commands have a default timeout of 10 seconds.
+     * @param commands
+     * @return
+     */
+    protected String executeCommands(final String ...commands) {
+        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        final PrintStream printStream = new PrintStream(byteArrayOutputStream);
+        final CommandProcessor commandProcessor = getOsgiService(CommandProcessor.class);
+        final CommandSession commandSession = commandProcessor.createSession(System.in, printStream, System.err);
+        commandSession.put("APPLICATION", System.getProperty("karaf.name", "root"));
+        commandSession.put("USER", "karaf");
+
+        for (String command : commands) {
+            try {
+                System.err.println(command);
+                commandSession.execute(command);
+            } catch (Exception e) {
+                e.printStackTrace(System.err);
+            }
+        }
+
         return byteArrayOutputStream.toString();
     }
 
@@ -261,3 +288,5 @@ public class JcloudsKarafTestSupport {
         return MavenUtils.getArtifactVersion(KARAF_GROUP_ID, KARAF_ARTIFACT_ID);
     }
 }
+
+

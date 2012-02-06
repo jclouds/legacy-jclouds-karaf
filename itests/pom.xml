@@ -60,6 +60,20 @@
             <classifier>features</classifier>
         </dependency>
 
+         <dependency>
+            <groupId>org.jclouds</groupId>
+            <artifactId>jclouds-compute</artifactId>
+            <version>${jclouds.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+           <groupId>org.jclouds.api</groupId>
+           <artifactId>ec2</artifactId>
+           <version>${jclouds.version}</version>
+           <scope>test</scope>
+       </dependency>
+
 
         <dependency>
             <groupId>org.openengsb.labs.paxexam.karaf</groupId>
@@ -122,6 +136,23 @@
                     <includes>
                         <include>**/*Test.*</include>
                     </includes>
+                    <systemPropertyVariables>
+                        <!-- EC2 Live Variables -->
+                        <jclouds.aws.identity>${jclouds.aws.identity}</jclouds.aws.identity>
+                        <jclouds.aws.credential>${jclouds.aws.credential}</jclouds.aws.credential>
+                        <jclouds.aws.region>${jclouds.aws.region}</jclouds.aws.region>
+                        <jclouds.aws.image>${jclouds.aws.image}</jclouds.aws.image>
+                        <jclouds.aws.location>${jclouds.aws.location}</jclouds.aws.location>
+                        <jclouds.aws.user>${jclouds.aws.user}</jclouds.aws.user>
+
+                        <!-- Rackspace Live Variables -->
+                        <jclouds.rackspace.identity>${jclouds.rackspace.identity}</jclouds.rackspace.identity>
+                        <jclouds.rackspace.credential>${jclouds.rackspace.credential}</jclouds.rackspace.credential>
+                        <jclouds.rackspace.region>${jclouds.rackspace.region}</jclouds.rackspace.region>
+                        <jclouds.rackspace.image>${jclouds.rackspace.image}</jclouds.rackspace.image>
+                        <jclouds.rackspace.location>${jclouds.rackspace.location}</jclouds.rackspace.location>
+                        <jclouds.rackspace.user>${jclouds.rackspace.user}</jclouds.rackspace.user>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>
@@ -129,3 +160,5 @@
 
 
 </project>
+
+
