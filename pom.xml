@@ -126,7 +126,7 @@
                 <configuration>
                     <preparationGoals>clean install</preparationGoals>
                 </configuration>
-      </plugin>
+            </plugin>
         </plugins>
     </build>
 
