@@ -128,7 +128,7 @@
 
     <feature name='jclouds-driver-bouncycastle' description='JClouds - Drivers - Bouncycastle' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
-        <bundle dependency='true'>mvn:org.bouncycastle/bcprov-jdk15/${bcprov.version}</bundle>
+        <bundle>mvn:org.bouncycastle/bcprov-jdk15/${bcprov.version}</bundle>
     </feature>
 
     <feature name='jclouds-aws-cloudwatch' description='Amazon Web Service - Cloudwatch' version='${project.version}' resolver='(obr)'>
