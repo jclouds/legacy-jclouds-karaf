@@ -103,13 +103,6 @@
                             <descriptors>
                                 <descriptor>file:${basedir}/target/feature.xml</descriptor>
                             </descriptors>
-                            <features>
-                                <feature>jclouds</feature>
-                                <feature>guice</feature>
-                                <feature>jclouds-driver-sshj</feature>
-                                <feature>jclouds-aws-s3</feature>
-                                <feature>jclouds-aws-ec2</feature>
-                            </features>
                              <repository>target/features-repo</repository>
                         </configuration>
                     </execution>

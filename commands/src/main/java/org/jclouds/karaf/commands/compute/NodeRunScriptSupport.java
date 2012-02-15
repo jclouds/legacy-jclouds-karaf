@@ -50,6 +50,9 @@ public abstract class NodeRunScriptSupport extends ComputeCommandSupport {
     @Option(name = "-s", aliases = "--script-url", description = "The url script of the script to run.", required = false, multiValued = false)
     private String scriptUrl;
 
+    @Option(name = "-d", aliases = "--direct", description = "A direct command passed to the node to run. ", required = false, multiValued = false)
+    private String directCommand;
+
 
     public abstract String getId();
 
@@ -138,6 +141,9 @@ public abstract class NodeRunScriptSupport extends ComputeCommandSupport {
      * If url is specified the script is read from the url.
      */
     private String getScript() {
+        if (directCommand != null) {
+            return directCommand;
+        }
         if (scriptUrl != null) {
             InputStream is = null;
             DataInputStream in = null;
