@@ -39,7 +39,7 @@ public class BlobWriteCommand extends BlobStoreCommandSupport {
     @Argument(index = 2, name = "payload", description = "A url pointing to a payload, or just a string payload", required = true, multiValued = false)
     String payload;
 
-    @Option(name = "--store-url", description = "Option to store in the blob the url itself", required = false, multiValued = false)
+    @Option(name = "-s", aliases = "--store-url", description = "Option to store in the blob the url itself", required = false, multiValued = false)
     boolean storeUrl;
 
     @Override

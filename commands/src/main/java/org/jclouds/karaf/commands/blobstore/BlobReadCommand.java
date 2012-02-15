@@ -21,8 +21,16 @@ package org.jclouds.karaf.commands.blobstore;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.StringReader;
+
+import com.google.common.base.Strings;
+import com.google.common.io.ByteStreams;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.apache.felix.gogo.commands.Option;
+
+import javax.ws.rs.OPTIONS;
 
 /**
  * @author: iocanel
@@ -36,19 +44,24 @@ public class BlobReadCommand extends BlobStoreCommandSupport {
     @Argument(index = 1, name = "blobName", description = "The name of the blob", required = true, multiValued = false)
     String blobName;
 
-    @Argument(index = 2, name = "file", description = "The file to store the blob", required = false, multiValued = false)
+    @Option(name = "-f", aliases ="--to-file", description = "The file to store the blob", required = false, multiValued = false)
     String file;
+
+    @Option(name = "-d", aliases ="--display", description = "Display the content to the console", required = false, multiValued = false)
+    Boolean display;
 
     @Override
     protected Object doExecute() throws Exception {
-        if (file == null) {
-            Object payload = read(containerName, blobName);
-            System.out.printf("%s\n", payload);
-        } else {
+        if (!Strings.isNullOrEmpty(file)) {
             File f = new File(file);
             if (!f.exists() && f.createNewFile()) {
-                copy(getBlobInputStream(containerName, blobName), new FileOutputStream(f));
+                ByteStreams.copy(getBlobInputStream(containerName, blobName), new FileOutputStream(f));
             }
+        }
+
+        if (display) {
+            InputStream inputStream = getBlobInputStream(containerName, blobName);
+            System.err.println(new String(ByteStreams.toByteArray(inputStream)));
         }
         return null;
     }

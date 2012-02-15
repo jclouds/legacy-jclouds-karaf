@@ -68,6 +68,13 @@
         </dependency>
 
         <dependency>
+            <groupId>org.jclouds</groupId>
+            <artifactId>jclouds-blobstore</artifactId>
+            <version>${jclouds.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
            <groupId>org.jclouds.api</groupId>
            <artifactId>ec2</artifactId>
            <version>${jclouds.version}</version>

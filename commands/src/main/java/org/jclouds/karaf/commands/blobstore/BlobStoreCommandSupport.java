@@ -29,11 +29,16 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
+import com.google.common.io.ByteStreams;
+import com.google.common.io.InputSupplier;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.compute.ComputeService;
+import org.jclouds.io.payloads.InputStreamSupplierPayload;
 import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,10 +149,9 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
      */
     public void write(String bucket, String blobName, InputStream is) {
         BlobStore blobStore = getBlobStore();
-        Blob blob = blobStore.blobBuilder(blobName).build();
-        blob.setPayload(is);
-        blobStore.putBlob(bucket, blob);
         try {
+            Blob blob = blobStore.blobBuilder(blobName).payload(ByteStreams.toByteArray(is)).build();
+            blobStore.putBlob(bucket, blob);
             is.close();
         } catch (Exception ex) {
             LOGGER.warn("Error closing input stream.", ex);
@@ -226,46 +230,6 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
 
         }
         return new byte[0];
-    }
-
-
-    /**
-     * Copies data from {@link InputStream} to {@link OutputStream}.
-     *
-     * @param is Source {@link InputStream}.
-     * @param os Target {@link OutputStream}.
-     */
-    public void copy(InputStream is, OutputStream os) {
-        byte[] buffer = new byte[SIZE];
-        int read = 0;
-        try {
-            read = is.read(buffer);
-            while (read >= 0) {
-                if (read > 0) {
-                    os.write(buffer, 0, read);
-                }
-                read = is.read(buffer);
-            }
-        } catch (IOException e) {
-
-        } finally {
-
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (Exception ex) {
-                    //Ignore
-                }
-            }
-
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (Exception ex) {
-                    //Ignore
-                }
-            }
-        }
     }
 
      protected void printBlobStoreProviders(List<BlobStore> blobStores, String indent, PrintStream out) {
