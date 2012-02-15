@@ -66,6 +66,20 @@ public class JcloudsLiveTestSupport extends JcloudsFeaturesTestSupport {
         executeCommands(list.toArray(new String[list.size()]));
     }
 
+
+     /**
+     * Creates a Manged Compute Service using the configured system properties.
+     */
+    public void createManagedBlobStoreService(String provider) {
+        List<String> list = new LinkedList<String>();
+        list.add("config:edit org.jclouds.blobstore-test");
+        list.add("config:propset provider " + provider);
+        list.add("config:propset identity " + identity);
+        list.add("config:propset credential " + credential);
+        list.add("config:update");
+        executeCommands(list.toArray(new String[list.size()]));
+    }
+
     /**
      * @return the IP address of the client on which this code is running.
      * @throws java.io.IOException
