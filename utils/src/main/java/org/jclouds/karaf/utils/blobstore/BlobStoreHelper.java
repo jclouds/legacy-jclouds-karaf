@@ -18,8 +18,15 @@
 
 package org.jclouds.karaf.utils.blobstore;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Properties;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.Module;
 import org.jclouds.blobstore.BlobStore;
+import org.jclouds.blobstore.BlobStoreContext;
+import org.jclouds.blobstore.BlobStoreContextFactory;
 
 public class BlobStoreHelper {
 
@@ -54,6 +61,13 @@ public class BlobStoreHelper {
             }
         }
     }
+
+    public static BlobStore createBlobStore(String provider, String identity, String credential, Iterable<? extends Module> modules, Properties props) {
+        BlobStoreContext context = new BlobStoreContextFactory().createContext(provider, identity, credential, modules, props);
+        BlobStore blobStore = context.getBlobStore();
+        return blobStore;
+    }
+
 
     private BlobStoreHelper() {
         //Utility Class

@@ -26,8 +26,12 @@ import java.io.PipedOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
+
+import com.google.inject.Module;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
@@ -70,9 +74,11 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
         final String providerName;
         final String containerName;
         final String blobName;
+        final URL url;
 
         public Connection(URL url) {
             super(url);
+            this.url = url;
             int index = 0;
             String[] parts = url.getPath().split("/");
             if (url.getHost() == null || url.getHost().trim().length() == 0) {
@@ -98,6 +104,19 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
         public InputStream getInputStream() throws IOException {
             try {
                 BlobStore blobStore = BlobStoreHelper.getBlobStore(providerName,blobStores);
+                if (blobStore == null && url.getUserInfo() != null) {
+                    String userInfo = url.getUserInfo();
+                    String[] ui = userInfo.split(":");
+                    if (ui != null && ui.length == 2) {
+                        String identity = ui[0];
+                        String credential = ui[1];
+                        blobStore = BlobStoreHelper.createBlobStore(providerName, identity, credential, new LinkedHashSet<Module>(), new Properties());
+                        blobStores.add(blobStore);
+                    }
+                }
+                if (blobStore == null) {
+                    throw new IOException("BlobStore service not available for provider " + providerName);
+                }
                 if (!blobStore.containerExists(containerName)) {
                     throw new IOException("Container " + containerName + " does not exists");
                 } else if (!blobStore.blobExists(containerName,blobName)) {
@@ -108,7 +127,6 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
 
                 return blob.getPayload().getInput();
             } catch (Exception e) {
-                logger.error("Error opening blob protocol url:" , e);
                 throw (IOException) new IOException("Error opening blob protocol url").initCause(e);
             }
         }
@@ -126,7 +144,6 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
                blobStore.getBlob(containerName, blobName).setPayload(is);
                return out;
             } catch (Exception e) {
-                logger.error("Error opening blob protocol url", e);
                 throw (IOException) new IOException("Error opening blob protocol url").initCause(e);
             }
         }
