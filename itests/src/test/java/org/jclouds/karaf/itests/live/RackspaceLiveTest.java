@@ -52,7 +52,7 @@ public class RackspaceLiveTest extends JcloudsLiveTestSupport {
         location = System.getProperty("jclouds.rackspace.location");
         user = System.getProperty("jclouds.rackspace.user");
 
-        if (isLiveConfigured()) {
+        if (isComputeLiveConfigured()) {
             installAndCheckFeature("jclouds-commands");
         } else {
             System.err.println("Aborting test.");
@@ -62,14 +62,14 @@ public class RackspaceLiveTest extends JcloudsLiveTestSupport {
 
     @After
     public void tearDown() {
-        if (isLiveConfigured()) {
+        if (isComputeLiveConfigured()) {
             executeCommand("jclouds:node-destroy-all ");
         }
     }
 
     @Test
     public void testNodeCreateLive() throws InterruptedException {
-        if (isLiveConfigured()) {
+        if (isComputeLiveConfigured()) {
             createManagedComputeService("cloudservers-us");
             ComputeService computeService = getOsgiService(ComputeService.class);
             Thread.sleep(DEFAULT_TIMEOUT);

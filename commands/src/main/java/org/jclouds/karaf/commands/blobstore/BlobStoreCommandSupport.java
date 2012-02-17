@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.InputSupplier;
 import org.apache.felix.gogo.commands.Option;
@@ -37,7 +38,9 @@ import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
+import org.jclouds.blobstore.util.BlobStoreUtils;
 import org.jclouds.compute.ComputeService;
+import org.jclouds.io.Payload;
 import org.jclouds.io.payloads.InputStreamSupplierPayload;
 import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
 import org.slf4j.Logger;
@@ -124,8 +127,12 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
      * @param blobName
      * @return
      */
-    public InputStream getBlobInputStream(String containerName, String blobName) {
-      return  getBlobStore().getBlob(containerName, blobName).getPayload().getInput();
+    public InputStream getBlobInputStream(String containerName, String blobName) throws Exception {
+      if (getBlobStore().blobExists(containerName, blobName)) {
+          return  getBlobStore().getBlob(containerName, blobName).getPayload().getInput();
+      } else {
+        throw new Exception("Blob " + blobName + " does not exist in conatiner "+containerName+".");
+      }
     }
 
     /**
@@ -150,6 +157,14 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
     public void write(String bucket, String blobName, InputStream is) {
         BlobStore blobStore = getBlobStore();
         try {
+            String name = blobName;
+            if (blobName.contains("/")) {
+                String directory = BlobStoreUtils.parseDirectoryFromPath(blobName);
+                if (!Strings.isNullOrEmpty(directory)) {
+                    blobStore.createDirectory(bucket, directory);
+                }
+            }
+
             Blob blob = blobStore.blobBuilder(blobName).payload(ByteStreams.toByteArray(is)).build();
             blobStore.putBlob(bucket, blob);
             is.close();

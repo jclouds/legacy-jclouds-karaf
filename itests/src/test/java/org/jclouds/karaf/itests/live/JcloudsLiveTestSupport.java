@@ -40,14 +40,25 @@ public class JcloudsLiveTestSupport extends JcloudsFeaturesTestSupport {
 
 
     /**
-     * Checks if Live Test parameters are properly configured.
+     * Checks if Live Test parameters are properly configured for compute tests.
      *
      * @return
      */
-    public boolean isLiveConfigured() {
+    public boolean isComputeLiveConfigured() {
         return
                 identity != null && credential != null && image != null && location != null
                         && !identity.isEmpty() && !credential.isEmpty() && !image.isEmpty() && !location.isEmpty();
+    }
+
+    /**
+     * Checks if Live Test parameters are properly configured for blobstore tests.
+     *
+     * @return
+     */
+    public boolean isBlobStoreLiveConfigured() {
+        return
+                identity != null && credential != null
+                        && !identity.isEmpty() && !credential.isEmpty();
     }
 
     /**

@@ -68,7 +68,6 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory {
                 String identity = (String) properties.get("identity");
                 String credential = (String) properties.get("credential");
                 BlobStoreContext context =  new BlobStoreContextFactory().createContext(provider, identity, credential,  ImmutableSet.of(new Log4JLoggingModule()), props);
-
                 BlobStore blobStore = context.getBlobStore();
                 newRegistration = bundleContext.registerService(
                         BlobStore.class.getName(), blobStore, properties);

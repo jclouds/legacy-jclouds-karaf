@@ -52,10 +52,12 @@ public class BlobWriteCommand extends BlobStoreCommandSupport {
         }
         if (url == null || storeUrl) {
             write(containerName, blobName, payload);
+            CacheProvider.getCache("container").add(containerName);
+            CacheProvider.getCache("blob").add(blobName);
         } else {
             write(containerName, blobName, url.openStream());
-            CacheProvider.getCache("container").remove(containerName);
-            CacheProvider.getCache("blob").remove(blobName);
+            CacheProvider.getCache("container").add(containerName);
+            CacheProvider.getCache("blob").add(blobName);
         }
         return null;
     }
