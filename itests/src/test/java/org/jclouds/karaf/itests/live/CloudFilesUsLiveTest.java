@@ -1,18 +1,18 @@
 /*
- * Copyright (C) 2011, the original authors
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright (C) 2011, the original authors                                       
+ *                                                                                
+ * ====================================================================           
+ * Licensed under the Apache License, Version 2.0 (the "License");                
+ * you may not use this file except in compliance with the License.               
+ * You may obtain a copy of the License at                                        
+ *                                                                                
+ * http://www.apache.org/licenses/LICENSE-2.0                                     
+ *                                                                                
+ * Unless required by applicable law or agreed to in writing, software            
+ * distributed under the License is distributed on an "AS IS" BASIS,              
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.       
+ * See the License for the specific language governing permissions and            
+ * limitations under the License.                                                 
  * ====================================================================
  */
 
@@ -39,23 +39,20 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.debugConfiguration;
-import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
-import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.logLevel;
+import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.*;
 import static org.ops4j.pax.exam.CoreOptions.scanFeatures;
 
 @RunWith(JUnit4TestRunner.class)
 @ExamReactorStrategy(AllConfinedStagedReactorFactory.class)
-public class AwsS3LiveTest extends JcloudsLiveTestSupport {
+public class CloudFilesUsLiveTest extends JcloudsLiveTestSupport {
 
     String group = "karaf";
 
     @Before
     public void setUp() throws Exception {
-        identity = System.getProperty("jclouds.aws.identity");
-        credential = System.getProperty("jclouds.aws.credential");
+        identity = System.getProperty("jclouds.rackspace.identity");
+        credential = System.getProperty("jclouds.rackspace.credential");
 
         if (isBlobStoreLiveConfigured()) {
             installAndCheckFeature("jclouds-commands");
@@ -75,7 +72,7 @@ public class AwsS3LiveTest extends JcloudsLiveTestSupport {
     @Test
     public void testCreateNodeLive() throws InterruptedException {
         if (isBlobStoreLiveConfigured()) {
-            createManagedBlobStoreService("aws-s3");
+            createManagedBlobStoreService("cloudfiles-us");
             BlobStore blobStoreService = getOsgiService(BlobStore.class);
             Thread.sleep(DEFAULT_TIMEOUT);
 
@@ -93,7 +90,7 @@ public class AwsS3LiveTest extends JcloudsLiveTestSupport {
     @Test
     public void testUrlHandler() throws Exception {
         if (isBlobStoreLiveConfigured()) {
-            createManagedBlobStoreService("aws-s3");
+            createManagedBlobStoreService("cloudfiles-us");
             BlobStore blobStoreService = getOsgiService(BlobStore.class);
             Thread.sleep(DEFAULT_TIMEOUT);
 
@@ -115,7 +112,7 @@ public class AwsS3LiveTest extends JcloudsLiveTestSupport {
             //Make sure that only S3 is available as a repo.
             System.err.println(executeCommands("config:edit org.ops4j.pax.url.mvn",
                     "config:propset org.ops4j.pax.url.mvn.localRepository " + System.getProperty("karaf.base") + File.separatorChar + "none",
-                    "config:propset org.ops4j.pax.url.mvn.repositories blob:aws-s3/itest-container/maven2@snapshots ",
+                    "config:propset org.ops4j.pax.url.mvn.repositories blob:cloudfiles-us/itest-container/maven2@snapshots ",
                     "config:update"));
             Thread.sleep(DEFAULT_TIMEOUT);
 
@@ -147,12 +144,11 @@ public class AwsS3LiveTest extends JcloudsLiveTestSupport {
     public Option[] config() {
         return new Option[]{
                 jcloudsDistributionConfiguration(), keepRuntimeFolder(), logLevel(LogLevelOption.LogLevel.ERROR),
-                //debugConfiguration("5005",true),
-                systemProperty("jclouds.aws.identity"),
-                systemProperty("jclouds.aws.credential"),
+                systemProperty("jclouds.rackspace.identity"),
+                systemProperty("jclouds.rackspace.credential"),
                 systemProperty("jclouds.version",MavenUtils.getArtifactVersion(JCLOUDS_GROUP_ID, JCLOUDS_ARTIFACT_ID)),
                 systemProperty("jclouds.featureURL",String.format(JCLOUDS_FEATURE_FORMAT, MavenUtils.getArtifactVersion(JCLOUDS_GROUP_ID, JCLOUDS_ARTIFACT_ID))),
-                scanFeatures(String.format(JCLOUDS_FEATURE_FORMAT, MavenUtils.getArtifactVersion(JCLOUDS_GROUP_ID, JCLOUDS_ARTIFACT_ID)),"jclouds", "jclouds-compute", "jclouds-aws-s3").start()
+                scanFeatures(String.format(JCLOUDS_FEATURE_FORMAT, MavenUtils.getArtifactVersion(JCLOUDS_GROUP_ID, JCLOUDS_ARTIFACT_ID)),"jclouds", "jclouds-cloudfiles-us").start()
         };
     }
 }

@@ -18,13 +18,7 @@
 
 package org.jclouds.karaf.itests.live;
 
-import com.google.common.base.Predicate;
 import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.domain.ComputeMetadata;
-import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.domain.NodeState;
-import org.jclouds.ec2.EC2Client;
-import org.jclouds.ec2.domain.IpProtocol;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,8 +30,6 @@ import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.ExamReactorStrategy;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 import org.ops4j.pax.exam.spi.reactors.AllConfinedStagedReactorFactory;
-
-import javax.annotation.Nullable;
 
 import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.debugConfiguration;
 import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
@@ -60,7 +52,7 @@ public class AwsEc2LiveTest extends JcloudsLiveTestSupport {
         location = System.getProperty("jclouds.aws.location");
         user = System.getProperty("jclouds.aws.user");
 
-        if (isLiveConfigured()) {
+        if (isComputeLiveConfigured()) {
             installAndCheckFeature("jclouds-commands");
         }  else {
             System.err.println("Aborting test.");
@@ -70,14 +62,14 @@ public class AwsEc2LiveTest extends JcloudsLiveTestSupport {
 
     @After
     public void tearDown() {
-        if (isLiveConfigured()) {
+        if (isComputeLiveConfigured()) {
             executeCommand("jclouds:node-destroy-all ");
         }
     }
 
     @Test
     public void testCreateNodeLive() throws InterruptedException {
-        if (isLiveConfigured()) {
+        if (isComputeLiveConfigured()) {
             createManagedComputeService("aws-ec2");
             ComputeService computeService = getOsgiService(ComputeService.class);
             Thread.sleep(DEFAULT_TIMEOUT);
