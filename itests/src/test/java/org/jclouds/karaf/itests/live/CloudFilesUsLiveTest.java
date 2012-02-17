@@ -23,6 +23,7 @@ import org.jclouds.blobstore.BlobStore;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.openengsb.labs.paxexam.karaf.options.LogLevelOption;
 import org.ops4j.pax.exam.MavenUtils;
@@ -50,6 +51,7 @@ public class CloudFilesUsLiveTest extends JcloudsLiveTestSupport {
     String group = "karaf";
 
     @Before
+    @Ignore
     public void setUp() throws Exception {
         identity = System.getProperty("jclouds.rackspace.identity");
         credential = System.getProperty("jclouds.rackspace.credential");
@@ -63,6 +65,7 @@ public class CloudFilesUsLiveTest extends JcloudsLiveTestSupport {
     }
 
     @After
+    @Ignore
     public void tearDown() {
         if (isBlobStoreLiveConfigured()) {
             System.err.println(executeCommand("jclouds:blobstore-delete itest-container"));
