@@ -133,9 +133,9 @@
     <modules>
         <module>utils</module>
         <module>commands</module>
-        <module>feature</module>
         <module>services</module>
         <module>urlhandler</module>
+        <module>feature</module>
         <module>itests</module>
     </modules>
 
