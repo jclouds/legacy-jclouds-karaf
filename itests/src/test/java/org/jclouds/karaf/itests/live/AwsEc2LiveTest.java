@@ -71,7 +71,7 @@ public class AwsEc2LiveTest extends JcloudsLiveTestSupport {
     public void testCreateNodeLive() throws InterruptedException {
         if (isComputeLiveConfigured()) {
             createManagedComputeService("aws-ec2");
-            ComputeService computeService = getOsgiService(ComputeService.class);
+            ComputeService computeService = getOsgiService(ComputeService.class,1000000L);
             Thread.sleep(DEFAULT_TIMEOUT);
 
             System.err.println(executeCommand("jclouds:image-list"));

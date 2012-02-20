@@ -20,17 +20,15 @@
 -->
 <features name="jclouds-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
 
-    <feature name='guice' description='Google Guice' version='${guice.version}' resolver='(obr)'>
+    <feature name='jclouds-guice' description='Jclouds - Google Guice' version='${project.version}' resolver='(obr)'>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.javax-inject/${javax.inject.bundle.version}</bundle>
-        <bundle dependency='true'>
-            mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aopalliance/${aopalliance.bundle.version}
-        </bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aopalliance/${aopalliance.bundle.version}</bundle>
         <bundle>mvn:com.google.inject/guice/${guice.version}</bundle>
         <bundle>mvn:com.google.inject.extensions/guice-assistedinject/${guice.version}</bundle>
     </feature>
 
     <feature name='jclouds' description='JClouds' version='${project.version}' resolver='(obr)'>
-        <feature version='${guice.version}'>guice</feature>
+        <feature version='${project.version}'>jclouds-guice</feature>
         <bundle dependency='true'>mvn:com.googlecode.guava-osgi/guava-osgi/${guava.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.oauth-commons/${net.oauth.bundle.version}</bundle>
         <bundle dependency='true'>mvn:com.google.code.gson/gson/${gson.version}</bundle>
