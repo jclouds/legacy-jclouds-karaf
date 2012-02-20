@@ -18,14 +18,8 @@
 
 package org.jclouds.karaf.itests;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Dictionary;
-import java.util.Enumeration;
+import java.io.*;
+import java.util.*;
 import javax.inject.Inject;
 import org.apache.felix.service.command.CommandProcessor;
 import org.apache.felix.service.command.CommandSession;
@@ -89,7 +83,6 @@ public class JcloudsKarafTestSupport {
                 maven().groupId(KARAF_GROUP_ID).artifactId(KARAF_ARTIFACT_ID).versionAsInProject().type("tar.gz"))
                 .karafVersion(getKarafVersion()).name("Apache Karaf Distro").unpackDirectory(new File("target/paxexam/unpack/"));
     }
-
 
     /**
      * Sets a System property.

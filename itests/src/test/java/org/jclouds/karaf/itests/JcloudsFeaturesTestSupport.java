@@ -50,7 +50,7 @@ public class JcloudsFeaturesTestSupport extends JcloudsKarafTestSupport {
     public void installAndCheckFeature(String feature) throws Exception {
         System.err.println(executeCommand("features:install " + feature));
         FeaturesService featuresService = getOsgiService(FeaturesService.class);
-        System.err.println(executeCommand("osgi:list"));
+        System.err.println(executeCommand("osgi:list -t 0"));
         assertTrue("Expected " + feature + " feature to be installed.", featuresService.isInstalled(featuresService.getFeature(feature)));
     }
 
