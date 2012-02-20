@@ -32,6 +32,10 @@
     <artifactId>itests</artifactId>
     <name>JClouds :: Karaf :: Integration Tests</name>
 
+    <properties>
+        <camel.version>2.9.0</camel.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.ops4j.pax.url</groupId>
@@ -50,6 +54,20 @@
             <artifactId>apache-karaf</artifactId>
             <version>${karaf.version}</version>
             <type>tar.gz</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.camel.karaf</groupId>
+            <artifactId>apache-camel</artifactId>
+            <version>${camel.version}</version>
+            <classifier>features</classifier>
+            <type>xml</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.servicemix.specs</groupId>
+            <artifactId>org.apache.servicemix.specs.jsr250-1.0</artifactId>
+            <version>${sericemix.specs.jsr250.version}</version>
         </dependency>
 
         <dependency>
@@ -143,6 +161,9 @@
                     <includes>
                         <include>**/*Test.*</include>
                     </includes>
+                    <excludes>
+                        <exclude>**/special/*Test.*</exclude>
+                    </excludes>
                     <systemPropertyVariables>
                         <!-- EC2 Live Variables -->
                         <jclouds.aws.identity>${jclouds.aws.identity}</jclouds.aws.identity>
