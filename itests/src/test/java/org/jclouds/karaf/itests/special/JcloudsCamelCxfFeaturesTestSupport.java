@@ -48,8 +48,8 @@ public class JcloudsCamelCxfFeaturesTestSupport extends AwsEc2LiveTest {
         System.err.println(executeCommand("features:addurl " + String.format(JCLOUDS_FEATURE_FORMAT,System.getProperty(JCLOUDS_FEATURE_VERSION_PROPERTY))));
         System.err.println(executeCommand("features:install xml-specs-api"));
         System.err.println(executeCommand("osgi:install mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.jsr250-1.0/1.9.0"));
-        System.err.println(executeCommand("features:install jclouds-aws-ec2"));
         System.err.println(executeCommand("features:install camel-cxf"));
+        System.err.println(executeCommand("features:install jclouds-aws-ec2"));
         System.err.println(executeCommand("features:install jclouds-services"));
         super.setUp();
     }
@@ -58,7 +58,6 @@ public class JcloudsCamelCxfFeaturesTestSupport extends AwsEc2LiveTest {
     public Option[] config()  {
         return new Option[]{
                 jcloudsDistributionConfiguration(), keepRuntimeFolder(), logLevel(LogLevelOption.LogLevel.ERROR),
-                debugConfiguration("5005",true),
                 systemProperty("jclouds.aws.identity"),
                 systemProperty("jclouds.aws.credential"),
                 systemProperty("jclouds.aws.region"),
