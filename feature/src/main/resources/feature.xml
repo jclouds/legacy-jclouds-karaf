@@ -32,9 +32,9 @@
         <feature version='${project.version}'>jclouds-guice</feature>
         <bundle dependency='true'>mvn:com.googlecode.guava-osgi/guava-osgi/${guava.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.oauth-commons/${net.oauth.bundle.version}</bundle>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jersey-core/${jersey.bundle.version}</bundle>
         <bundle dependency='true'>mvn:com.google.code.gson/gson/${gson.version}</bundle>
         <bundle dependency='true'>mvn:org.bouncycastle/bcprov-jdk15/${bcprov.version}</bundle>
-        <bundle dependency='true'>mvn:com.sun.jersey/jersey-core/${jersey.version}</bundle>
         <bundle>mvn:org.jclouds/jclouds-core/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds/jclouds-blobstore/${jclouds.version}</bundle>
     </feature>
