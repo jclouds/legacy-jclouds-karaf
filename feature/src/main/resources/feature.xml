@@ -152,7 +152,7 @@
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>        <bundle dependency='true'>mvn:joda-time/joda-time/${joda.version}</bundle>
-        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.netty/${netty.bundle.version}</bundle>
+        <bundle dependency='true'>mvn:io.netty/netty/${netty.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.httpcomponents/httpcore-osgi/${httpcore.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.httpcomponents/httpclient-osgi/${httpclient.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-joda/${jclouds.version}</bundle>
