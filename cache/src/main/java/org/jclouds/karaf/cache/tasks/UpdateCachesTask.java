@@ -16,24 +16,32 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.blobstore.completer;
+package org.jclouds.karaf.cache.tasks;
 
-import org.jclouds.blobstore.BlobStore;
+import org.jclouds.karaf.cache.Cacheable;
 
-public class ContainerCompleter extends BlobStoreCompleterSupport {
+import java.util.List;
 
-    public void init() {
-        cache = cacheProvider.getProviderCacheForType("container");
+public class UpdateCachesTask<T> implements Runnable {
+
+    private final List<Cacheable<T>> cacheables;
+    private final List<T> services;
+
+    public UpdateCachesTask(List<Cacheable<T>> cacheables, List<T> services) {
+        this.cacheables = cacheables;
+        this.services = services;
     }
 
-
     @Override
-    public void updateOnAdded(BlobStore blobStore) {
-        cache.putAll(blobStore.getContext().getProviderSpecificContext().getId(), listContainers(blobStore));
-    }
-
-    @Override
-    public void updateOnRemoved(BlobStore blobStore) {
-        cache.removeAll(blobStore.getContext().getProviderSpecificContext().getId());
+    public void run() {
+        if (services != null && !services.isEmpty()) {
+            for (T service : services) {
+                if (cacheables != null && !cacheables.isEmpty()) {
+                    for (Cacheable<T> cacheable : cacheables) {
+                        cacheable.updateOnAdded(service);
+                    }
+                }
+            }
+        }
     }
 }

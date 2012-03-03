@@ -18,12 +18,12 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
-import java.util.LinkedList;
-import java.util.List;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
-import org.jclouds.karaf.commands.cache.CacheProvider;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author: iocanel
@@ -45,12 +45,12 @@ public class BlobDeleteCommand extends BlobStoreCommandSupport {
                 for (String blobName : blobNames) {
                     if (getBlobStore().blobExists(container, blobName)) {
                         getBlobStore().removeBlob(container, blobName);
-                        CacheProvider.getCache("blob").remove(blobName);
+                        cacheProvider.getProviderCacheForType("blob").remove(getBlobStore().getContext().getProviderSpecificContext().getId(),blobName);
                     }
                 }
             } else {
                 getBlobStore().deleteContainer(container);
-                CacheProvider.getCache("container").remove(container);
+                cacheProvider.getProviderCacheForType("container").remove(getBlobStore().getContext().getProviderSpecificContext().getId(),container);
             }
         }
         return null;

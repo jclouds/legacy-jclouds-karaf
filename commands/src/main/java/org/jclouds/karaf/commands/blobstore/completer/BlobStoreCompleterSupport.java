@@ -18,63 +18,35 @@
 
 package org.jclouds.karaf.commands.blobstore.completer;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import com.google.common.collect.Multimap;
 import org.apache.karaf.shell.console.Completer;
 import org.apache.karaf.shell.console.completer.StringsCompleter;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
-import org.jclouds.karaf.commands.cache.Cacheable;
-import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
+import org.jclouds.karaf.cache.CacheProvider;
+import org.jclouds.karaf.cache.Cacheable;
+
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public abstract class BlobStoreCompleterSupport implements Completer, Cacheable<BlobStore> {
 
-    private List<BlobStore> blobStoreServices;
-
     protected final StringsCompleter delegate = new StringsCompleter();
-    protected Set<String> cache;
+    protected Multimap<String,String> cache;
+    protected CacheProvider cacheProvider;
 
-    protected BlobStore getBlobStore() {
-        BlobStore service = null;
-        try {
-            service = BlobStoreHelper.getBlobStore(null, blobStoreServices);
-        } catch (IllegalArgumentException ex) {
-            //Ignore and skip completion;
-        }
-        return service;
-    }
 
     @Override
     public int complete(String buffer, int cursor, List<String> candidates) {
         delegate.getStrings().clear();
-        for (String item : cache) {
+        for (String item : cache.values()) {
             if (buffer == null || item.startsWith(buffer)) {
                 delegate.getStrings().add(item);
             }
         }
         return delegate.complete(buffer, cursor, candidates);
-    }
-
-
-
-    @Override
-    public void updateCache() {
-        cache.clear();
-        for (BlobStore blobStore : getBlobStoreServices()) {
-            updateCache(blobStore);
-        }
-    }
-
-
-
-    protected Set<String> listContainers() {
-        Set<String> containers = new LinkedHashSet<String>();
-        for (BlobStore blobStore : blobStoreServices) {
-            containers.addAll(listContainers(blobStore));
-        }
-        return containers;
     }
 
 
@@ -91,13 +63,6 @@ public abstract class BlobStoreCompleterSupport implements Completer, Cacheable<
         return containers;
     }
 
-    protected Set<String> listBlobs(String container) {
-        Set<String> blobs = new LinkedHashSet<String>();
-        for (BlobStore blobStore : blobStoreServices) {
-            blobs.addAll(listBlobs(blobStore, container));
-        }
-        return blobs;
-    }
 
      protected Set<String> listBlobs(BlobStore blobStore, String container) {
         Set<String> blobs = new LinkedHashSet<String>();
@@ -112,20 +77,25 @@ public abstract class BlobStoreCompleterSupport implements Completer, Cacheable<
         return blobs;
     }
 
-
-    public List<BlobStore> getBlobStoreServices() {
-        return blobStoreServices;
+    @Override
+    public void updateOnRemoved(BlobStore blobStore) {
+        cache.removeAll(blobStore.getContext().getProviderSpecificContext().getId());
     }
 
-    public void setBlobStoreServices(List<BlobStore> blobStoreServices) {
-        this.blobStoreServices = blobStoreServices;
-    }
 
-    public Set<String> getCache() {
+    public Multimap<String,String> getCache() {
         return cache;
     }
 
-    public void setCache(Set<String> cache) {
+    public void setCache(Multimap<String,String> cache) {
         this.cache = cache;
+    }
+
+    public CacheProvider getCacheProvider() {
+        return cacheProvider;
+    }
+
+    public void setCacheProvider(CacheProvider cacheProvider) {
+        this.cacheProvider = cacheProvider;
     }
 }

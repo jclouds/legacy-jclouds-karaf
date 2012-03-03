@@ -137,6 +137,7 @@
         <module>urlhandler</module>
         <module>feature</module>
         <module>itests</module>
+        <module>cache</module>
     </modules>
 
     <properties>
