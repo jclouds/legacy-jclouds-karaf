@@ -111,7 +111,7 @@
                             org.jclouds.karaf.cache*;version=${jclouds.version},
                             org.jclouds.blobstore;version=${jclouds.version},
                             org.jclouds.compute;version=${jclouds.version},
-                            org.jclouds.ec2*;version=${jclouds.version},
+                            org.jclouds.ec2*;version=${jclouds.version};resolution:=optional,
                             *
                         </Import-Package>
                         <Private-Package>org.jclouds.karaf.utils*</Private-Package>
