@@ -19,7 +19,6 @@
 package org.jclouds.karaf.commands.blobstore;
 
 import org.apache.felix.gogo.commands.Command;
-import org.jclouds.karaf.commands.compute.ComputeCommandSupport;
 
 @Command(scope = "jclouds", name = "blobstore-provider-list")
 public class BlobStoreListCommand extends BlobStoreCommandSupport  {

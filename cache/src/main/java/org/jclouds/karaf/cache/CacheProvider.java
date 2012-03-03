@@ -16,24 +16,40 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.cache;
+package org.jclouds.karaf.cache;
 
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import com.google.common.collect.Multimap;
 
-public class CacheProvider {
+public interface CacheProvider {
 
-    private static Map<String,Set<String>> caches = new ConcurrentHashMap<String, Set<String>>();
+    /**.
+     * Returns a {@link Map} of cached values per provider for the specified type.
+     * An example that demonstrates the structure:
+     *
+     * {
+     *  "images": {
+     *      "aws-ec2": {
+     *          ami-3xxxxx,
+     *          ami-4xxxxx
+     *      },
+     *      "cloudservers-us": {
+     *          103,
+     *          104
+     *      }
+     *  },
+     *  "locations": {
+     *    "aws-ec2": {
+     *          eu-west1,
+     *          us-east-1
+     *      }
+     *  }
+     * }
+     *
+     * @param provider
+     * @return
+     */
 
-    public static synchronized Set<String> getCache(String name) {
-        if  (caches.containsKey(name)) {
-            return caches.get(name);
-        } else {
-            Set<String> cache = new LinkedHashSet<String>();
-            caches.put(name, cache);
-            return cache;
-        }
-    }
+   Multimap<String,String> getProviderCacheForType(String provider);
 }

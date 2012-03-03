@@ -34,11 +34,22 @@
     <name>JClouds :: Karaf :: Commands</name>
 
     <dependencies>
+        <!-- Internal Dependencies -->
+        <dependency>
+            <groupId>org.jclouds.karaf</groupId>
+            <artifactId>cache</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.jclouds.karaf</groupId>
             <artifactId>utils</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
 
         <dependency>
@@ -95,11 +106,12 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
-                        <Export-Package>org.jclouds.karaf.commands.*</Export-Package>
+                        <Export-Package>org.jclouds.karaf.commands*</Export-Package>
                         <Import-Package>
-                            org.jclouds.blobstore;version=${jclouds.version};resolution:=optional,
-                            org.jclouds.compute;version=${jclouds.version};resolution:=optional,
-                            org.jclouds.ec2*;version=${jclouds.version};resolution:=optional,
+                            org.jclouds.karaf.cache*;version=${jclouds.version},
+                            org.jclouds.blobstore;version=${jclouds.version},
+                            org.jclouds.compute;version=${jclouds.version},
+                            org.jclouds.ec2*;version=${jclouds.version},
                             *
                         </Import-Package>
                         <Private-Package>org.jclouds.karaf.utils*</Private-Package>

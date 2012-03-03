@@ -17,23 +17,20 @@
  */
 package org.jclouds.karaf.commands.compute;
 
+import org.apache.felix.gogo.commands.Option;
+import org.apache.karaf.shell.console.OsgiCommandSupport;
+import org.jclouds.compute.ComputeService;
+import org.jclouds.compute.domain.*;
+import org.jclouds.domain.Location;
+import org.jclouds.karaf.cache.CacheProvider;
+import org.jclouds.karaf.utils.compute.ComputeHelper;
+import org.osgi.service.cm.ConfigurationAdmin;
+
 import java.io.PrintStream;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.apache.felix.gogo.commands.Option;
-import org.apache.karaf.shell.console.OsgiCommandSupport;
-import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.domain.ComputeMetadata;
-import org.jclouds.compute.domain.Hardware;
-import org.jclouds.compute.domain.Image;
-import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.domain.Processor;
-import org.jclouds.domain.Location;
-import org.jclouds.karaf.commands.cache.CacheProvider;
-import org.jclouds.karaf.utils.compute.ComputeHelper;
-import org.osgi.service.cm.ConfigurationAdmin;
 
 
 /**
@@ -50,6 +47,7 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
 
     private ConfigurationAdmin configurationAdmin;
     private List<ComputeService> computeServices;
+    private CacheProvider cacheProvider;
 
     @Option(name = "--provider")
     protected String provider;
@@ -68,8 +66,8 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
         for (ComputeMetadata metadata : nodes) {
             NodeMetadata node = (NodeMetadata) metadata;
             out.println(String.format(NODEFORMAT, indent, node.getId(), node.getLocation().getId(), node.getHardware().getId(), node.getGroup(), node.getState().toString().toLowerCase()));
-            CacheProvider.getCache("node").add(node.getId());
-            CacheProvider.getCache("group").add(node.getGroup());
+            cacheProvider.getProviderCacheForType("node").put(node.getProviderId(),node.getId());
+            cacheProvider.getProviderCacheForType("group").put(node.getProviderId(),node.getGroup());
         }
     }
 
@@ -88,13 +86,13 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
             String location = image.getLocation() != null ? image.getLocation().getId() : "";
             String description = image.getDescription();
             out.println(String.format(IMAGEFORMAT, indent, id, location, description));
-            CacheProvider.getCache("image").add(image.getId());
+            cacheProvider.getProviderCacheForType("image").put(image.getProviderId(),image.getId());
         }
     }
 
-    protected void printLocations(Set<? extends Location> locations, String indent, PrintStream out) {
+    protected void printLocations(ComputeService computeService, String indent, PrintStream out) {
         out.println(String.format(LOCATIONFORMAT, indent + "[id]", "[scope]", "[description]"));
-        printLocations(getAllLocations(locations), null, indent, out);
+        printLocations(getAllLocations(computeService), null, indent, out);
     }
 
     protected void printLocations(Set<? extends Location> locations, Location parent, String indent, PrintStream out) {
@@ -106,12 +104,12 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
         }
     }
 
-    protected Set<? extends Location> getAllLocations(Set<? extends Location> locations) {
+    protected Set<? extends Location> getAllLocations(ComputeService computeService) {
         Set<Location> all = new HashSet<Location>();
-        for (Location loc : locations) {
+        for (Location loc : computeService.listAssignableLocations()) {
             for (Location p = loc; p != null; p = p.getParent()) {
                 all.add(p);
-                CacheProvider.getCache("location").add(p.getId());
+                cacheProvider.getProviderCacheForType("location").put(computeService.getContext().getProviderSpecificContext().getId(),p.getId());
             }
         }
         return all;
@@ -161,5 +159,13 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
 
     protected ComputeService getComputeService() {
         return ComputeHelper.getComputeService(provider, computeServices);
+    }
+
+    public CacheProvider getCacheProvider() {
+        return cacheProvider;
+    }
+
+    public void setCacheProvider(CacheProvider cacheProvider) {
+        this.cacheProvider = cacheProvider;
     }
 }

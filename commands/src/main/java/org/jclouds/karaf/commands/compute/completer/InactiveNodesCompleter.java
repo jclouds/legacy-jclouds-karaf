@@ -18,10 +18,8 @@
 
 package org.jclouds.karaf.commands.compute.completer;
 
-import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeState;
-import org.jclouds.karaf.commands.cache.Cacheable;
 
 public class InactiveNodesCompleter extends NodesCompleter {
 

@@ -39,7 +39,7 @@ public class ProviderInfoCommand extends ComputeCommandSupport {
 
             System.out.println("  Locations");
             System.out.println("  ---------");
-            printLocations(service.listAssignableLocations(), "    ", System.out);
+            printLocations(service, "    ", System.out);
 
             System.out.println("  Images");
             System.out.println("  ------");
