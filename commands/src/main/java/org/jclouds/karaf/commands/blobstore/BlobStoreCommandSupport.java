@@ -17,34 +17,23 @@
  */
 package org.jclouds.karaf.commands.blobstore;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
-import com.google.common.io.InputSupplier;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
-import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.util.BlobStoreUtils;
-import org.jclouds.compute.ComputeService;
-import org.jclouds.io.Payload;
-import org.jclouds.io.payloads.InputStreamSupplierPayload;
+import org.jclouds.karaf.cache.CacheProvider;
 import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author iocanel
@@ -57,8 +46,10 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
     public static final String PROVIDERFORMAT = "%-16s %s";
 
     private List<BlobStore> services;
-    private Set<String> containerCache;
-    private Set<String> blobCache;
+
+
+
+    protected CacheProvider cacheProvider;
 
     @Option(name = "--provider")
     protected String provider;
@@ -254,19 +245,11 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
         }
     }
 
-    public Set<String> getContainerCache() {
-        return containerCache;
+    public CacheProvider getCacheProvider() {
+        return cacheProvider;
     }
 
-    public void setContainerCache(Set<String> containerCache) {
-        this.containerCache = containerCache;
-    }
-
-    public Set<String> getBlobCache() {
-        return blobCache;
-    }
-
-    public void setBlobCache(Set<String> blobCache) {
-        this.blobCache = blobCache;
+    public void setCacheProvider(CacheProvider cacheProvider) {
+        this.cacheProvider = cacheProvider;
     }
 }

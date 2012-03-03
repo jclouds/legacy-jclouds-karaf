@@ -16,18 +16,23 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.cache;
+package org.jclouds.karaf.cache;
 
+import org.jclouds.karaf.cache.tasks.UpdateCachesTask;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import org.jclouds.blobstore.BlobStore;
 
 public class CacheManager<T> implements Runnable {
 
-    private ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-    private List<? extends Cacheable<T>> cacheables;
+    protected ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+    protected final List<Cacheable<T>> cacheables = new LinkedList<Cacheable<T>> ();
+    protected final List<T> services = new LinkedList<T>();
 
     public void init() {
       scheduledExecutorService.scheduleAtFixedRate(this,0,5, TimeUnit.MINUTES);
@@ -38,26 +43,7 @@ public class CacheManager<T> implements Runnable {
 
     @Override
     public void run() {
-        if (cacheables != null && !cacheables.isEmpty()) {
-            for(Cacheable cacheable:cacheables) {
-                cacheable.updateCache();
-            }
-        }
-    }
-
-    public void bind(T service) {
-       scheduledExecutorService.submit(this);
-    }
-
-    public void unbind(T service) {
-
-    }
-
-    public List<? extends Cacheable<T>> getCacheables() {
-        return cacheables;
-    }
-
-    public void setCacheables(List<? extends Cacheable<T>> cacheables) {
-        this.cacheables = cacheables;
+        //Update all cacheables for all services.
+        new UpdateCachesTask(cacheables,services).run();
     }
 }

@@ -20,33 +20,27 @@ package org.jclouds.karaf.commands.compute.completer;
 
 import java.util.List;
 import java.util.Set;
+
+import com.google.common.collect.Multimap;
 import org.apache.karaf.shell.console.Completer;
 import org.apache.karaf.shell.console.completer.StringsCompleter;
+import org.jclouds.blobstore.BlobStore;
 import org.jclouds.compute.ComputeService;
-import org.jclouds.karaf.commands.cache.Cacheable;
+import org.jclouds.karaf.cache.CacheProvider;
+import org.jclouds.karaf.cache.Cacheable;
 import org.jclouds.karaf.utils.compute.ComputeHelper;
 
 public abstract class ComputeCompleterSupport implements Completer, Cacheable<ComputeService> {
 
-    private List<ComputeService> computeServices;
 
     protected final StringsCompleter delegate = new StringsCompleter();
-    protected Set<String> cache;
-
-    protected ComputeService getService() {
-        ComputeService service = null;
-        try {
-            service = ComputeHelper.getComputeService(null, computeServices);
-        } catch (IllegalArgumentException ex) {
-            //Ignore and skip completion;
-        }
-        return service;
-    }
+    protected CacheProvider cacheProvider;
+    protected Multimap<String, String> cache;
 
     @Override
     public int complete(String buffer, int cursor, List<String> candidates) {
         delegate.getStrings().clear();
-        for (String item : cache) {
+        for (String item : cache.values()) {
             if (buffer == null || item.startsWith(buffer)) {
                 delegate.getStrings().add(item);
             }
@@ -56,26 +50,23 @@ public abstract class ComputeCompleterSupport implements Completer, Cacheable<Co
     }
 
     @Override
-    public void updateCache() {
-        cache.clear();
-        for (ComputeService computeService : computeServices) {
-            updateCache(computeService);
-        }
+    public void updateOnRemoved(ComputeService computeService) {
+        cache.removeAll(computeService.getContext().getProviderSpecificContext().getId());
     }
 
-    public List<ComputeService> getComputeServices() {
-        return computeServices;
-    }
-
-    public void setComputeServices(List<ComputeService> computeServices) {
-        this.computeServices = computeServices;
-    }
-
-    public Set<String> getCache() {
+    public Multimap<String,String> getCache() {
         return cache;
     }
 
-    public void setCache(Set<String> cache) {
+    public void setCache(Multimap<String,String> cache) {
         this.cache = cache;
+    }
+
+    public CacheProvider getCacheProvider() {
+        return cacheProvider;
+    }
+
+    public void setCacheProvider(CacheProvider cacheProvider) {
+        this.cacheProvider = cacheProvider;
     }
 }

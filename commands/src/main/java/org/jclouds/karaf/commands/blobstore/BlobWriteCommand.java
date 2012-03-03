@@ -18,11 +18,11 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
-import java.net.URL;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
-import org.jclouds.karaf.commands.cache.CacheProvider;
+
+import java.net.URL;
 
 /**
  * @author: iocanel
@@ -52,12 +52,12 @@ public class BlobWriteCommand extends BlobStoreCommandSupport {
         }
         if (url == null || storeUrl) {
             write(containerName, blobName, payload);
-            CacheProvider.getCache("container").add(containerName);
-            CacheProvider.getCache("blob").add(blobName);
+            cacheProvider.getProviderCacheForType("container").put(getBlobStore().getContext().getProviderSpecificContext().getId(),containerName);
+            cacheProvider.getProviderCacheForType("blob").put(getBlobStore().getContext().getProviderSpecificContext().getId(),blobName);
         } else {
             write(containerName, blobName, url.openStream());
-            CacheProvider.getCache("container").add(containerName);
-            CacheProvider.getCache("blob").add(blobName);
+            cacheProvider.getProviderCacheForType("container").put(getBlobStore().getContext().getProviderSpecificContext().getId(),containerName);
+            cacheProvider.getProviderCacheForType("blob").put(getBlobStore().getContext().getProviderSpecificContext().getId(),blobName);
         }
         return null;
     }

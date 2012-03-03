@@ -18,25 +18,25 @@
 
 package org.jclouds.karaf.commands.compute.completer;
 
-import java.util.Set;
 import org.apache.karaf.shell.console.Completer;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.Image;
-import org.jclouds.karaf.commands.cache.CacheProvider;
+
+import java.util.Set;
 
 public class ImageCompleter extends ComputeCompleterSupport implements Completer {
 
-    public ImageCompleter() {
-        cache = CacheProvider.getCache("image");
+    public void init() {
+        cache = cacheProvider.getProviderCacheForType("image");
     }
 
     @Override
-    public void updateCache(ComputeService computeService) {
+    public void updateOnAdded(ComputeService computeService) {
         if (computeService != null) {
             Set<? extends Image> images = computeService.listImages();
             if (images != null) {
                 for (Image image : images) {
-                    cache.add(image.getId());
+                    cache.put(computeService.getContext().getProviderSpecificContext().getId(),image.getId());
                 }
             }
         }

@@ -16,28 +16,27 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.compute.completer;
+package org.jclouds.karaf.cache.internal;
 
-import org.jclouds.compute.ComputeService;
-import org.jclouds.domain.Location;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import org.jclouds.karaf.cache.CacheProvider;
 
-import java.util.Set;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class LocationCompleter extends ComputeCompleterSupport {
+public class BasicCacheProvider implements CacheProvider {
 
-    public void init() {
-        cache = cacheProvider.getProviderCacheForType("location");
-    }
+    private static Map<String, Multimap<String,String>> caches = new ConcurrentHashMap<String, Multimap<String,String>>();
 
-    @Override
-    public void updateOnAdded(ComputeService computeService) {
-        if (computeService != null) {
-            Set<? extends Location> locations = computeService.listAssignableLocations();
-            if (locations != null) {
-                for (Location location : locations) {
-                    cache.put(computeService.getContext().getProviderSpecificContext().getId(),location.getId());
-                }
-            }
+    public synchronized  Multimap<String,String> getProviderCacheForType(String type) {
+        if  (caches.containsKey(type)) {
+            return caches.get(type);
+        } else {
+
+             Multimap<String,String> cache =  HashMultimap.<String,String>create();
+            caches.put(type, cache);
+            return cache;
         }
     }
 }

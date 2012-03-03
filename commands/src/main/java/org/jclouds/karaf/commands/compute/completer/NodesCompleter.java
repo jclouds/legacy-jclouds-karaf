@@ -18,29 +18,28 @@
 
 package org.jclouds.karaf.commands.compute.completer;
 
-import java.util.Set;
 import org.apache.karaf.shell.console.Completer;
-import org.jclouds.blobstore.BlobStore;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.karaf.commands.cache.CacheProvider;
+
+import java.util.Set;
 
 public class NodesCompleter extends ComputeCompleterSupport implements Completer {
 
-    public NodesCompleter() {
-        cache = CacheProvider.getCache("node");
+    public void init() {
+        cache = cacheProvider.getProviderCacheForType("node");
     }
 
     @Override
-    public void updateCache(ComputeService computeService) {
+    public void updateOnAdded(ComputeService computeService) {
         if (computeService != null) {
             Set<? extends ComputeMetadata> computeMetadatas = computeService.listNodes();
             if (computeMetadatas != null) {
                 for (ComputeMetadata compute : computeMetadatas) {
                     NodeMetadata node = (NodeMetadata) compute;
                     if (apply(node)) {
-                        cache.add(node.getId());
+                        cache.put(computeService.getContext().getProviderSpecificContext().getId(),node.getId());
                     }
                 }
             }

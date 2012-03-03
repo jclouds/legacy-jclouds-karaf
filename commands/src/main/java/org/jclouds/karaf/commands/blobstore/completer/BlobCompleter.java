@@ -19,26 +19,17 @@
 package org.jclouds.karaf.commands.blobstore.completer;
 
 import org.jclouds.blobstore.BlobStore;
-import org.jclouds.karaf.commands.cache.CacheProvider;
 
 public class BlobCompleter extends BlobStoreCompleterSupport {
 
-    public BlobCompleter() {
-        cache = CacheProvider.getCache("blob");
+    public void init() {
+        cache = cacheProvider.getProviderCacheForType("blob");
     }
 
     @Override
-    public void updateCache() {
-        cache.clear();
-        for (BlobStore blobStore : getBlobStoreServices()) {
-            updateCache(blobStore);
-        }
-    }
-
-    @Override
-    public void updateCache(BlobStore blobStore) {
+    public void updateOnAdded(BlobStore blobStore) {
         for (String container : listContainers(blobStore)) {
-            cache.addAll(listBlobs(blobStore,container));
+            cache.putAll(blobStore.getContext().getProviderSpecificContext().getId(), listBlobs(blobStore,container));
         }
     }
 }

@@ -28,7 +28,7 @@ public class LocationListCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        printLocations(getComputeService().listAssignableLocations(), "", System.out);
+        printLocations(getComputeService(), "", System.out);
         return null;
     }
 

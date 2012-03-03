@@ -16,10 +16,11 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.cache;
+package org.jclouds.karaf.cache;
 
-import org.jclouds.compute.ComputeService;
+public interface Cacheable<S>  {
 
-public class ComputeCacheManager<C extends ComputeService> extends CacheManager<C> {
+    public void updateOnAdded(S service);
+    public void updateOnRemoved(S service);
 
 }
