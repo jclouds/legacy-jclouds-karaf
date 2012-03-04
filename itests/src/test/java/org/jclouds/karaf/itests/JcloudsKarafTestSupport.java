@@ -53,8 +53,11 @@ public class JcloudsKarafTestSupport {
     public static final String KARAF_GROUP_ID = "org.apache.karaf";
     public static final String KARAF_ARTIFACT_ID = "apache-karaf";
 
-    public static final String JCLOUDS_GROUP_ID = "org.jclouds.karaf";
-    public static final String JCLOUDS_ARTIFACT_ID = "jclouds-karaf";
+    public static final String JCLOUDS_KARAF_GROUP_ID = "org.jclouds.karaf";
+    public static final String JCLOUDS_KARAF_ARTIFACT_ID = "jclouds-karaf";
+
+    public static final String JCLOUDS_GROUP_ID = "org.jclouds";
+    public static final String JCLOUDS_ARTIFACT_ID = "jclouds-core";
 
     @Inject
     protected BundleContext bundleContext;

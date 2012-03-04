@@ -91,7 +91,7 @@ public class AwsEc2LiveTest extends JcloudsLiveTestSupport {
                 systemProperty("jclouds.aws.image"),
                 systemProperty("jclouds.aws.location"),
                 systemProperty("jclouds.aws.user"),
-                scanFeatures(String.format(JCLOUDS_FEATURE_FORMAT, MavenUtils.getArtifactVersion(JCLOUDS_GROUP_ID, JCLOUDS_ARTIFACT_ID)),"jclouds", "jclouds-compute", "jclouds-aws-ec2").start()
+                scanFeatures(String.format(JCLOUDS_FEATURE_FORMAT, MavenUtils.getArtifactVersion(JCLOUDS_KARAF_GROUP_ID, JCLOUDS_KARAF_ARTIFACT_ID)),"jclouds", "jclouds-compute", "jclouds-aws-ec2").start()
         };
     }
 }

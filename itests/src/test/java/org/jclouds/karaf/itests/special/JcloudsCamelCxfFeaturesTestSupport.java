@@ -18,15 +18,12 @@
 
 package org.jclouds.karaf.itests.special;
 
-import org.apache.karaf.features.FeaturesService;
-import org.jclouds.karaf.itests.AwsFeaturesInstallationTest;
 import org.jclouds.karaf.itests.live.AwsEc2LiveTest;
 import org.junit.Before;
 import org.openengsb.labs.paxexam.karaf.options.LogLevelOption;
 import org.ops4j.pax.exam.MavenUtils;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
-import org.ops4j.pax.exam.options.DefaultCompositeOption;
 
 import java.io.File;
 
@@ -64,7 +61,7 @@ public class JcloudsCamelCxfFeaturesTestSupport extends AwsEc2LiveTest {
                 systemProperty("jclouds.aws.image"),
                 systemProperty("jclouds.aws.location"),
                 systemProperty("jclouds.aws.user"),
-                systemProperty(JCLOUDS_FEATURE_VERSION_PROPERTY, MavenUtils.getArtifactVersion(JCLOUDS_GROUP_ID, JCLOUDS_ARTIFACT_ID)),
+                systemProperty(JCLOUDS_FEATURE_VERSION_PROPERTY, MavenUtils.getArtifactVersion(JCLOUDS_KARAF_GROUP_ID, JCLOUDS_KARAF_ARTIFACT_ID)),
                 systemProperty(CAMEL_FEATURE_VERSION_PROPERTY, MavenUtils.getArtifactVersion(CAMEL_GROUP_ID, CAMEL_ARTIFACT_ID)),
                 replaceConfigurationFile("etc/jre.properties", new File("target/test-classes/jre.properties.cxf")),
         };
