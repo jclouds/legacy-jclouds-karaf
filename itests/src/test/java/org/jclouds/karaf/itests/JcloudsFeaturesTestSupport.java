@@ -59,7 +59,7 @@ public class JcloudsFeaturesTestSupport extends JcloudsKarafTestSupport {
     public Option[] config() {
         return new Option[]{
                 jcloudsDistributionConfiguration(), keepRuntimeFolder(),
-                systemProperty(JCLOUDS_FEATURE_VERSION_PROPERTY, MavenUtils.getArtifactVersion(JCLOUDS_GROUP_ID,JCLOUDS_ARTIFACT_ID)),
+                systemProperty(JCLOUDS_FEATURE_VERSION_PROPERTY, MavenUtils.getArtifactVersion(JCLOUDS_KARAF_GROUP_ID, JCLOUDS_KARAF_ARTIFACT_ID)),
                 logLevel(LogLevelOption.LogLevel.ERROR)};
     }
 }

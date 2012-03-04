@@ -90,7 +90,7 @@ public class RackspaceLiveTest extends JcloudsLiveTestSupport {
                 systemProperty("jclouds.rackspace.image"),
                 systemProperty("jclouds.rackspace.location"),
                 systemProperty("jclouds.rackspace.user"),
-                scanFeatures(String.format(JCLOUDS_FEATURE_FORMAT, MavenUtils.getArtifactVersion(JCLOUDS_GROUP_ID, JCLOUDS_ARTIFACT_ID)), "jclouds", "jclouds-compute", "jclouds-cloudserver-us").start()
+                scanFeatures(String.format(JCLOUDS_FEATURE_FORMAT, MavenUtils.getArtifactVersion(JCLOUDS_KARAF_GROUP_ID, JCLOUDS_KARAF_ARTIFACT_ID)), "jclouds", "jclouds-compute", "jclouds-cloudserver-us").start()
         };
     }
 }
