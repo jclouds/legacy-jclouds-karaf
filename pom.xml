@@ -30,7 +30,7 @@
     <groupId>org.jclouds</groupId>
     <artifactId>jclouds-karaf-pom</artifactId>
     <packaging>pom</packaging>
-    <version>1.3.2_1</version>
+    <version>1.3.3-SNAPSHOT</version>
     <name>JClouds :: Karaf</name>
 
     <description>Jclouds Karaf Integration Project</description>
