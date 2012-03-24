@@ -358,13 +358,13 @@
         <bundle>mvn:org.jclouds.provider/greenhousedata-element-vcloud/${jclouds.version}</bundle>
     </feature>
 
-    <feature name='jclouds-hpcloud-objectstorage-lvs' description='HP Cloud Object Storage in Las Vegas' version='${project.version}' resolver='(obr)'>
+    <!--feature name='jclouds-hpcloud-objectstorage-lvs' description='HP Cloud Object Storage in Las Vegas' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/swift/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/hpcloud-objectstorage-lvs/${jclouds.version}</bundle>
-    </feature>
+    </feature-->
 
     <feature name='jclouds-ninefold-storage' description='Ninefold Storage' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
