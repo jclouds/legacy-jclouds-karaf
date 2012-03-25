@@ -159,4 +159,9 @@ public class MiscFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
     public void testAzureBlobFeature() throws Exception {
         installAndCheckFeature("jclouds-azureblob");
     }
+
+     @Test
+    public void testTryStackNova() throws Exception {
+        installAndCheckFeature("jclouds-trystack-nova");
+    }
 }

@@ -465,6 +465,14 @@
         <bundle>mvn:org.jclouds.provider/trmk-ecloud/${jclouds.version}</bundle>
     </feature>
 
+     <feature name='jclouds-trystack-nova' description='OpenStack Nova implementation targeted to TryStack.org' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-compute</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+         <feature version='${project.version}'>jclouds-api-nova</feature>
+        <bundle>mvn:org.jclouds.provider/trystack-nova/${jclouds.version}</bundle>
+    </feature>
+
     <feature name='jclouds-trmk-vcloudexpress' description='Terremark vCloud Express' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-compute</feature>
