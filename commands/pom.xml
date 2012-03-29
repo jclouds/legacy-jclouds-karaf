@@ -108,7 +108,7 @@
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                         <Export-Package>org.jclouds.karaf.commands*</Export-Package>
                         <Import-Package>
-                            org.jclouds.karaf.cache*;version=${jclouds.version},
+                            org.jclouds.karaf.cache*;version=${project.version},
                             org.jclouds.blobstore;version=${jclouds.version},
                             org.jclouds.compute;version=${jclouds.version},
                             org.jclouds.ec2*;version=${jclouds.version};resolution:=optional,
