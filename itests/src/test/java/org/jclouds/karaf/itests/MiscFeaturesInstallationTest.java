@@ -105,11 +105,6 @@ public class MiscFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
     }
 
     @Test
-    public void testSavvisSymphonyVpdcFeature() throws Exception {
-        installAndCheckFeature("jclouds-savvis-symphonyvpdc");
-    }
-
-    @Test
     public void testServerloveZ1ManFeature() throws Exception {
         installAndCheckFeature("jclouds-serverlove-z1-man");
     }
@@ -148,8 +143,8 @@ public class MiscFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
     public void testAzureBlobFeature() throws Exception {
         installAndCheckFeature("jclouds-azureblob");
     }
-
-     @Test
+    
+    @Test
     public void testTryStackNova() throws Exception {
         installAndCheckFeature("jclouds-trystack-nova");
     }

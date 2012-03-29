@@ -96,7 +96,7 @@
     <feature name='jclouds-api-openstack-nova' description='JClouds - API - OpenStack Nova' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds-compute</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
-        <feature version='${project.version}'>jclouds-driver-log4j</feature>
+        <feature version='${project.version}'>jclouds-driver-slf4j</feature>
         <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.api/openstack-nova/${jclouds.version}</bundle>
     </feature>
@@ -366,13 +366,31 @@
         <bundle>mvn:org.jclouds.provider/greenhousedata-element-vcloud/${jclouds.version}</bundle>
     </feature>
 
-    <!--feature name='jclouds-hpcloud-objectstorage-lvs' description='HP Cloud Object Storage in Las Vegas' version='${project.version}' resolver='(obr)'>
+    <feature name='jclouds-hpcloud-objectstorage' description='HP Cloud Object Storage' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
-        <feature version='${project.version}'>jclouds-driver-log4j</feature>
+        <feature version='${project.version}'>jclouds-driver-slf4j</feature>
         <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/swift/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.provider/hpcloud-objectstorage-lvs/${jclouds.version}</bundle>
-    </feature-->
+        <bundle>mvn:org.jclouds.provider/hpcloud-objectstorage/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name='jclouds-hpcloud-compute' description='HP Cloud Compute' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-slf4j</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/openstack-nova/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/hpcloud-compute/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name='jclouds-trystack-nova' description='TryStack.org Nova' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-slf4j</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/openstack-nova/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/trystack-nova/${jclouds.version}</bundle>
+    </feature>
 
     <feature name='jclouds-ninefold-storage' description='Ninefold Storage' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
@@ -405,17 +423,6 @@
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
         <bundle>mvn:org.jclouds.provider/rimuhosting/${jclouds.version}</bundle>
     </feature>
-
-
-    <feature name='jclouds-savvis-symphonyvpdc' description='Savvis Symphony VPDC' version='${project.version}'
-             resolver='(obr)'>
-        <feature version='${project.version}'>jclouds</feature>
-        <feature version='${project.version}'>jclouds-compute</feature>
-        <feature version='${project.version}'>jclouds-driver-sshj</feature>
-        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
-        <bundle>mvn:org.jclouds.provider/savvis-symphonyvpdc/${jclouds.version}</bundle>
-    </feature>
-
 
     <feature name='jclouds-serverlove-z1-man' description='Serverlove implementation targeted to Manchester' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>

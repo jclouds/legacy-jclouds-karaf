@@ -28,7 +28,7 @@ import org.ops4j.pax.exam.spi.reactors.AllConfinedStagedReactorFactory;
 
 @RunWith(JUnit4TestRunner.class)
 @ExamReactorStrategy(AllConfinedStagedReactorFactory.class)
-public class ApisFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
+public class HPCloudFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
 
     @Before
     public void setUp() {
@@ -41,23 +41,12 @@ public class ApisFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
     }
 
     @Test
-    public void testFileSystemFeature() throws Exception {
-        installAndCheckFeature("jclouds-api-filesystem");
-    }
-
-    @Test
-    public void testVcloudFeature() throws Exception {
-        installAndCheckFeature("jclouds-api-vcloud");
-    }
-
-    @Test
-    public void testEucalyptusFeature() throws Exception {
-        installAndCheckFeature("jclouds-api-eucalyptus");
-    }
-
-    @Test
-    public void testOpenStackNovaFeature() throws Exception {
-        installAndCheckFeature("jclouds-api-openstack-nova");
+    public void testHPCloudCompute() throws Exception {
+        installAndCheckFeature("jclouds-hpcloud-compute");
     }
     
+    @Test
+    public void testHPCloudObjectStorage() throws Exception {
+        installAndCheckFeature("jclouds-hpcloud-objectstorage");
+    }
 }
