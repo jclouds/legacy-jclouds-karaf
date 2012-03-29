@@ -18,7 +18,6 @@
 
 package org.jclouds.karaf.services.modules;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Dictionary;
@@ -27,16 +26,17 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import javax.inject.Singleton;
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import org.apache.log4j.FileAppender;
+
 import org.jclouds.domain.Credentials;
 import org.jclouds.rest.ConfiguresCredentialStore;
-import org.jclouds.rest.annotations.Credential;
 import org.osgi.service.cm.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 
 @ConfiguresCredentialStore
 public class ConfigurationAdminCredentialStore extends AbstractModule {

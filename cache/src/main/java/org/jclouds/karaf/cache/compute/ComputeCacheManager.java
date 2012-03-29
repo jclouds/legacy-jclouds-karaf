@@ -18,12 +18,12 @@
 
 package org.jclouds.karaf.cache.compute;
 
+import java.util.Arrays;
+
 import org.jclouds.compute.ComputeService;
 import org.jclouds.karaf.cache.CacheManager;
 import org.jclouds.karaf.cache.Cacheable;
 import org.jclouds.karaf.cache.tasks.UpdateCachesTask;
-
-import java.util.Arrays;
 
 public class ComputeCacheManager extends CacheManager<ComputeService> {
 

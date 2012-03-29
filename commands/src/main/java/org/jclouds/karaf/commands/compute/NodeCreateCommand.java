@@ -28,7 +28,6 @@ import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.ec2.compute.options.EC2TemplateOptions;
-import org.jclouds.karaf.utils.compute.ComputeHelper;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>

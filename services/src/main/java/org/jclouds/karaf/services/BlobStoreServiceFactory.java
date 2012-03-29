@@ -17,11 +17,15 @@
  */
 package org.jclouds.karaf.services;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.BlobStoreContextFactory;
-
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -30,11 +34,7 @@ import org.osgi.service.cm.ManagedServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
+import com.google.common.collect.ImmutableSet;
 
 public class BlobStoreServiceFactory implements ManagedServiceFactory {
 

@@ -19,7 +19,6 @@
 package org.jclouds.karaf.commands.compute;
 
 import org.apache.felix.gogo.commands.Command;
-import org.jclouds.compute.ComputeService;
 
 @Command(scope = "jclouds", name = "compute-provider-list")
 public class ComputeListCommand extends ComputeCommandSupport  {

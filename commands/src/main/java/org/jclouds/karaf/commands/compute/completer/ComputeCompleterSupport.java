@@ -19,16 +19,14 @@
 package org.jclouds.karaf.commands.compute.completer;
 
 import java.util.List;
-import java.util.Set;
 
-import com.google.common.collect.Multimap;
 import org.apache.karaf.shell.console.Completer;
 import org.apache.karaf.shell.console.completer.StringsCompleter;
-import org.jclouds.blobstore.BlobStore;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.karaf.cache.CacheProvider;
 import org.jclouds.karaf.cache.Cacheable;
-import org.jclouds.karaf.utils.compute.ComputeHelper;
+
+import com.google.common.collect.Multimap;
 
 public abstract class ComputeCompleterSupport implements Completer, Cacheable<ComputeService> {
 

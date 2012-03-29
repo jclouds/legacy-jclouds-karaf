@@ -17,8 +17,17 @@
  */
 package org.jclouds.karaf.commands.blobstore;
 
-import com.google.common.base.Strings;
-import com.google.common.io.ByteStreams;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintStream;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.jclouds.blobstore.BlobStore;
@@ -29,11 +38,8 @@ import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import com.google.common.base.Strings;
+import com.google.common.io.ByteStreams;
 
 /**
  * @author iocanel
@@ -41,7 +47,6 @@ import java.util.Set;
 public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BlobStoreCommandSupport.class);
-    private static final int SIZE = 32 * 1024;
 
     public static final String PROVIDERFORMAT = "%-16s %s";
 
@@ -148,7 +153,6 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
     public void write(String bucket, String blobName, InputStream is) {
         BlobStore blobStore = getBlobStore();
         try {
-            String name = blobName;
             if (blobName.contains("/")) {
                 String directory = BlobStoreUtils.parseDirectoryFromPath(blobName);
                 if (!Strings.isNullOrEmpty(directory)) {

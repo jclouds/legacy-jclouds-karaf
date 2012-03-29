@@ -18,12 +18,13 @@
 
 package org.jclouds.karaf.cache.internal;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import org.jclouds.karaf.cache.CacheProvider;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.jclouds.karaf.cache.CacheProvider;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 
 public class BasicCacheProvider implements CacheProvider {
 

@@ -18,15 +18,13 @@
 
 package org.jclouds.karaf.cache;
 
-import org.jclouds.karaf.cache.tasks.UpdateCachesTask;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import org.jclouds.karaf.cache.tasks.UpdateCachesTask;
 
 public class CacheManager<T> implements Runnable {
 

@@ -18,12 +18,12 @@
 
 package org.jclouds.karaf.cache.blobstore;
 
+import java.util.Arrays;
+
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.karaf.cache.CacheManager;
 import org.jclouds.karaf.cache.Cacheable;
 import org.jclouds.karaf.cache.tasks.UpdateCachesTask;
-
-import java.util.Arrays;
 
 public class BlobCacheManager extends CacheManager<BlobStore> {
 

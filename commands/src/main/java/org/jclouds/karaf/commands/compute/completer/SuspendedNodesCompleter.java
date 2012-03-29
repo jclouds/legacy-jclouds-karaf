@@ -18,7 +18,6 @@
 
 package org.jclouds.karaf.commands.compute.completer;
 
-import java.util.List;
 import org.apache.karaf.shell.console.Completer;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeState;

@@ -18,12 +18,14 @@
 package org.jclouds.karaf.commands.compute;
 
 import java.util.Set;
+
 import javax.annotation.Nullable;
-import com.google.common.base.Predicate;
+
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.karaf.utils.compute.ComputeHelper;
+
+import com.google.common.base.Predicate;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>

@@ -18,11 +18,11 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
+import java.net.URL;
+
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
-
-import java.net.URL;
 
 /**
  * @author: iocanel

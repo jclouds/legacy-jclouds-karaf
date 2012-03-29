@@ -18,9 +18,21 @@
 
 package org.jclouds.karaf.itests;
 
-import java.io.*;
-import java.util.*;
+import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.editConfigurationFileExtend;
+import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
+import static org.ops4j.pax.exam.CoreOptions.maven;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintStream;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Dictionary;
+import java.util.Enumeration;
+
 import javax.inject.Inject;
+
 import org.apache.felix.service.command.CommandProcessor;
 import org.apache.felix.service.command.CommandSession;
 import org.ops4j.pax.exam.CoreOptions;
@@ -37,13 +49,6 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
-
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
-import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.editConfigurationFileExtend;
-import static org.ops4j.pax.exam.CoreOptions.maven;
 
 public class JcloudsKarafTestSupport {
 
