@@ -4,13 +4,13 @@ This project currently hosts a Karaf feature for easy installation of JClouds in
 
 Usage Instructions
 ===================
-On Karaf 2.2.0 or later:
+On Karaf 2.2.5 or later:
 
 Install JClouds AWS Modules
 ----------------------------
 Install the feature and a provider for blobstore and compute service:
    
-    karaf@root> features:addurl mvn:org.jclouds.karaf/jclouds-karaf/1.3.0-SNAPSHOT/xml/features
+    karaf@root> features:addurl mvn:org.jclouds.karaf/jclouds-karaf/1.5.0-SNAPSHOT/xml/features
     karaf@root> features:install jclouds-aws-s3
     karaf@root> features:install jclouds-aws-ec2
 
@@ -73,8 +73,12 @@ and the service will automatically created and exported for you.
 
 Use the compute service commands
     
-    karaf@root> jclouds:node-create YOUR_IMAGE_ID YOUR_LOCATION_ID GROUPNAME
+    karaf@root> jclouds:node-create --imageId YOUR_IMAGE_ID --locationId YOUR_LOCATION_ID GROUPNAME
     karaf@root> jclouds:node-list.
+
+If you don't want/need to specify specific image, you specify the os family and the os version
+
+    karaf@root> jclouds:node-create --os-family OS_FAMILY --os-version OS_VERSION --locationId YOUR_LOCATION_ID GROUPNAME
     
 <b>Note:<b> You can supply additional options to select hardware etc.    
 
@@ -83,14 +87,18 @@ Run a script to a single node or a group of nodes:
     
     karaf@root> jclouds:group-runscript --script-url URL_OF_THE_SCRIPT GROUPNAME.
     karaf@root> jclouds:node-runscript --script-url URL_OF_THE_SCRIPT NODEID.
-    
+
+For simple commands you can just inline the command, for example to get the uptime of the node:
+
+    karaf@root> jclouds:group-runscript --direct uptime GROUPNAME.
+    karaf@root> jclouds:node-runscript --direct uptime NODEID.
+
+Or you can use whatever command you want.
 
 Shutdown all your nodes or the nodes of a specific group:
 
     karaf@root> jclouds:group-destroy GROUPNAME
     karaf@root> jclouds:node-destroy-all GROUPNAME
-
-
 
 Code completion
 ---------------
