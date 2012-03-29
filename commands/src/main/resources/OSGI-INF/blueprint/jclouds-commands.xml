@@ -29,6 +29,7 @@
             <optional-completers>
                 <entry key="--imageId" value-ref="imageCompleter"/>
                 <entry key="--locationId" value-ref="locationCompleter"/>
+                <entry key="--os-family" value-ref="osFamilyCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/node-destroy">
@@ -215,6 +216,8 @@
         <property name="cacheProvider" ref="cacheProvider"/>
     </bean>
 
+    <bean id="osFamilyCompleter" class="org.jclouds.karaf.commands.compute.completer.OsFamilyCompleter"/>
+
     <service ref="activeNodeCompleter" auto-export="interfaces">
         <service-properties>
             <entry key="completer-type" value="active-node"/>
@@ -254,6 +257,12 @@
         <service-properties>
             <entry key="completer-type" value="location"/>
             <entry key="cache-type" value="jclouds.computeservice"/>
+        </service-properties>
+    </service>
+
+    <service ref="osFamilyCompleter" auto-export="interfaces">
+        <service-properties>
+            <entry key="completer-type" value="osfamily"/>
         </service-properties>
     </service>
 
