@@ -18,11 +18,11 @@
 
 package org.jclouds.karaf.commands.compute.completer;
 
+import java.util.Set;
+
 import org.apache.karaf.shell.console.Completer;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.Image;
-
-import java.util.Set;
 
 public class ImageCompleter extends ComputeCompleterSupport implements Completer {
 

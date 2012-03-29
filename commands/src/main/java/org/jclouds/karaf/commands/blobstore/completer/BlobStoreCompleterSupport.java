@@ -18,7 +18,10 @@
 
 package org.jclouds.karaf.commands.blobstore.completer;
 
-import com.google.common.collect.Multimap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.karaf.shell.console.Completer;
 import org.apache.karaf.shell.console.completer.StringsCompleter;
 import org.jclouds.blobstore.BlobStore;
@@ -27,9 +30,7 @@ import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.karaf.cache.CacheProvider;
 import org.jclouds.karaf.cache.Cacheable;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import com.google.common.collect.Multimap;
 
 public abstract class BlobStoreCompleterSupport implements Completer, Cacheable<BlobStore> {
 

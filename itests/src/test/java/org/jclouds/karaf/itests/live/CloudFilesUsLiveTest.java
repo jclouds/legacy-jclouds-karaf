@@ -18,6 +18,16 @@
 
 package org.jclouds.karaf.itests.live;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
+import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.logLevel;
+import static org.ops4j.pax.exam.CoreOptions.scanFeatures;
+
+import java.io.File;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.apache.karaf.features.FeaturesService;
 import org.jclouds.blobstore.BlobStore;
 import org.junit.After;
@@ -33,15 +43,6 @@ import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 import org.ops4j.pax.exam.spi.reactors.AllConfinedStagedReactorFactory;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
-
-import java.io.File;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.*;
-import static org.ops4j.pax.exam.CoreOptions.scanFeatures;
 
 @RunWith(JUnit4TestRunner.class)
 @ExamReactorStrategy(AllConfinedStagedReactorFactory.class)

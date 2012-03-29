@@ -18,10 +18,10 @@
 
 package org.jclouds.karaf.commands.compute.completer;
 
+import java.util.Set;
+
 import org.jclouds.compute.ComputeService;
 import org.jclouds.domain.Location;
-
-import java.util.Set;
 
 public class LocationCompleter extends ComputeCompleterSupport {
 

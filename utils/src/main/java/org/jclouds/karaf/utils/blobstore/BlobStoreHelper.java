@@ -18,15 +18,14 @@
 
 package org.jclouds.karaf.utils.blobstore;
 
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.Module;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.BlobStoreContextFactory;
+
+import com.google.inject.Module;
 
 public class BlobStoreHelper {
 

@@ -19,6 +19,7 @@
 package org.jclouds.karaf.utils.compute;
 
 import java.util.List;
+
 import org.jclouds.compute.ComputeService;
 
 public class ComputeHelper {

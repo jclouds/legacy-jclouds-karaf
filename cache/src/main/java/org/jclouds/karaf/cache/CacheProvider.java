@@ -19,7 +19,7 @@
 package org.jclouds.karaf.cache;
 
 import java.util.Map;
-import java.util.Set;
+
 import com.google.common.collect.Multimap;
 
 public interface CacheProvider {

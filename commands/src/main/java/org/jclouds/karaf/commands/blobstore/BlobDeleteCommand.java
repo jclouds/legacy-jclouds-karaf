@@ -18,12 +18,12 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author: iocanel
