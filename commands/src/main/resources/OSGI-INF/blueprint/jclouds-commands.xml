@@ -20,17 +20,16 @@
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
 
-    <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
+    <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.1.0">
         <command name="jclouds/node-create">
             <action class="org.jclouds.karaf.commands.compute.NodeCreateCommand">
                 <property name="computeServices" ref="computeServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
-            <completers>
-                <ref component-id="imageCompleter"/>
-                <ref component-id="locationCompleter"/>
-                <null/>
-            </completers>
+            <optional-completers>
+                <entry key="--imageId" value-ref="imageCompleter"/>
+                <entry key="--locationId" value-ref="locationCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/node-destroy">
             <action class="org.jclouds.karaf.commands.compute.NodeDestroyCommand">
