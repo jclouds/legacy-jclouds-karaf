@@ -61,16 +61,16 @@ public class NodeCreateCommand extends ComputeCommandSupport {
     private String ec2NoKeyPair;
 
 
-    @Argument(name = "imageId", index = 0, multiValued = false, required = true, description = "Image")
+    @Option(name = "--imageId",  multiValued = false, required = false, description = "Image")
     private String imageId;
 
-    @Argument(name = "locationId", index = 1, multiValued = false, required = true, description = "Location")
+    @Option(name = "--locationId",  multiValued = false, required = false, description = "Location")
     private String locationId;
 
-    @Argument(name = "group", index = 2, multiValued = false, required = true, description = "Node group")
+    @Argument(name = "group", index = 0, multiValued = false, required = true, description = "Node group")
     private String group;
 
-    @Argument(name = "number", index = 3, multiValued = false, required = false, description = "Number of nodes to create")
+    @Argument(name = "number", index = 1, multiValued = false, required = false, description = "Number of nodes to create")
     private Integer number  = 1;
 
 
