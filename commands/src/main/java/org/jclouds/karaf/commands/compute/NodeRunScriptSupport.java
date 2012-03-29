@@ -17,6 +17,8 @@
  */
 package org.jclouds.karaf.commands.compute;
 
+import static org.jclouds.compute.options.RunScriptOptions.Builder.overrideLoginCredentials;
+
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -34,7 +36,7 @@ import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.ExecResponse;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeState;
-import org.jclouds.domain.Credentials;
+import org.jclouds.domain.LoginCredentials;
 
 import com.google.common.base.Predicate;
 
@@ -62,17 +64,13 @@ public abstract class NodeRunScriptSupport extends ComputeCommandSupport {
         Set<? extends NodeMetadata> nodeMetaDataSet = getComputeService().listNodesDetailsMatching(getComputeFilter());
         if (nodeMetaDataSet != null && !nodeMetaDataSet.isEmpty()) {
             NodeMetadata nodeMetadata = nodeMetaDataSet.toArray(new NodeMetadata[0])[0];
-            Credentials credentials = nodeMetadata.getCredentials();
-
-            if (credentials == null) {
-                credentials = new Credentials(null, null);
-            }
+            LoginCredentials credentials = nodeMetadata.getCredentials();
 
             if (user != null) {
-                credentials = new Credentials(user, credentials.credential);
+                credentials = credentials.toBuilder().user(user).build();
             }
 
-             Map<? extends NodeMetadata, ExecResponse> responseMap = getComputeService().runScriptOnNodesMatching(getNodeFilter(), getScript(), overrideCredentialsWith(credentials).runAsRoot(false));
+            Map<? extends NodeMetadata, ExecResponse> responseMap = getComputeService().runScriptOnNodesMatching(getNodeFilter(), getScript(), overrideLoginCredentials(credentials).runAsRoot(false));
 
             for (Map.Entry<? extends NodeMetadata, ExecResponse> entry : responseMap.entrySet()) {
                 ExecResponse response = entry.getValue();
