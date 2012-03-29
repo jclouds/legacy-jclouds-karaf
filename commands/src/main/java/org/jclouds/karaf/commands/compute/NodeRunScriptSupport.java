@@ -26,18 +26,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.Set;
+
 import javax.annotation.Nullable;
-import com.google.common.base.Predicate;
+
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.ExecResponse;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeState;
-import org.jclouds.compute.options.RunScriptOptions;
 import org.jclouds.domain.Credentials;
 
-
-import static org.jclouds.compute.options.RunScriptOptions.Builder.overrideCredentialsWith;
+import com.google.common.base.Predicate;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>

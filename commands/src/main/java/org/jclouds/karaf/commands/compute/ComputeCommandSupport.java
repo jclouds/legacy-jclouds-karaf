@@ -17,20 +17,24 @@
  */
 package org.jclouds.karaf.commands.compute;
 
-import org.apache.felix.gogo.commands.Option;
-import org.apache.karaf.shell.console.OsgiCommandSupport;
-import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.domain.*;
-import org.jclouds.domain.Location;
-import org.jclouds.karaf.cache.CacheProvider;
-import org.jclouds.karaf.utils.compute.ComputeHelper;
-import org.osgi.service.cm.ConfigurationAdmin;
-
 import java.io.PrintStream;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.felix.gogo.commands.Option;
+import org.apache.karaf.shell.console.OsgiCommandSupport;
+import org.jclouds.compute.ComputeService;
+import org.jclouds.compute.domain.ComputeMetadata;
+import org.jclouds.compute.domain.Hardware;
+import org.jclouds.compute.domain.Image;
+import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.Processor;
+import org.jclouds.domain.Location;
+import org.jclouds.karaf.cache.CacheProvider;
+import org.jclouds.karaf.utils.compute.ComputeHelper;
+import org.osgi.service.cm.ConfigurationAdmin;
 
 
 /**

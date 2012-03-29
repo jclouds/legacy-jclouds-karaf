@@ -18,9 +18,9 @@
 
 package org.jclouds.karaf.cache.tasks;
 
-import org.jclouds.karaf.cache.Cacheable;
-
 import java.util.List;
+
+import org.jclouds.karaf.cache.Cacheable;
 
 public class UpdateCachesTask<T> implements Runnable {
 

@@ -18,16 +18,14 @@
 
 package org.jclouds.karaf.itests.live;
 
-import org.apache.commons.io.IOUtils;
-import org.jclouds.karaf.itests.JcloudsFeaturesTestSupport;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.logLevel;
+import org.apache.commons.io.IOUtils;
+import org.jclouds.karaf.itests.JcloudsFeaturesTestSupport;
 
 public class JcloudsLiveTestSupport extends JcloudsFeaturesTestSupport {
 

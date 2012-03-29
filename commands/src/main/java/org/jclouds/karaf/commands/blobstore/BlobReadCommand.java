@@ -19,15 +19,16 @@
 package org.jclouds.karaf.commands.blobstore;
 
 
-import com.google.common.base.Strings;
-import com.google.common.io.ByteStreams;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import com.google.common.base.Strings;
+import com.google.common.io.ByteStreams;
 
 /**
  * @author: iocanel
