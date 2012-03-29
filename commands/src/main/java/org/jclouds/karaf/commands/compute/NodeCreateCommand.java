@@ -26,6 +26,7 @@ import org.apache.felix.gogo.commands.Option;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.ec2.compute.options.EC2TemplateOptions;
@@ -60,6 +61,11 @@ public class NodeCreateCommand extends ComputeCommandSupport {
     @Option(name = "--ec2-no-key-pair")
     private String ec2NoKeyPair;
 
+    @Option(name = "--os-family", multiValued = false, required = false, description = "OS Family")
+    private String osFamily;
+
+    @Option(name = "--os-version", multiValued = false, required = false, description = "OS Version")
+    private String osVersion;
 
     @Option(name = "--imageId",  multiValued = false, required = false, description = "Image")
     private String imageId;
@@ -98,6 +104,14 @@ public class NodeCreateCommand extends ComputeCommandSupport {
         }
         if (hardwareId != null) {
             builder.hardwareId(hardwareId);
+        }
+
+        if (osFamily != null) {
+            builder.osFamily(OsFamily.fromValue(osFamily));
+        }
+
+        if (osVersion != null) {
+            builder.osVersionMatches(osVersion);
         }
 
         TemplateOptions options = service.templateOptions();
