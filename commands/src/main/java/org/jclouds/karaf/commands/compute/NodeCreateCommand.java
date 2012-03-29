@@ -27,14 +27,18 @@ import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.TemplateBuilder;
+import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.ec2.compute.options.EC2TemplateOptions;
+import org.jclouds.scriptbuilder.statements.login.AdminAccess;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 @Command(scope = "jclouds", name = "node-create")
 public class NodeCreateCommand extends ComputeCommandSupport {
-
+    @Option(name = "--adminAccess")
+    private boolean adminAccess;
+   
     @Option(name = "--smallest")
     private boolean smallest;
 
@@ -95,20 +99,25 @@ public class NodeCreateCommand extends ComputeCommandSupport {
         if (hardwareId != null) {
             builder.hardwareId(hardwareId);
         }
+
+        TemplateOptions options = service.templateOptions();
+        if (adminAccess) {
+            options.runScript(AdminAccess.standard());
+        }
         if (ec2SecurityGroups != null) {
-            builder.build().getOptions().as(EC2TemplateOptions.class).securityGroups(ec2SecurityGroups);
+            options.as(EC2TemplateOptions.class).securityGroups(ec2SecurityGroups);
         }
         if (ec2KeyPair != null) {
-            builder.build().getOptions().as(EC2TemplateOptions.class).keyPair(ec2KeyPair);
+            options.as(EC2TemplateOptions.class).keyPair(ec2KeyPair);
         }
         if (ec2NoKeyPair != null) {
-            builder.build().getOptions().as(EC2TemplateOptions.class).noKeyPair();
+            options.as(EC2TemplateOptions.class).noKeyPair();
         }
 
         Set<? extends NodeMetadata> metadatas = null;
 
         try {
-            metadatas = service.createNodesInGroup(group, number, builder.build());
+            metadatas = service.createNodesInGroup(group, number, builder.options(options).build());
         } catch (RunNodesException ex) {
             System.out.println("Failed to create nodes:" + ex.getMessage());
         }
