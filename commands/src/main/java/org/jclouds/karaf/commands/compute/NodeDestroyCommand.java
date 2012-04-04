@@ -32,6 +32,9 @@ public class NodeDestroyCommand extends ComputeCommandSupport {
     @Override
     protected Object doExecute() throws Exception {
         getComputeService().destroyNode(id);
+        cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(),id);
+        cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(),id);
+        cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(),id);
         return null;
     }
 }

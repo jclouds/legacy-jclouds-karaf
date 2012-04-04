@@ -21,8 +21,13 @@ package org.jclouds.karaf.commands.compute.completer;
 import org.apache.karaf.shell.console.Completer;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeState;
+import org.jclouds.karaf.commands.compute.Constants;
 
 public class SuspendedNodesCompleter extends NodesCompleter implements Completer {
+
+    public void init() {
+        cache = cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE);
+    }
 
     @Override
     public boolean apply(NodeMetadata node) {

@@ -21,13 +21,14 @@ package org.jclouds.karaf.commands.compute.completer;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.domain.Location;
+import org.jclouds.karaf.commands.compute.Constants;
 
 import java.util.Set;
 
 public class HardwareCompleter extends ComputeCompleterSupport {
 
     public void init() {
-        cache = cacheProvider.getProviderCacheForType("hardware");
+        cache = cacheProvider.getProviderCacheForType(Constants.HARDWARE_CACHE);
     }
 
     @Override
