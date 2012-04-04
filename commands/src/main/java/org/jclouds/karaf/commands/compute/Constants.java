@@ -16,20 +16,17 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.compute.completer;
+package org.jclouds.karaf.commands.compute;
 
-import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.domain.NodeState;
-import org.jclouds.karaf.commands.compute.Constants;
+public class Constants {
 
-public class InactiveNodesCompleter extends NodesCompleter {
+    public static final String NODE_CACHE = "NODE_CACHE";
+    public static final String ACTIVE_NODE_CACHE = "ACTIVE_NODE_CACHE";
+    public static final String INACTIVE_NODE_CACHE = "INACTIVE_NODE_CACHE";
+    public static final String SUSPENDED_NODE_CACHE = "SUSPENDED_NODE_CACHE";
 
-    public void init() {
-        cache = cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE);
-    }
-
-    @Override
-    public boolean apply(NodeMetadata node) {
-        return !node.getState().equals(NodeState.RUNNING);
-    }
+    public static final String IMAGE_CACHE = "IMAGE_CACHE";
+    public static final String LOCATION_CACHE = "LOCATION_CACHE";
+    public static final String HARDWARE_CACHE = "HARDWARE_CACHE";
+    public static final String GROUP = "GROUP";
 }

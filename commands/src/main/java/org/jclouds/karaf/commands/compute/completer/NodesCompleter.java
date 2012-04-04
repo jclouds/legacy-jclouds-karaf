@@ -24,11 +24,12 @@ import org.apache.karaf.shell.console.Completer;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.karaf.commands.compute.Constants;
 
 public class NodesCompleter extends ComputeCompleterSupport implements Completer {
 
     public void init() {
-        cache = cacheProvider.getProviderCacheForType("node");
+        cache = cacheProvider.getProviderCacheForType(Constants.NODE_CACHE);
     }
 
     @Override
