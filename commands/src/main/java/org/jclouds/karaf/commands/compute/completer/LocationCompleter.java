@@ -22,11 +22,12 @@ import java.util.Set;
 
 import org.jclouds.compute.ComputeService;
 import org.jclouds.domain.Location;
+import org.jclouds.karaf.commands.compute.Constants;
 
 public class LocationCompleter extends ComputeCompleterSupport {
 
     public void init() {
-        cache = cacheProvider.getProviderCacheForType("location");
+        cache = cacheProvider.getProviderCacheForType(Constants.LOCATION_CACHE);
     }
 
     @Override

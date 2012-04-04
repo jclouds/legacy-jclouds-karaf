@@ -49,9 +49,11 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
     public static final String LOCATIONFORMAT = "%-32s %-9s %s";
     public static final String PROVIDERFORMAT = "%-16s %s";
 
+
+
     private ConfigurationAdmin configurationAdmin;
     private List<ComputeService> computeServices;
-    private CacheProvider cacheProvider;
+    protected CacheProvider cacheProvider;
 
     @Option(name = "--provider")
     protected String provider;
@@ -70,8 +72,7 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
         for (ComputeMetadata metadata : nodes) {
             NodeMetadata node = (NodeMetadata) metadata;
             out.println(String.format(NODEFORMAT, indent, node.getId(), node.getLocation().getId(), node.getHardware().getId(), node.getGroup(), node.getState().toString().toLowerCase()));
-            cacheProvider.getProviderCacheForType("node").put(node.getProviderId(),node.getId());
-            cacheProvider.getProviderCacheForType("group").put(node.getProviderId(),node.getGroup());
+            cacheProvider.getProviderCacheForType(Constants.GROUP).put(node.getProviderId(),node.getGroup());
         }
     }
 
@@ -79,6 +80,7 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
         out.println(String.format(HARDWAREFORMAT, indent, "[id]", "[cpu]", "[cores]", "[ram]", "[disk]"));
         for (Hardware hardware : hardwares) {
             out.println(String.format(HARDWAREFORMAT, indent, hardware.getId(), getCpuUnits(hardware), getCpuCores(hardware), getMemory(hardware)));
+            cacheProvider.getProviderCacheForType(Constants.HARDWARE_CACHE).put(hardware.getProviderId(),hardware.getId());
         }
     }
 
@@ -90,7 +92,7 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
             String location = image.getLocation() != null ? image.getLocation().getId() : "";
             String description = image.getDescription();
             out.println(String.format(IMAGEFORMAT, indent, id, location, description));
-            cacheProvider.getProviderCacheForType("image").put(image.getProviderId(),image.getId());
+            cacheProvider.getProviderCacheForType(Constants.IMAGE_CACHE).put(image.getProviderId(),image.getId());
         }
     }
 
@@ -113,7 +115,7 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
         for (Location loc : computeService.listAssignableLocations()) {
             for (Location p = loc; p != null; p = p.getParent()) {
                 all.add(p);
-                cacheProvider.getProviderCacheForType("location").put(computeService.getContext().getProviderSpecificContext().getId(),p.getId());
+                cacheProvider.getProviderCacheForType(Constants.LOCATION_CACHE).put(computeService.getContext().getProviderSpecificContext().getId(),p.getId());
             }
         }
         return all;

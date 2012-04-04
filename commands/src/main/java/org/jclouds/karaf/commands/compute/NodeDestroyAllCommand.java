@@ -45,6 +45,12 @@ public class NodeDestroyAllCommand extends ComputeCommandSupport {
             System.out.println("Destroyed nodes:");
             printNodes(nodeMetadatas, "", System.out);
         }
+
+        for (NodeMetadata node : nodeMetadatas) {
+            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
+            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
+            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
+        }
         return null;
     }
 }
