@@ -27,8 +27,10 @@
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
             <optional-completers>
+                <entry key="--provider" value-ref="computeProviderCompleter"/>
                 <entry key="--imageId" value-ref="imageCompleter"/>
                 <entry key="--locationId" value-ref="locationCompleter"/>
+                <entry key="--hardwareId" value-ref="hardwareCompleter"/>
                 <entry key="--os-family" value-ref="osFamilyCompleter"/>
             </optional-completers>
         </command>
@@ -40,12 +42,18 @@
             <completers>
                 <ref component-id="activeNodeCompleter"/>
             </completers>
+            <optional-completers>
+                <entry key="--provider" value-ref="computeProviderCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/node-destroy-all">
             <action class="org.jclouds.karaf.commands.compute.NodeDestroyAllCommand">
                 <property name="computeServices" ref="computeServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
+            <optional-completers>
+                <entry key="--provider" value-ref="computeProviderCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/group-destroy">
             <action class="org.jclouds.karaf.commands.compute.GroupDestroyCommand">
@@ -55,6 +63,9 @@
             <completers>
                 <ref component-id="groupCompleter"/>
             </completers>
+            <optional-completers>
+                <entry key="--provider" value-ref="computeProviderCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/node-suspend">
             <action class="org.jclouds.karaf.commands.compute.NodeSuspendCommand">
@@ -64,6 +75,9 @@
             <completers>
                 <ref component-id="activeNodeCompleter"/>
             </completers>
+            <optional-completers>
+                <entry key="--provider" value-ref="computeProviderCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/node-resume">
             <action class="org.jclouds.karaf.commands.compute.NodeResumeCommand">
@@ -73,6 +87,9 @@
             <completers>
                 <ref component-id="suspendedNodeCompleter"/>
             </completers>
+            <optional-completers>
+                <entry key="--provider" value-ref="computeProviderCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/node-runscript">
             <action class="org.jclouds.karaf.commands.compute.NodeRunScriptCommand">
@@ -82,6 +99,9 @@
             <completers>
                 <ref component-id="activeNodeCompleter"/>
             </completers>
+            <optional-completers>
+                <entry key="--provider" value-ref="computeProviderCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/group-runscript">
             <action class="org.jclouds.karaf.commands.compute.GroupRunScriptCommand">
@@ -97,6 +117,9 @@
                 <property name="computeServices" ref="computeServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
+            <optional-completers>
+                <entry key="--provider" value-ref="computeProviderCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/compute-provider-list">
             <action class="org.jclouds.karaf.commands.compute.ComputeListCommand">
@@ -115,24 +138,36 @@
                 <property name="computeServices" ref="computeServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
+            <optional-completers>
+                <entry key="--provider" value-ref="computeProviderCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/hardware-list">
             <action class="org.jclouds.karaf.commands.compute.HardwareListCommand">
                 <property name="computeServices" ref="computeServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
+            <optional-completers>
+                <entry key="--provider" value-ref="computeProviderCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/location-list">
             <action class="org.jclouds.karaf.commands.compute.LocationListCommand">
                 <property name="computeServices" ref="computeServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
+            <optional-completers>
+                <entry key="--provider" value-ref="computeProviderCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/image-list">
             <action class="org.jclouds.karaf.commands.compute.ImageListCommand">
                 <property name="computeServices" ref="computeServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
+            <optional-completers>
+                <entry key="--provider" value-ref="computeProviderCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/blobstore-write">
             <action class="org.jclouds.karaf.commands.blobstore.BlobWriteCommand">
@@ -144,6 +179,9 @@
                 <ref component-id="blobCompleter"/>
                 <null/>
             </completers>
+            <optional-completers>
+                <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
+            </optional-completers>
         </command>
 
         <command name="jclouds/blobstore-read">
@@ -156,18 +194,27 @@
                 <ref component-id="blobCompleter"/>
                 <null/>
             </completers>
+            <optional-completers>
+                <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/blobstore-list">
             <action class="org.jclouds.karaf.commands.blobstore.BlobListCommand">
                 <property name="blobStoreServices" ref="blobStoreServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
+            <optional-completers>
+                <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/blobstore-create">
             <action class="org.jclouds.karaf.commands.blobstore.BlobCreateCommand">
                 <property name="blobStoreServices" ref="blobStoreServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
+            <optional-completers>
+                <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/blobstore-delete">
             <action class="org.jclouds.karaf.commands.blobstore.BlobDeleteCommand">
@@ -177,6 +224,9 @@
             <completers>
                 <ref component-id="containerCompleter"/>
             </completers>
+            <optional-completers>
+                <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
+            </optional-completers>
         </command>
     </command-bundle>
 
@@ -191,7 +241,15 @@
         <property name="cacheProvider" ref="cacheProvider"/>
     </bean>
 
+    <bean id="blobStoreProviderCompleter" class="org.jclouds.karaf.commands.blobstore.completer.BlobStoreProviderCompleter">
+        <property name="blobStoreServices" ref="blobStoreServices"/>
+    </bean>
+
     <!-- Compute Completers -->
+    <bean id="computeProviderCompleter" class="org.jclouds.karaf.commands.compute.completer.ComputeProviderCompleter">
+        <property name="computeServices" ref="computeServices"/>
+    </bean>
+
     <bean id="activeNodeCompleter" class="org.jclouds.karaf.commands.compute.completer.ActiveNodesCompleter" init-method="init">
         <property name="cacheProvider" ref="cacheProvider"/>
     </bean>
@@ -216,7 +274,17 @@
         <property name="cacheProvider" ref="cacheProvider"/>
     </bean>
 
+    <bean id="hardwareCompleter" class="org.jclouds.karaf.commands.compute.completer.HardwareCompleter" init-method="init">
+        <property name="cacheProvider" ref="cacheProvider"/>
+    </bean>
+
     <bean id="osFamilyCompleter" class="org.jclouds.karaf.commands.compute.completer.OsFamilyCompleter"/>
+
+    <service ref="computeProviderCompleter" auto-export="interfaces">
+        <service-properties>
+            <entry key="completer-type" value="compute-provider"/>
+        </service-properties>
+    </service>
 
     <service ref="activeNodeCompleter" auto-export="interfaces">
         <service-properties>
@@ -260,9 +328,22 @@
         </service-properties>
     </service>
 
+    <service ref="hardwareCompleter" auto-export="interfaces">
+        <service-properties>
+            <entry key="completer-type" value="hardware"/>
+            <entry key="cache-type" value="jclouds.computeservice"/>
+        </service-properties>
+    </service>
+
     <service ref="osFamilyCompleter" auto-export="interfaces">
         <service-properties>
             <entry key="completer-type" value="osfamily"/>
+        </service-properties>
+    </service>
+
+    <service ref="blobStoreProviderCompleter" auto-export="interfaces">
+        <service-properties>
+            <entry key="completer-type" value="blobstore-provider"/>
         </service-properties>
     </service>
 
