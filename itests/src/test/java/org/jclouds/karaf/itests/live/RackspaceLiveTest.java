@@ -73,7 +73,7 @@ public class RackspaceLiveTest extends JcloudsLiveTestSupport {
             ComputeService computeService = getOsgiService(ComputeService.class);
             Thread.sleep(DEFAULT_TIMEOUT);
             System.err.println(executeCommand("jclouds:image-list"));
-            System.err.println(executeCommand("jclouds:node-create --image " + image + " --location" + location + " " + group));
+            System.err.println(executeCommand("jclouds:node-create --imageId " + image + " --locationId " + location + " " + group));
             System.err.println(executeCommand("jclouds:group-runscript -d ls -u " + user + " " + group));
             assertTrue("Expected at least one node", computeService.listNodes().size() >= 1);
         }
