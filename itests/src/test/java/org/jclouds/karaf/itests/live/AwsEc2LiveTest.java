@@ -74,7 +74,7 @@ public class AwsEc2LiveTest extends JcloudsLiveTestSupport {
             Thread.sleep(DEFAULT_TIMEOUT);
 
             System.err.println(executeCommand("jclouds:image-list"));
-            System.err.println(executeCommand("jclouds:node-create " + image + " " + location + " " + group));
+            System.err.println(executeCommand("jclouds:node-create --image " + image + " --location" + location + " " + group));
             System.err.println(executeCommand("jclouds:group-runscript -d ls -u " + user + " " + group));
             assertTrue("Expected at least one node", computeService.listNodes().size() >= 1);
         }
