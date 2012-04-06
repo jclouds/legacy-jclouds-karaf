@@ -47,7 +47,7 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
     public static final String HARDWAREFORMAT = "%s%-20s %5s %7s %6s";
     public static final String IMAGEFORMAT = "%s%-30s %-32s %s";
     public static final String LOCATIONFORMAT = "%-32s %-9s %s";
-    public static final String PROVIDERFORMAT = "%-16s %s";
+    public static final String PROVIDERFORMAT = "%-24s %-12s %-12s";
 
 
 
@@ -60,10 +60,17 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
 
 
 
-     protected void printComputeProviders(List<ComputeService> computeServices, String indent, PrintStream out) {
-        out.println(String.format(PROVIDERFORMAT, "[id]", "[type]"));
-        for (ComputeService computeService : computeServices) {
-            out.println(String.format(PROVIDERFORMAT, computeService.getContext().getProviderSpecificContext().getId(), "compute"));
+     protected void printComputeProviders(Set<String> providers, List<ComputeService> computeServices, String indent, PrintStream out) {
+        out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
+        for (String provider : providers) {
+            boolean registered = false;
+            for (ComputeService computeService:computeServices) {
+                if (computeService.getContext().getProviderSpecificContext().getId().equals(provider)) {
+                    registered = true;
+                    break;
+                }
+            }
+            out.println(String.format(PROVIDERFORMAT, provider, "compute", registered));
         }
     }
 
