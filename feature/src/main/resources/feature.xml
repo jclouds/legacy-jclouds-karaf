@@ -503,6 +503,7 @@
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <feature version='${project.version}'>jclouds-compute</feature>
         <feature version='${project.version}'>jclouds-driver-jsch</feature>
+        <bundle>mvn:org.jclouds.karaf/core/${project.version}</bundle>
         <bundle>mvn:org.jclouds.karaf/services/${project.version}</bundle>
     </feature>
 
@@ -512,6 +513,7 @@
         <feature version='${project.version}'>jclouds-services</feature>
         <feature version='${project.version}'>jclouds-compute</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <bundle>mvn:org.jclouds.karaf/core/${project.version}</bundle>
         <bundle>mvn:org.jclouds.karaf/cache/${project.version}</bundle>
         <bundle>mvn:org.jclouds.karaf/commands/${project.version}</bundle>
     </feature>

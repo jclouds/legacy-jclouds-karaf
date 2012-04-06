@@ -19,13 +19,28 @@
 package org.jclouds.karaf.commands.blobstore;
 
 import org.apache.felix.gogo.commands.Command;
+import org.jclouds.karaf.core.BlobStoreProviderListener;
 
 @Command(scope = "jclouds", name = "blobstore-provider-list")
 public class BlobStoreListCommand extends BlobStoreCommandSupport  {
 
+    private BlobStoreProviderListener blobStoreProviderListener;
+
     @Override
     protected Object doExecute() throws Exception {
-        printBlobStoreProviders(getBlobStoreServices(),"",System.out);
+        try {
+        printBlobStoreProviders(blobStoreProviderListener.getInstalledProviders(), getBlobStoreServices(),"",System.out);
+        }catch(Exception ex) {
+            //noop
+        }
         return null;
+    }
+
+    public BlobStoreProviderListener getBlobStoreProviderListener() {
+        return blobStoreProviderListener;
+    }
+
+    public void setBlobStoreProviderListener(BlobStoreProviderListener blobStoreProviderListener) {
+        this.blobStoreProviderListener = blobStoreProviderListener;
     }
 }

@@ -19,9 +19,13 @@ package org.jclouds.karaf.services;
 
 import java.util.Hashtable;
 
+import org.jclouds.karaf.core.BlobStoreProviderListener;
+import org.jclouds.karaf.core.ComputeProviderListener;
+import org.jclouds.karaf.core.internal.ProviderBundleListener;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ManagedServiceFactory;
 
 /**
@@ -29,6 +33,8 @@ import org.osgi.service.cm.ManagedServiceFactory;
  */
 public class Activator implements BundleActivator {
 
+    ServiceRegistration computeFactoryRegistration;
+    ServiceRegistration blobStoreFactoryRegistration;
     ComputeServiceFactory computeFactory;
     BlobStoreServiceFactory blobStoreFactory;
 
@@ -38,7 +44,12 @@ public class Activator implements BundleActivator {
     }
 
     public void stop(BundleContext context) throws Exception {
-        computeFactory.destroy();
+        if (computeFactoryRegistration != null) {
+            computeFactoryRegistration.unregister();
+        }
+        if (blobStoreFactoryRegistration != null) {
+            blobStoreFactoryRegistration.unregister();
+        }
     }
 
     /**
@@ -46,11 +57,11 @@ public class Activator implements BundleActivator {
      * @param context
      */
     private void registerComputeServiceFactory(BundleContext context) {
+
         Hashtable<String, Object> properties = new Hashtable<String, Object>();
         properties.put(Constants.SERVICE_PID, "org.jclouds.compute");
         computeFactory = new ComputeServiceFactory(context);
-        computeFactory.init();
-        context.registerService(ManagedServiceFactory.class.getName(),
+        computeFactoryRegistration = context.registerService(new String[] {ManagedServiceFactory.class.getName(), ComputeProviderListener.class.getName()},
                 computeFactory, properties);
     }
 
@@ -62,7 +73,7 @@ public class Activator implements BundleActivator {
        Hashtable<String, Object> properties = new Hashtable<String, Object>();
         properties.put(Constants.SERVICE_PID, "org.jclouds.blobstore");
         blobStoreFactory = new BlobStoreServiceFactory(context);
-        context.registerService(ManagedServiceFactory.class.getName(),
+        blobStoreFactoryRegistration = context.registerService(new String[] {ManagedServiceFactory.class.getName(),BlobStoreProviderListener.class.getName()},
                 blobStoreFactory, properties);
     }
 }

@@ -27,12 +27,14 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.util.BlobStoreUtils;
+import org.jclouds.compute.ComputeService;
 import org.jclouds.karaf.cache.CacheProvider;
 import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
 import org.slf4j.Logger;
@@ -48,7 +50,7 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BlobStoreCommandSupport.class);
 
-    public static final String PROVIDERFORMAT = "%-16s %s";
+    public static final String PROVIDERFORMAT = "%-24s %-12s %-12s";
 
     private List<BlobStore> services;
 
@@ -242,10 +244,17 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
         return new byte[0];
     }
 
-     protected void printBlobStoreProviders(List<BlobStore> blobStores, String indent, PrintStream out) {
-        out.println(String.format(PROVIDERFORMAT, "[id]", "[type]"));
-        for (BlobStore blobStore : blobStores) {
-            out.println(String.format(PROVIDERFORMAT, blobStore.getContext().getProviderSpecificContext().getId(), "blob"));
+    protected void printBlobStoreProviders(Set<String> providers, List<BlobStore> blobStores, String indent, PrintStream out) {
+        out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
+        for (String provider : providers) {
+            boolean registered = false;
+            for (BlobStore blobStore:blobStores) {
+                if (blobStore.getContext().getProviderSpecificContext().getId().equals(provider)) {
+                    registered = true;
+                    break;
+                }
+            }
+            out.println(String.format(PROVIDERFORMAT, provider, "blobstore", registered));
         }
     }
 

@@ -19,13 +19,28 @@
 package org.jclouds.karaf.commands.compute;
 
 import org.apache.felix.gogo.commands.Command;
+import org.jclouds.karaf.core.ComputeProviderListener;
 
 @Command(scope = "jclouds", name = "compute-provider-list")
-public class ComputeListCommand extends ComputeCommandSupport  {
+public class ComputeListCommand extends ComputeCommandSupport {
+
+    private ComputeProviderListener computeProviderListener;
 
     @Override
     protected Object doExecute() throws Exception {
-        printComputeProviders(getComputeServices(),"",System.out);
+        try {
+            printComputeProviders(computeProviderListener.getInstalledProviders(), getComputeServices(), "", System.out);
+        } catch (Exception ex) {
+            //noope
+        }
         return null;
+    }
+
+    public ComputeProviderListener getComputeProviderListener() {
+        return computeProviderListener;
+    }
+
+    public void setComputeProviderListener(ComputeProviderListener computeProviderListener) {
+        this.computeProviderListener = computeProviderListener;
     }
 }

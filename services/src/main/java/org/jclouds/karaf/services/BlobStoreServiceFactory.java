@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2011, the original authors
  *
  * ====================================================================
@@ -15,17 +15,15 @@
  * limitations under the License.
  * ====================================================================
  */
+
 package org.jclouds.karaf.services;
 
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
-
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.AbstractModule;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.BlobStoreContextFactory;
+import org.jclouds.karaf.core.BlobStoreProviderListener;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -34,16 +32,33 @@ import org.osgi.service.cm.ManagedServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class BlobStoreServiceFactory implements ManagedServiceFactory {
+public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStoreProviderListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BlobStoreServiceFactory.class);
 
-    private final Map<String, ServiceRegistration> registrations =
-            new ConcurrentHashMap<String, ServiceRegistration>();
+    public static final String PROVIDER = "provider";
+    public static final String IDENTITY = "identity";
+    public static final String CREDENTIAL = "credential";
+
+
+    private final Map<String, ServiceRegistration> registrations = new ConcurrentHashMap<String, ServiceRegistration>();
+    private final Map<String, Dictionary> pendingPids = new HashMap<String, Dictionary>();
+    private final Map<String, String> providerPids = new HashMap<String, String>();
+    private final Set<String> installedProviders = new LinkedHashSet<String>();
+
 
     private final BundleContext bundleContext;
+    private AbstractModule credentialStore;
+
 
     public BlobStoreServiceFactory(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
@@ -54,7 +69,7 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory {
     }
 
     public void updated(String pid, Dictionary properties) throws ConfigurationException {
-        System.out.println("Updating configuration properties for BlobStoreServiceFactory " + pid);
+        System.out.println("Updating configuration properties for BlobStore " + pid);
         ServiceRegistration newRegistration = null;
         try {
             if (properties != null) {
@@ -64,34 +79,72 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory {
                     Object val = properties.get(key);
                     props.put(key, val);
                 }
-                String provider = (String) properties.get("provider");
-                String identity = (String) properties.get("identity");
-                String credential = (String) properties.get("credential");
-                BlobStoreContext context =  new BlobStoreContextFactory().createContext(provider, identity, credential,  ImmutableSet.of(new Log4JLoggingModule()), props);
+                String provider = (String) properties.get(PROVIDER);
+
+                if (!installedProviders.contains(provider)) {
+                    pendingPids.put(pid, properties);
+                    LOGGER.debug("Provider {} is not currently installed. Service will resume once the the provider is installed.", provider);
+                    return;
+                }
+
+                String identity = (String) properties.get(IDENTITY);
+                String credential = (String) properties.get(CREDENTIAL);
+
+                BlobStoreContext context =  new BlobStoreContextFactory().createContext(provider, identity, credential, ImmutableSet.of(new Log4JLoggingModule()), props);
                 BlobStore blobStore = context.getBlobStore();
                 newRegistration = bundleContext.registerService(
                         BlobStore.class.getName(), blobStore, properties);
+
+
+                //If all goes well remove the pending pid.
+                pendingPids.remove(pid);
             }
         } catch (Exception ex) {
-            LOGGER.error("Error creating blob store service.",ex);
+            LOGGER.error("Error creating blobstore service.",ex);
         }
         finally {
             ServiceRegistration oldRegistration = (newRegistration == null)
                     ? registrations.remove(pid)
                     : registrations.put(pid, newRegistration);
             if (oldRegistration != null) {
-                System.out.println("Unregistering BlobStoreService " + pid);
+                System.out.println("Unregistering BlobStore " + pid);
                 oldRegistration.unregister();
             }
         }
-
     }
 
     public void deleted(String pid) {
-        System.out.println("BlobStoreServiceFactory deleted (" + pid + ")");
+        System.out.println("BlobStore deleted (" + pid + ")");
         ServiceRegistration oldRegistration = registrations.remove(pid);
         if (oldRegistration != null) {
             oldRegistration.unregister();
         }
+    }
+
+    @Override
+    public void providerInstalled(String provider) {
+        installedProviders.add(provider);
+        //Check if there is a pid that requires the installed provider.
+        String pid = providerPids.get(provider);
+        if (pid != null) {
+            Dictionary properties = pendingPids.get(pid);
+            try {
+                updated(pid, properties);
+            } catch (ConfigurationException e) {
+                LOGGER.error("Error while installing service for pending provider " + provider + " with pid "+ pid, e);
+            }
+        }
+    }
+
+    @Override
+    public void providerUninstalled(String provider) {
+        String pid = providerPids.get(provider);
+        if (pid != null) {
+            deleted(pid);
+        }
+    }
+
+    public Set<String> getInstalledProviders() {
+        return installedProviders;
     }
 }
