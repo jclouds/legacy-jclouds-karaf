@@ -32,6 +32,7 @@ import javax.inject.Singleton;
 import org.jclouds.domain.Credentials;
 import org.jclouds.rest.ConfiguresCredentialStore;
 import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,18 +40,18 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
 @ConfiguresCredentialStore
-public class ConfigurationAdminCredentialStore extends AbstractModule {
+public class ConfigurationAdminCredentialStore extends CredentialStore {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationAdminCredentialStore.class);
     public static final String CREDENTIAL_STORE_PID = "org.jclouds.credentials";
 
-
+    private ConfigurationAdmin configurationAdmin;
     private Configuration configuration;
     private ConfigurationAdminBacking backing;
 
-    public ConfigurationAdminCredentialStore(Configuration configuration) {
-      this.configuration = configuration;
-      this.backing = new ConfigurationAdminBacking(configuration);
+    public void init() throws IOException {
+        this.configuration = configurationAdmin.getConfiguration(CREDENTIAL_STORE_PID);
+        this.backing = new ConfigurationAdminBacking(configuration);
     }
 
     /**
@@ -60,10 +61,17 @@ public class ConfigurationAdminCredentialStore extends AbstractModule {
     protected void configure() {
     }
 
-    @Provides
-    @Singleton
-    protected Map<String, Credentials> provideCredentialStore() {
+    @Override
+    Map<String, Credentials> getStoreBacking() {
         return backing;
+    }
+
+    public ConfigurationAdmin getConfigurationAdmin() {
+        return configurationAdmin;
+    }
+
+    public void setConfigurationAdmin(ConfigurationAdmin configurationAdmin) {
+        this.configurationAdmin = configurationAdmin;
     }
 
     private class ConfigurationAdminBacking implements Map<String, Credentials> {

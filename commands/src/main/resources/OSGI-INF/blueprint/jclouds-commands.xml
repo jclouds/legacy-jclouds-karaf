@@ -125,12 +125,14 @@
             <action class="org.jclouds.karaf.commands.compute.ComputeListCommand">
                 <property name="computeServices" ref="computeServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
+                <property name="computeProviderListener" ref="computeProviderListener"/>
             </action>
         </command>
         <command name="jclouds/blobstore-provider-list">
             <action class="org.jclouds.karaf.commands.blobstore.BlobStoreListCommand">
                 <property name="blobStoreServices" ref="blobStoreServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
+                <property name="blobStoreProviderListener" ref="blobStoreProviderListener"/>
             </action>
         </command>
         <command name="jclouds/node-list">
@@ -365,5 +367,9 @@
 
     <reference-list id="computeServices" interface="org.jclouds.compute.ComputeService" availability="optional"/>
     <reference-list id="blobStoreServices" interface="org.jclouds.blobstore.BlobStore" availability="optional"/>
+
+    <reference id="blobStoreProviderListener" interface="org.jclouds.karaf.core.BlobStoreProviderListener" availability="optional"/>
+
+    <reference id="computeProviderListener" interface="org.jclouds.karaf.core.ComputeProviderListener" availability="optional"/>
 
 </blueprint>

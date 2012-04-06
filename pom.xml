@@ -68,7 +68,7 @@
                 <configuration>
                     <instructions>
                         <Bundle-Name>${project.name}</Bundle-Name>
-                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-SymbolicName>org.jclouds.karaf.${project.artifactId}</Bundle-SymbolicName>
                         <Export-Package>${osgi.export}</Export-Package>
                         <Import-Package>${osgi.import}</Import-Package>
                         <DynamicImport-Package>${osgi.dynamic.import}</DynamicImport-Package>
@@ -138,6 +138,7 @@
         <module>feature</module>
         <module>itests</module>
         <module>cache</module>
+        <module>core</module>
     </modules>
 
     <properties>
