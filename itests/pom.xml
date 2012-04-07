@@ -77,8 +77,22 @@
         </dependency>
 
         <dependency>
+            <groupId>org.jclouds.karaf</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.jclouds</groupId>
             <artifactId>jclouds-core</artifactId>
+            <version>${jclouds.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jclouds.driver</groupId>
+            <artifactId>jclouds-log4j</artifactId>
             <version>${jclouds.version}</version>
             <scope>test</scope>
         </dependency>

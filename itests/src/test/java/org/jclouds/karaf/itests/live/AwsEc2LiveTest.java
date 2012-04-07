@@ -69,7 +69,7 @@ public class AwsEc2LiveTest extends JcloudsLiveTestSupport {
     @Test
     public void testCreateNodeLive() throws InterruptedException {
         if (isComputeLiveConfigured()) {
-            createManagedComputeService("aws-ec2");
+            createManagedComputeService("aws-ec2", false);
             ComputeService computeService = getOsgiService(ComputeService.class,1000000L);
             Thread.sleep(DEFAULT_TIMEOUT);
 

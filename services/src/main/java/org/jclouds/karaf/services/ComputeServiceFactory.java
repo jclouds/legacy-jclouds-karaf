@@ -22,6 +22,7 @@ import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.ComputeServiceContextFactory;
 import org.jclouds.karaf.core.ComputeProviderListener;
+import org.jclouds.karaf.core.ComputeServiceEventProxy;
 import org.jclouds.karaf.services.modules.CredentialStore;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
 import org.jclouds.sshj.config.SshjSshClientModule;
@@ -44,6 +45,7 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
     public static final String PROVIDER = "provider";
     public static final String IDENTITY = "identity";
     public static final String CREDENTIAL = "credential";
+    public static final String NODE_EVENT_SUPPORT = "eventsupport";
     public static final String CREDENTIAL_STORE = "credential-store";
     public static final String DEFAULT_CREDENTIAL_STORE_TYPE = "cadmin";
     public static final String CREDENTIAL_STORE_FILTER = "(&(objectClass=org.jclouds.karaf.services.modules.CredentialStore)(credential-store-type=%s))";
@@ -104,8 +106,15 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
                 String identity = (String) properties.get(IDENTITY);
                 String credential = (String) properties.get(CREDENTIAL);
                 String storeType = (String) properties.get(CREDENTIAL_STORE);
+                String eventSupport = (String) properties.get(NODE_EVENT_SUPPORT);
+                Boolean enableEventSupport = false;
+
                 if (storeType == null || storeType.isEmpty()) {
                     storeType = DEFAULT_CREDENTIAL_STORE_TYPE;
+                }
+
+                if (eventSupport != null && !eventSupport.isEmpty()) {
+                    enableEventSupport = Boolean.parseBoolean(eventSupport);
                 }
 
                 CredentialStore credentialStore = lookupStore(storeType);
@@ -119,7 +128,13 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
                             .createContext(provider, identity, credential,
                                     ImmutableSet.of(new Log4JLoggingModule(), new SshjSshClientModule()), props);
                 }
-                ComputeService client = context.getComputeService();
+                ComputeService client = null;
+
+                if (enableEventSupport) {
+                    client = new ComputeServiceEventProxy(bundleContext,context.getComputeService());
+                } else {
+                    client = context.getComputeService();
+                }
 
                 newRegistration = bundleContext.registerService(
                         ComputeService.class.getName(), client, properties);
