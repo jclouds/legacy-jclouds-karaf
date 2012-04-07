@@ -35,13 +35,15 @@
 
     <properties>
         <osgi.export>
-            org.jclouds.karaf.core;version=${project.version}
+            org.jclouds.karaf.core;version=${project.version};-noimport=true
         </osgi.export>
         <osgi.private>
             org.jclouds.karaf.core.internal
         </osgi.private>
         <osgi.import>
-            org.jclouds*;version="${project.version}",
+            org.jclouds.compute*;version="${jclouds.version}";resolution:=optional,
+            org.jclouds.scriptbuilder*;version="${jclouds.version}";resolution:=optional,
+            org.jclouds*;version="${jclouds.version}",
             *
         </osgi.import>
     </properties>
