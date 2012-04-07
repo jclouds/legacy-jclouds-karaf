@@ -19,6 +19,7 @@
 package org.jclouds.karaf.itests.live;
 
 import static org.junit.Assert.assertTrue;
+import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.debugConfiguration;
 import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
 import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.logLevel;
 import static org.ops4j.pax.exam.CoreOptions.scanFeatures;
@@ -69,8 +70,8 @@ public class RackspaceLiveTest extends JcloudsLiveTestSupport {
     @Test
     public void testNodeCreateLive() throws InterruptedException {
         if (isComputeLiveConfigured()) {
-            createManagedComputeService("cloudservers-us");
-            ComputeService computeService = getOsgiService(ComputeService.class);
+            createManagedComputeService("cloudservers-us", false);
+            ComputeService computeService = getOsgiService(ComputeService.class, 1000000L);
             Thread.sleep(DEFAULT_TIMEOUT);
             System.err.println(executeCommand("jclouds:image-list"));
             System.err.println(executeCommand("jclouds:node-create --imageId " + image + " --locationId " + location + " " + group));

@@ -21,13 +21,13 @@
 
     <reference id="configurationAdmin" interface="org.osgi.service.cm.ConfigurationAdmin"/>
 
-    <bean id="configAdminCredentialStore" class="org.jclouds.karaf.services.modules.ConfigurationAdminCredentialStore">
+    <bean id="configAdminCredentialStore" class="org.jclouds.karaf.services.modules.ConfigurationAdminCredentialStore" init-method="init">
         <property name="configurationAdmin" ref="configurationAdmin"/>
     </bean>
 
     <service ref="configAdminCredentialStore" interface="org.jclouds.karaf.services.modules.CredentialStore">
         <service-properties>
-            <entry key="credential-store_type" value="cadmin"/>
+            <entry key="credential-store-type" value="cadmin"/>
         </service-properties>
     </service>
 

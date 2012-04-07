@@ -51,10 +51,24 @@
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.compendium</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.jclouds</groupId>
             <artifactId>jclouds-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jclouds</groupId>
+            <artifactId>jclouds-compute</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jclouds</groupId>
+            <artifactId>jclouds-blobstore</artifactId>
         </dependency>
 
         <dependency>
