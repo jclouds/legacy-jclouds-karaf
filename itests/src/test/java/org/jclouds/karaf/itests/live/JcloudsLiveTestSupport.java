@@ -62,12 +62,13 @@ public class JcloudsLiveTestSupport extends JcloudsFeaturesTestSupport {
     /**
      * Creates a Manged Compute Service using the configured system properties.
      */
-    public void createManagedComputeService(String provider) {
+    public void createManagedComputeService(String provider, boolean eventSupport) {
         List<String> list = new LinkedList<String>();
         list.add("config:edit org.jclouds.compute-test");
         list.add("config:propset provider " + provider);
         list.add("config:propset identity " + identity);
         list.add("config:propset credential " + credential);
+        list.add("config:propset eventsupport " + String.valueOf(eventSupport));
         if (regions != null && !regions.isEmpty()) {
             list.add("config:propset jclouds.regions " + regions);
         }
