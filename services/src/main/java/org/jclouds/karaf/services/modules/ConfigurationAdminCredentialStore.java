@@ -26,18 +26,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
-import javax.inject.Singleton;
-
 import org.jclouds.domain.Credentials;
+import org.jclouds.karaf.core.CredentialStore;
 import org.jclouds.rest.ConfiguresCredentialStore;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
 
 @ConfiguresCredentialStore
 public class ConfigurationAdminCredentialStore extends CredentialStore {
@@ -47,11 +42,10 @@ public class ConfigurationAdminCredentialStore extends CredentialStore {
 
     private ConfigurationAdmin configurationAdmin;
     private Configuration configuration;
-    private ConfigurationAdminBacking backing;
 
     public void init() throws IOException {
         this.configuration = configurationAdmin.getConfiguration(CREDENTIAL_STORE_PID);
-        this.backing = new ConfigurationAdminBacking(configuration);
+        this.store = new ConfigurationAdminBacking(configuration);
     }
 
     /**
@@ -59,11 +53,6 @@ public class ConfigurationAdminCredentialStore extends CredentialStore {
      */
     @Override
     protected void configure() {
-    }
-
-    @Override
-    Map<String, Credentials> getStoreBacking() {
-        return backing;
     }
 
     public ConfigurationAdmin getConfigurationAdmin() {

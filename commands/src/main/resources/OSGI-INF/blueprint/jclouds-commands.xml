@@ -98,6 +98,7 @@
             </action>
             <completers>
                 <ref component-id="activeNodeCompleter"/>
+                <null/>
             </completers>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
@@ -110,6 +111,7 @@
             </action>
             <completers>
                 <ref component-id="groupCompleter"/>
+                <null/>
             </completers>
         </command>
         <command name="jclouds/provider-info">

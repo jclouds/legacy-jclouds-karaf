@@ -16,7 +16,7 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.services.modules;
+package org.jclouds.karaf.core;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -25,9 +25,9 @@ import org.jclouds.domain.Credentials;
 import javax.inject.Singleton;
 import java.util.Map;
 
-public abstract class CredentialStore extends AbstractModule {
+public class CredentialStore extends AbstractModule {
 
-
+    protected Map<String, Credentials> store;
     /**
      * Configures a {@link com.google.inject.Binder} via the exposed methods.
      */
@@ -37,9 +37,11 @@ public abstract class CredentialStore extends AbstractModule {
 
     @Provides
     @Singleton
-    protected Map<String, Credentials> getStore() {
-       return getStoreBacking();
+    public Map<String, Credentials> getStore() {
+       return store;
     }
 
-     abstract Map<String, Credentials> getStoreBacking();
+    public void setStore(Map<String, Credentials> store) {
+        this.store = store;
+    }
 }
