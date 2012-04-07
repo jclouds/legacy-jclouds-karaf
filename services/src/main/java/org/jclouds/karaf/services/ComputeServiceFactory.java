@@ -23,7 +23,7 @@ import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.ComputeServiceContextFactory;
 import org.jclouds.karaf.core.ComputeProviderListener;
 import org.jclouds.karaf.core.ComputeServiceEventProxy;
-import org.jclouds.karaf.services.modules.CredentialStore;
+import org.jclouds.karaf.core.CredentialStore;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.osgi.framework.BundleContext;
@@ -48,7 +48,7 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
     public static final String NODE_EVENT_SUPPORT = "eventsupport";
     public static final String CREDENTIAL_STORE = "credential-store";
     public static final String DEFAULT_CREDENTIAL_STORE_TYPE = "cadmin";
-    public static final String CREDENTIAL_STORE_FILTER = "(&(objectClass=org.jclouds.karaf.services.modules.CredentialStore)(credential-store-type=%s))";
+    public static final String CREDENTIAL_STORE_FILTER = "(&(objectClass=org.jclouds.karaf.core.CredentialStore)(credential-store-type=%s))";
 
 
     private final Map<String, ServiceRegistration> registrations = new ConcurrentHashMap<String, ServiceRegistration>();
