@@ -35,7 +35,7 @@
 
     <properties>
         <osgi.export>
-            org.jclouds.karaf.core;version=${project.version};-noimport=true
+            org.jclouds.karaf.core;version=${project.version};-noimport:=true
         </osgi.export>
         <osgi.private>
             org.jclouds.karaf.core.internal
