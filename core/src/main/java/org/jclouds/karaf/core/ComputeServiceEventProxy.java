@@ -19,12 +19,10 @@
 package org.jclouds.karaf.core;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.util.concurrent.ListenableFuture;
-import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.ComputeServiceContext;
-import org.jclouds.compute.RunNodesException;
-import org.jclouds.compute.RunScriptOnNodesException;
+import org.jclouds.compute.*;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.ExecResponse;
 import org.jclouds.compute.domain.Hardware;
@@ -58,7 +56,7 @@ public class ComputeServiceEventProxy implements ComputeService {
     private BundleContext bundleContext;
     private ComputeService computeService;
 
-    private ServiceTracker listnerTracker;
+    private ServiceTracker listenerTracker;
 
     /**
      * Constructor
@@ -69,14 +67,14 @@ public class ComputeServiceEventProxy implements ComputeService {
     public ComputeServiceEventProxy(BundleContext bundleContext, ComputeService computeService) {
         this.bundleContext = bundleContext;
         this.computeService = computeService;
-        this.listnerTracker = new ServiceTracker(bundleContext, NodeListener.class.getName(), null);
-        this.listnerTracker.open();
+        this.listenerTracker = new ServiceTracker(bundleContext, NodeListener.class.getName(), null);
+        this.listenerTracker.open();
     }
 
     private List<? extends NodeListener> getNodeListeners() {
         List<NodeListener> listeners = new LinkedList<NodeListener>();
         try {
-            listeners.addAll(Arrays.asList((NodeListener[]) listnerTracker.getServices()));
+            listeners.addAll(Arrays.asList((NodeListener[]) listenerTracker.getServices()));
         } catch (Exception ex) {
             LOGGER.warn("Could not lookup node listeners. Listeners will not receive the last event.");
         }
@@ -487,4 +485,9 @@ public class ComputeServiceEventProxy implements ComputeService {
     public ExecResponse runScriptOnNode(String id, String runScript) {
         return computeService.runScriptOnNode(id, runScript);
     }
+
+  @Override
+  public Optional<ImageExtension> getImageExtension() {
+    return null;  //To change body of implemented methods use File | Settings | File Templates.
+  }
 }

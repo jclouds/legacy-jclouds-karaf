@@ -20,11 +20,13 @@ package org.jclouds.karaf.services;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
+import com.google.inject.Module;
+import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
-import org.jclouds.blobstore.BlobStoreContextFactory;
 import org.jclouds.karaf.core.BlobStoreProviderListener;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
+import org.jclouds.providers.ProviderMetadata;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
@@ -32,13 +34,7 @@ import org.osgi.service.cm.ManagedServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStoreProviderListener {
@@ -53,7 +49,7 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
     private final Map<String, ServiceRegistration> registrations = new ConcurrentHashMap<String, ServiceRegistration>();
     private final Map<String, Dictionary> pendingPids = new HashMap<String, Dictionary>();
     private final Map<String, String> providerPids = new HashMap<String, String>();
-    private final Set<String> installedProviders = new LinkedHashSet<String>();
+    private final Map<String, ProviderMetadata> installedProviders = new HashMap<String, ProviderMetadata>();
 
 
     private final BundleContext bundleContext;
@@ -81,7 +77,7 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
                 }
                 String provider = (String) properties.get(PROVIDER);
 
-                if (!installedProviders.contains(provider)) {
+                if (!installedProviders.containsKey(provider)) {
                     pendingPids.put(pid, properties);
                     LOGGER.debug("Provider {} is not currently installed. Service will resume once the the provider is installed.", provider);
                     return;
@@ -90,11 +86,16 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
                 String identity = (String) properties.get(IDENTITY);
                 String credential = (String) properties.get(CREDENTIAL);
 
-                BlobStoreContext context =  new BlobStoreContextFactory().createContext(provider, identity, credential, ImmutableSet.of(new Log4JLoggingModule()), props);
+                ProviderMetadata metadata = installedProviders.get(provider);
+                BlobStoreContext context = ContextBuilder.newBuilder(metadata)
+                    .credentials(identity, credential)
+                    .modules(ImmutableSet.<Module> of(new Log4JLoggingModule()))
+                    .overrides(props)
+                    .build(BlobStoreContext.class);
+
                 BlobStore blobStore = context.getBlobStore();
                 newRegistration = bundleContext.registerService(
                         BlobStore.class.getName(), blobStore, properties);
-
 
                 //If all goes well remove the pending pid.
                 pendingPids.remove(pid);
@@ -122,10 +123,10 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
     }
 
     @Override
-    public void providerInstalled(String provider) {
-        installedProviders.add(provider);
+    public void providerInstalled(ProviderMetadata provider) {
+        installedProviders.put(provider.getId(), provider);
         //Check if there is a pid that requires the installed provider.
-        String pid = providerPids.get(provider);
+        String pid = providerPids.get(provider.getId());
         if (pid != null) {
             Dictionary properties = pendingPids.get(pid);
             try {
@@ -137,14 +138,14 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
     }
 
     @Override
-    public void providerUninstalled(String provider) {
-        String pid = providerPids.get(provider);
+    public void providerUninstalled(ProviderMetadata provider) {
+        String pid = providerPids.get(provider.getId());
         if (pid != null) {
             deleted(pid);
         }
     }
 
-    public Set<String> getInstalledProviders() {
+    public Map<String, ProviderMetadata> getInstalledProviders() {
         return installedProviders;
     }
 }
