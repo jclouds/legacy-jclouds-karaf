@@ -18,14 +18,15 @@
 
 package org.jclouds.karaf.core.internal;
 
+import com.google.common.reflect.TypeToken;
+import org.jclouds.blobstore.BlobStoreContext;
+import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.karaf.core.BlobStoreProviderListener;
 import org.jclouds.karaf.core.ComputeProviderListener;
 import org.jclouds.karaf.core.ProviderListener;
 import org.jclouds.providers.ProviderMetadata;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleEvent;
-import org.osgi.framework.BundleListener;
+import org.jclouds.providers.ProviderPredicates;
+import org.osgi.framework.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,11 +43,11 @@ public class ProviderBundleListener implements BundleListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProviderBundleListener.class);
 
-    private Set<String> computeProviders = new HashSet<String>();
-    private Set<String> blobStoreProviders = new HashSet<String>();
+    private Set<ProviderMetadata> computeProviders = new HashSet<ProviderMetadata>();
+    private Set<ProviderMetadata> blobStoreProviders = new HashSet<ProviderMetadata>();
 
     private final List<ComputeProviderListener> computeListeners = new LinkedList<ComputeProviderListener>();
-    private final List<BlobStoreProviderListener> blboStoreListeners = new LinkedList<BlobStoreProviderListener>();
+    private final List<BlobStoreProviderListener> blobStoreListeners = new LinkedList<BlobStoreProviderListener>();
 
 
     private BundleContext bundleContext;
@@ -70,21 +71,36 @@ public class ProviderBundleListener implements BundleListener {
 
     public void notifyListeners(ProviderMetadata metadata) {
         if (metadata != null) {
-            String id = metadata.getId();
-            if (metadata.getType().equals(ProviderMetadata.COMPUTE_TYPE)) {
-                computeProviders.add(metadata.getId());
+            if (ProviderPredicates.contextWrappableAs(TypeToken.of(ComputeServiceContext.class)).apply(metadata)){
+                computeProviders.add(metadata);
                 for (ProviderListener providerListener : computeListeners) {
-                    providerListener.providerInstalled(id);
+                    providerListener.providerInstalled(metadata);
                 }
-            }
-            if (metadata.getType().equals(ProviderMetadata.BLOBSTORE_TYPE)) {
-                blobStoreProviders.add(metadata.getId());
-                for (ProviderListener providerListener : blboStoreListeners) {
-                    providerListener.providerInstalled(id);
+            } else if (ProviderPredicates.contextWrappableAs(TypeToken.of(BlobStoreContext.class)).apply(metadata)){
+                blobStoreProviders.add(metadata);
+                for (ProviderListener providerListener : blobStoreListeners) {
+                    providerListener.providerInstalled(metadata);
                 }
             }
         }
     }
+
+    private void removeListeners(ProviderMetadata metadata) {
+        if (metadata != null) {
+            if (ProviderPredicates.contextWrappableAs(TypeToken.of(ComputeServiceContext.class)).apply(metadata)){
+                computeProviders.remove(metadata);
+                for (ProviderListener providerListener : computeListeners) {
+                    providerListener.providerUninstalled(metadata);
+                }
+            } else if (ProviderPredicates.contextWrappableAs(TypeToken.of(BlobStoreContext.class)).apply(metadata)){
+                blobStoreProviders.remove(metadata);
+                for (ProviderListener providerListener : blobStoreListeners) {
+                    providerListener.providerUninstalled(metadata);
+                }
+            }
+        }
+    }
+
 
     /**
      * Receives notification that a bundle has had a lifecycle change.
@@ -95,14 +111,21 @@ public class ProviderBundleListener implements BundleListener {
      */
     @Override
     public void bundleChanged(BundleEvent event) {
+        ProviderMetadata metadata;
         switch (event.getType()) {
-            case BundleEvent.STARTED:
-            ProviderMetadata metadata = getProviderMetadata(event.getBundle());
-            notifyListeners(metadata);
-            break;
+          case BundleEvent.STARTED:
+              metadata = getProviderMetadata(event.getBundle());
+              notifyListeners(metadata);
+//        TODO: Uninstall is not handled directly yet because ProviderMetadata can't be retrieved
+//        from the bundle after it has been closed. Will handle this soon.
+/*
+          case BundleEvent.STOPPED:
+              metadata = getProviderMetadata(event.getBundle());
+              removeListeners(metadata);
+*/
+          break;
         }
     }
-
 
     /**
      * Creates an instance of {@link ProviderMetadata} from the {@link Bundle}.
@@ -133,7 +156,7 @@ public class ProviderBundleListener implements BundleListener {
      * @return
      */
     public String getProviderMetadataClassName(Bundle bundle) {
-        URL resource = bundle.getResource("/META-INF/services/org.jclouds.providers.ProviderMetadata");
+        URL resource = bundle.getEntry("/META-INF/services/org.jclouds.providers.ProviderMetadata");
         InputStream is = null;
         InputStreamReader reader = null;
         BufferedReader bufferedReader = null;
@@ -175,13 +198,16 @@ public class ProviderBundleListener implements BundleListener {
      */
     public void registerComputeListener(ComputeProviderListener providerListener) {
         this.computeListeners.add(providerListener);
-        for (String provider : computeProviders) {
+        for (ProviderMetadata provider : computeProviders) {
             providerListener.providerInstalled(provider);
         }
     }
 
     public void unregisterComputeListener(ComputeProviderListener providerListener) {
         this.computeListeners.remove(providerListener);
+        for (ProviderMetadata provider : computeProviders) {
+            providerListener.providerUninstalled(provider);
+        }
     }
 
     /**
@@ -189,14 +215,17 @@ public class ProviderBundleListener implements BundleListener {
      * @param providerListener
      */
     public void registerBlobStoreListener(BlobStoreProviderListener providerListener) {
-        this.blboStoreListeners.add(providerListener);
-        for (String provider : blobStoreProviders) {
+        this.blobStoreListeners.add(providerListener);
+        for (ProviderMetadata provider : blobStoreProviders) {
             providerListener.providerInstalled(provider);
         }
     }
 
     public void unregisterBlobStoreListener(BlobStoreProviderListener providerListener) {
-        this.blboStoreListeners.remove(providerListener);
+        this.blobStoreListeners.remove(providerListener);
+        for (ProviderMetadata provider : blobStoreProviders) {
+            providerListener.providerUninstalled(provider);
+        }
     }
 
     public BundleContext getBundleContext() {

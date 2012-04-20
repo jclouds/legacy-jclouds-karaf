@@ -27,16 +27,16 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.util.BlobStoreUtils;
-import org.jclouds.compute.ComputeService;
 import org.jclouds.karaf.cache.CacheProvider;
 import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
+import org.jclouds.providers.ProviderMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -244,9 +244,9 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
         return new byte[0];
     }
 
-    protected void printBlobStoreProviders(Set<String> providers, List<BlobStore> blobStores, String indent, PrintStream out) {
+    protected void printBlobStoreProviders(Map<String, ProviderMetadata> providers, List<BlobStore> blobStores, String indent, PrintStream out) {
         out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
-        for (String provider : providers) {
+        for (String provider : providers.keySet()) {
             boolean registered = false;
             for (BlobStore blobStore:blobStores) {
                 if (blobStore.getContext().getProviderSpecificContext().getId().equals(provider)) {
