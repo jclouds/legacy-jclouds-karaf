@@ -18,13 +18,15 @@
 package org.jclouds.karaf.services;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.inject.Module;
+import org.jclouds.ContextBuilder;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
-import org.jclouds.compute.ComputeServiceContextFactory;
 import org.jclouds.karaf.core.ComputeProviderListener;
 import org.jclouds.karaf.core.ComputeServiceEventProxy;
 import org.jclouds.karaf.core.CredentialStore;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
+import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -54,7 +56,7 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
     private final Map<String, ServiceRegistration> registrations = new ConcurrentHashMap<String, ServiceRegistration>();
     private final Map<String, Dictionary> pendingPids = new HashMap<String, Dictionary>();
     private final Map<String, String> providerPids = new HashMap<String, String>();
-    private final Set<String> installedProviders = new LinkedHashSet<String>();
+    private final Map<String, ProviderMetadata> installedProviders = new HashMap<String, ProviderMetadata>();
 
 
     private ServiceTracker credentialStoreTracker;
@@ -94,14 +96,12 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
                 }
                 String provider = (String) properties.get(PROVIDER);
 
-                if (!installedProviders.contains(provider)) {
+                if (!installedProviders.containsKey(provider)) {
                     pendingPids.put(pid, properties);
                     providerPids.put(provider,pid);
                     LOGGER.debug("Provider {} is not currently installed. Service will resume once the the provider is installed.", provider);
                     return;
                 }
-
-                ComputeServiceContext context = null;
 
                 String identity = (String) properties.get(IDENTITY);
                 String credential = (String) properties.get(CREDENTIAL);
@@ -118,16 +118,21 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
                 }
 
                 CredentialStore credentialStore = lookupStore(storeType);
+                ProviderMetadata metadata = installedProviders.get(provider);
+
+                ContextBuilder builder = ContextBuilder.newBuilder(metadata);
+                builder.modules(ImmutableSet.<Module>of(new Log4JLoggingModule(), new SshjSshClientModule()));
 
                 if (credentialStore != null) {
-                 context = new ComputeServiceContextFactory()
-                        .createContext(provider, identity, credential,
-                                ImmutableSet.of(new Log4JLoggingModule(), new SshjSshClientModule(), credentialStore), props);
-                } else {
-                    context = new ComputeServiceContextFactory()
-                            .createContext(provider, identity, credential,
-                                    ImmutableSet.of(new Log4JLoggingModule(), new SshjSshClientModule()), props);
+                  builder.modules(ImmutableSet.<Module>of(credentialStore));
                 }
+
+                builder
+                    .credentials(identity, credential)
+                    .overrides(props);
+
+                ComputeServiceContext context = builder.build(ComputeServiceContext.class);
+
                 ComputeService client = null;
 
                 if (enableEventSupport) {
@@ -163,10 +168,10 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
     }
 
     @Override
-    public void providerInstalled(String provider) {
-        installedProviders.add(provider);
+    public void providerInstalled(ProviderMetadata provider) {
+        installedProviders.put(provider.getId(), provider);
         //Check if there is a pid that requires the installed provider.
-        String pid = providerPids.get(provider);
+        String pid = providerPids.get(provider.getId());
         if (pid != null) {
             Dictionary properties = pendingPids.get(pid);
             try {
@@ -178,14 +183,14 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
     }
 
     @Override
-    public void providerUninstalled(String provider) {
-        String pid = providerPids.get(provider);
+    public void providerUninstalled(ProviderMetadata provider) {
+        String pid = providerPids.get(provider.getId());
         if (pid != null) {
             deleted(pid);
         }
     }
 
-    public Set<String> getInstalledProviders() {
+    public Map<String, ProviderMetadata> getInstalledProviders() {
         return installedProviders;
     }
 }

@@ -30,7 +30,7 @@
 
     <feature name='jclouds' description='JClouds' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds-guice</feature>
-        <bundle dependency='true'>mvn:com.googlecode.guava-osgi/guava-osgi/${guava.bundle.version}</bundle>
+        <bundle dependency='true'>mvn:com.google.guava/guava/${guava.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.oauth-commons/${net.oauth.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jersey-core/${jersey.bundle.version}</bundle>
         <bundle dependency='true'>mvn:com.google.code.gson/gson/${gson.version}</bundle>

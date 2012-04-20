@@ -18,10 +18,7 @@
 package org.jclouds.karaf.commands.compute;
 
 import java.io.PrintStream;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
@@ -34,6 +31,7 @@ import org.jclouds.compute.domain.Processor;
 import org.jclouds.domain.Location;
 import org.jclouds.karaf.cache.CacheProvider;
 import org.jclouds.karaf.utils.compute.ComputeHelper;
+import org.jclouds.providers.ProviderMetadata;
 import org.osgi.service.cm.ConfigurationAdmin;
 
 
@@ -60,9 +58,9 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
 
 
 
-     protected void printComputeProviders(Set<String> providers, List<ComputeService> computeServices, String indent, PrintStream out) {
+     protected void printComputeProviders(Map<String, ProviderMetadata> providers, List<ComputeService> computeServices, String indent, PrintStream out) {
         out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
-        for (String provider : providers) {
+        for (String provider : providers.keySet()) {
             boolean registered = false;
             for (ComputeService computeService:computeServices) {
                 if (computeService.getContext().getProviderSpecificContext().getId().equals(provider)) {
