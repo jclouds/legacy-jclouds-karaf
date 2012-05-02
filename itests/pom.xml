@@ -176,7 +176,6 @@
                 <configuration>
                     <forkMode>once</forkMode>
                     <useSystemClassLoader>true</useSystemClassLoader>
-                    <useManifestOnlyJar>false</useManifestOnlyJar>
                     <failIfNoTests>false</failIfNoTests>
                     <includes>
                         <include>**/*Test.*</include>
