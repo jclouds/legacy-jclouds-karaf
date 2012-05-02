@@ -71,12 +71,12 @@ public class ProviderBundleListener implements BundleListener {
 
     public void notifyListeners(ProviderMetadata metadata) {
         if (metadata != null) {
-            if (ProviderPredicates.contextWrappableAs(TypeToken.of(ComputeServiceContext.class)).apply(metadata)){
+            if (ProviderPredicates.viewableAs(TypeToken.of(ComputeServiceContext.class)).apply(metadata)){
                 computeProviders.add(metadata);
                 for (ProviderListener providerListener : computeListeners) {
                     providerListener.providerInstalled(metadata);
                 }
-            } else if (ProviderPredicates.contextWrappableAs(TypeToken.of(BlobStoreContext.class)).apply(metadata)){
+            } else if (ProviderPredicates.viewableAs(TypeToken.of(BlobStoreContext.class)).apply(metadata)){
                 blobStoreProviders.add(metadata);
                 for (ProviderListener providerListener : blobStoreListeners) {
                     providerListener.providerInstalled(metadata);
@@ -87,12 +87,12 @@ public class ProviderBundleListener implements BundleListener {
 
     private void removeListeners(ProviderMetadata metadata) {
         if (metadata != null) {
-            if (ProviderPredicates.contextWrappableAs(TypeToken.of(ComputeServiceContext.class)).apply(metadata)){
+            if (ProviderPredicates.viewableAs(TypeToken.of(ComputeServiceContext.class)).apply(metadata)){
                 computeProviders.remove(metadata);
                 for (ProviderListener providerListener : computeListeners) {
                     providerListener.providerUninstalled(metadata);
                 }
-            } else if (ProviderPredicates.contextWrappableAs(TypeToken.of(BlobStoreContext.class)).apply(metadata)){
+            } else if (ProviderPredicates.viewableAs(TypeToken.of(BlobStoreContext.class)).apply(metadata)){
                 blobStoreProviders.remove(metadata);
                 for (ProviderListener providerListener : blobStoreListeners) {
                     providerListener.providerUninstalled(metadata);
