@@ -149,7 +149,7 @@
         <configadmin.version>1.2.8</configadmin.version>
         <easymock.version>3.0</easymock.version>
         <felix.configadmin.version>1.2.8</felix.configadmin.version>
-        <gson.version>2.1</gson.version>
+        <gson.version>2.2</gson.version>
         <guava.version>12.0</guava.version>
         <guava.test.version>10.0</guava.test.version>
         <guice.version>3.0</guice.version>
@@ -157,7 +157,7 @@
         <httpcore.version>4.1</httpcore.version>
         <java-xmlbuilder.bundle.version>0.3_1</java-xmlbuilder.bundle.version>
         <javax.inject.bundle.version>1_1</javax.inject.bundle.version>
-        <jclouds.version>1.5.0-alpha.6</jclouds.version>
+        <jclouds.version>1.5.0-beta.1</jclouds.version>
         <jersey.version>1.11</jersey.version>
         <jersey.bundle.version>1.11_1</jersey.bundle.version>
         <joda.version>2.1</joda.version>
@@ -178,7 +178,7 @@
         <rocoto.version>6.1</rocoto.version>
         <slf4j.version>1.5.8</slf4j.version>
         <snakeyaml.version>1.9</snakeyaml.version>
-        <sshj.version>0.7.0</sshj.version>
+        <sshj.version>0.8.0</sshj.version>
 
         <!-- Plugin Versions -->
         <depends-maven-plugin.version>1.2</depends-maven-plugin.version>

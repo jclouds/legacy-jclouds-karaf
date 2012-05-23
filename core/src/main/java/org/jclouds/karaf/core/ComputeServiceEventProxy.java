@@ -18,11 +18,16 @@
 
 package org.jclouds.karaf.core;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.util.concurrent.ListenableFuture;
-import org.jclouds.compute.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.jclouds.compute.ComputeService;
+import org.jclouds.compute.ComputeServiceContext;
+import org.jclouds.compute.RunNodesException;
+import org.jclouds.compute.RunScriptOnNodesException;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.ExecResponse;
 import org.jclouds.compute.domain.Hardware;
@@ -30,6 +35,7 @@ import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
+import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.options.RunScriptOptions;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.Location;
@@ -39,11 +45,10 @@ import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.google.common.annotations.Beta;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.util.concurrent.ListenableFuture;
 
 /**
  * A proxy implementations of the {@link ComputeService} which delegates calls to the underlying impl and notifies
