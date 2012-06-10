@@ -75,7 +75,9 @@ public abstract class NodeRunScriptSupport extends ComputeCommandSupport {
             for (Map.Entry<? extends NodeMetadata, ExecResponse> entry : responseMap.entrySet()) {
                 ExecResponse response = entry.getValue();
                 NodeMetadata node = entry.getKey();
-                System.out.println("Node:" + node);
+                printNodeInfo(node, System.out);
+                System.out.println("");
+                System.out.println("");
                 if (response.getOutput() != null && !response.getOutput().isEmpty()) {
                     System.out.println("Output:" + response.getOutput());
                 }
@@ -154,7 +156,7 @@ public abstract class NodeRunScriptSupport extends ComputeCommandSupport {
                 String line = null;
 
                 while ((line = br.readLine()) != null) {
-                    builder.append(line ).append("\n");
+                    builder.append(line).append("\n");
                 }
 
                 return builder.toString();

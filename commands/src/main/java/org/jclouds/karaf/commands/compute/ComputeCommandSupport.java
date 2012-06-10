@@ -20,6 +20,7 @@ package org.jclouds.karaf.commands.compute;
 import java.io.PrintStream;
 import java.util.*;
 
+import com.google.common.collect.Sets;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
 import org.jclouds.compute.ComputeService;
@@ -27,6 +28,7 @@ import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.domain.Processor;
 import org.jclouds.domain.Location;
 import org.jclouds.karaf.cache.CacheProvider;
@@ -42,11 +44,11 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
 
 
     public static final String NODEFORMAT = "%s%-30s %-32s %-20s %-12s %-12s";
+    private static final String NODE_DETAILS_FORMAT = "%20s %-60s";
     public static final String HARDWAREFORMAT = "%s%-20s %5s %7s %6s";
     public static final String IMAGEFORMAT = "%s%-30s %-32s %s";
     public static final String LOCATIONFORMAT = "%-32s %-9s %s";
     public static final String PROVIDERFORMAT = "%-24s %-12s %-12s";
-
 
 
     private ConfigurationAdmin configurationAdmin;
@@ -57,12 +59,11 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
     protected String provider;
 
 
-
-     protected void printComputeProviders(Map<String, ProviderMetadata> providers, List<ComputeService> computeServices, String indent, PrintStream out) {
+    protected void printComputeProviders(Map<String, ProviderMetadata> providers, List<ComputeService> computeServices, String indent, PrintStream out) {
         out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
         for (String provider : providers.keySet()) {
             boolean registered = false;
-            for (ComputeService computeService:computeServices) {
+            for (ComputeService computeService : computeServices) {
                 if (computeService.getContext().getProviderSpecificContext().getId().equals(provider)) {
                     registered = true;
                     break;
@@ -77,7 +78,7 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
         for (ComputeMetadata metadata : nodes) {
             NodeMetadata node = (NodeMetadata) metadata;
             out.println(String.format(NODEFORMAT, indent, node.getId(), node.getLocation().getId(), node.getHardware().getId(), node.getGroup(), node.getState().toString().toLowerCase()));
-            cacheProvider.getProviderCacheForType(Constants.GROUP).put(node.getProviderId(),node.getGroup());
+            cacheProvider.getProviderCacheForType(Constants.GROUP).put(node.getProviderId(), node.getGroup());
         }
     }
 
@@ -85,7 +86,7 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
         out.println(String.format(HARDWAREFORMAT, indent, "[id]", "[cpu]", "[cores]", "[ram]", "[disk]"));
         for (Hardware hardware : hardwares) {
             out.println(String.format(HARDWAREFORMAT, indent, hardware.getId(), getCpuUnits(hardware), getCpuCores(hardware), getMemory(hardware)));
-            cacheProvider.getProviderCacheForType(Constants.HARDWARE_CACHE).put(hardware.getProviderId(),hardware.getId());
+            cacheProvider.getProviderCacheForType(Constants.HARDWARE_CACHE).put(hardware.getProviderId(), hardware.getId());
         }
     }
 
@@ -97,7 +98,7 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
             String location = image.getLocation() != null ? image.getLocation().getId() : "";
             String description = image.getDescription();
             out.println(String.format(IMAGEFORMAT, indent, id, location, description));
-            cacheProvider.getProviderCacheForType(Constants.IMAGE_CACHE).put(image.getProviderId(),image.getId());
+            cacheProvider.getProviderCacheForType(Constants.IMAGE_CACHE).put(image.getProviderId(), image.getId());
         }
     }
 
@@ -120,10 +121,76 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
         for (Location loc : computeService.listAssignableLocations()) {
             for (Location p = loc; p != null; p = p.getParent()) {
                 all.add(p);
-                cacheProvider.getProviderCacheForType(Constants.LOCATION_CACHE).put(computeService.getContext().getProviderSpecificContext().getId(),p.getId());
+                cacheProvider.getProviderCacheForType(Constants.LOCATION_CACHE).put(computeService.getContext().getProviderSpecificContext().getId(), p.getId());
             }
         }
         return all;
+    }
+
+    /**
+     * Returns a String that displays the {@link OperatingSystem} details.
+     *
+     * @param node
+     * @return
+     */
+    protected String getOperatingSystemDetails(NodeMetadata node) {
+        if (node != null) {
+            OperatingSystem os = node.getOperatingSystem();
+            if (os != null) {
+                return node.getOperatingSystem().getFamily().toString() + " " + node.getOperatingSystem().getArch() + " " + node.getOperatingSystem().getVersion();
+            }
+        }
+        return "";
+    }
+
+    /**
+     * Returns a comma separated list of the {@NodeMetadata} public addresses.
+     * @param node
+     * @return
+     */
+    protected String getPublicAddresses(NodeMetadata node) {
+        StringBuilder sb = new StringBuilder();
+        if (node != null && node.getPublicAddresses() != null && !node.getPublicAddresses().isEmpty()) {
+            Set<String> publicAddresses = node.getPublicAddresses();
+            Iterator<String> addressIterator = publicAddresses.iterator();
+            while (addressIterator.hasNext()) {
+                sb.append(addressIterator.next());
+                if (addressIterator.hasNext()) {
+                    sb.append(" , ");
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Returns a comma separated list of the {@NodeMetadata} private addresses.
+     * @param node
+     * @return
+     */
+    protected String getPrivateAddresses(NodeMetadata node) {
+        StringBuilder sb = new StringBuilder();
+        if (node != null && node.getPrivateAddresses() != null && !node.getPrivateAddresses().isEmpty()) {
+            Set<String> privateAddresses = node.getPrivateAddresses();
+            Iterator<String> addressIterator = privateAddresses.iterator();
+            while (addressIterator.hasNext()) {
+                sb.append(addressIterator.next());
+                if (addressIterator.hasNext()) {
+                    sb.append(" , ");
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    protected void printNodeInfo(NodeMetadata node , PrintStream out) {
+        printNodes(Sets.newHashSet(node), "", out);
+        out.println();
+        out.println(String.format(NODE_DETAILS_FORMAT, "Operating System:", getOperatingSystemDetails(node)));
+        out.println(String.format(NODE_DETAILS_FORMAT, "Configured User:", node.getCredentials().getUser()));
+        out.println(String.format(NODE_DETAILS_FORMAT, "Public Address:", getPublicAddresses(node)));
+        out.println(String.format(NODE_DETAILS_FORMAT, "Private Address:", getPrivateAddresses(node)));
+        out.println(String.format(NODE_DETAILS_FORMAT, "Image Id:", node.getImageId()));
     }
 
 
