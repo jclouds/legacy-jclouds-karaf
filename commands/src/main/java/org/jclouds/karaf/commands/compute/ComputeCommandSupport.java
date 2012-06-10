@@ -137,7 +137,7 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
         if (node != null) {
             OperatingSystem os = node.getOperatingSystem();
             if (os != null) {
-                return node.getOperatingSystem().getFamily().toString() + " " + node.getOperatingSystem().getArch() + " " + node.getOperatingSystem().getVersion();
+                return node.getOperatingSystem().getFamily().value() + " " + node.getOperatingSystem().getArch() + " " + node.getOperatingSystem().getVersion();
             }
         }
         return "";
@@ -183,14 +183,18 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
         return sb.toString();
     }
 
-    protected void printNodeInfo(NodeMetadata node , PrintStream out) {
-        printNodes(Sets.newHashSet(node), "", out);
-        out.println();
-        out.println(String.format(NODE_DETAILS_FORMAT, "Operating System:", getOperatingSystemDetails(node)));
-        out.println(String.format(NODE_DETAILS_FORMAT, "Configured User:", node.getCredentials().getUser()));
-        out.println(String.format(NODE_DETAILS_FORMAT, "Public Address:", getPublicAddresses(node)));
-        out.println(String.format(NODE_DETAILS_FORMAT, "Private Address:", getPrivateAddresses(node)));
-        out.println(String.format(NODE_DETAILS_FORMAT, "Image Id:", node.getImageId()));
+    protected void printNodeInfo(Set<? extends NodeMetadata> nodes , boolean details, PrintStream out) {
+        printNodes(nodes, "", out);
+        if (details) {
+            for (NodeMetadata node : nodes) {
+                out.println();
+                out.println(String.format(NODE_DETAILS_FORMAT, "Operating System:", getOperatingSystemDetails(node)));
+                out.println(String.format(NODE_DETAILS_FORMAT, "Configured User:", node.getCredentials().getUser()));
+                out.println(String.format(NODE_DETAILS_FORMAT, "Public Address:", getPublicAddresses(node)));
+                out.println(String.format(NODE_DETAILS_FORMAT, "Private Address:", getPrivateAddresses(node)));
+                out.println(String.format(NODE_DETAILS_FORMAT, "Image Id:", node.getImageId()));
+            }
+        }
     }
 
 

@@ -32,16 +32,13 @@ import java.util.List;
 @Command(scope = "jclouds", name = "node-info")
 public class NodeInfoCommand extends ComputeCommandSupport {
 
-
-
     @Argument(name = "id", description = "The id of the node.", required = true, multiValued = false)
     private String id;
 
     @Override
     protected Object doExecute() throws Exception {
         NodeMetadata node = getComputeService().getNodeMetadata(id);
-
-
+        printNodeInfo(Sets.newHashSet(node), true, System.out);
         return null;
     }
 }
