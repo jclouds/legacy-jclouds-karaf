@@ -491,8 +491,26 @@ public class ComputeServiceEventProxy implements ComputeService {
         return computeService.runScriptOnNode(id, runScript);
     }
 
-  @Override
-  public Optional<ImageExtension> getImageExtension() {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
-  }
+    /**
+     * Find an image by its id.
+     * <p/>
+     * <h3>note</h3>
+     * <p/>
+     * This is an uncached call to the backend service
+     */
+    @Override
+    public Image getImage(String id) {
+       return computeService.getImage(id);
+    }
+
+    /**
+     * Returns the {@link org.jclouds.compute.extensions.ImageExtension} for this provider if it implements it.
+     *
+     * @return an optional of the {@link org.jclouds.compute.extensions.ImageExtension} or {@link com.google.common.base.Optional#absent()} if not
+     *         implemented
+     */
+    @Override
+    public Optional<ImageExtension> getImageExtension() {
+        return computeService.getImageExtension();
+    }
 }
