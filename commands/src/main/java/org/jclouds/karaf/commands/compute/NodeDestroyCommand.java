@@ -20,21 +20,25 @@ package org.jclouds.karaf.commands.compute;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 
+import java.util.List;
+
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 @Command(scope = "jclouds", name = "node-destroy")
 public class NodeDestroyCommand extends ComputeCommandSupport {
 
-    @Argument(name = "id", description = "The id of the node.", required = true, multiValued = false)
-    private String id;
+    @Argument(name = "id", description = "The ids of the nodes to destroy.", required = true, multiValued = true)
+    private List<String> ids;
 
     @Override
     protected Object doExecute() throws Exception {
-        getComputeService().destroyNode(id);
-        cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(),id);
-        cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(),id);
-        cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(),id);
+        for (String id : ids) {
+            getComputeService().destroyNode(id);
+            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), id);
+            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), id);
+            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), id);
+        }
         return null;
     }
 }

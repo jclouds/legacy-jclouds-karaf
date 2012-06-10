@@ -17,6 +17,8 @@
  */
 package org.jclouds.karaf.commands.compute;
 
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nullable;
@@ -33,28 +35,35 @@ import com.google.common.base.Predicate;
 @Command(scope = "jclouds", name = "group-destroy")
 public class GroupDestroyCommand extends ComputeCommandSupport {
 
-    @Argument(index = 0, name = "group", description = "The group of nodes.", required = true, multiValued = false)
-    private String group;
+    @Argument(index = 0, name = "group", description = "The groups of nodes to destroy.", required = true, multiValued = true)
+    private List<String> groups;
 
     @Override
     protected Object doExecute() throws Exception {
-         Set<? extends NodeMetadata> nodeMetadatas = getComputeService().destroyNodesMatching(new Predicate<NodeMetadata>() {
-            @Override
-            public boolean apply(@Nullable NodeMetadata input) {
-                return input.getGroup().contains(group);
+        Set<NodeMetadata> aggregatedMetadata = new LinkedHashSet<NodeMetadata>();
+
+        for (final String group : groups) {
+            Set<? extends NodeMetadata> nodeMetadatas = getComputeService().destroyNodesMatching(new Predicate<NodeMetadata>() {
+                @Override
+                public boolean apply(@Nullable NodeMetadata input) {
+                    return input.getGroup().contains(group);
+                }
+            });
+
+            for (NodeMetadata node : nodeMetadatas) {
+                cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
+                cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
+                cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
+                aggregatedMetadata.add(node);
             }
-        });
+        }
 
-        if (nodeMetadatas != null && !nodeMetadatas.isEmpty()) {
+        if (!aggregatedMetadata.isEmpty()) {
             System.out.println("Destroyed nodes:");
-            printNodes(nodeMetadatas, "", System.out);
+            printNodes(aggregatedMetadata, "", System.out);
         }
 
-        for (NodeMetadata node : nodeMetadatas) {
-            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
-            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
-            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
-        }
+
         return null;
     }
 }
