@@ -104,6 +104,19 @@
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
             </optional-completers>
         </command>
+        <command name="jclouds/node-info">
+            <action class="org.jclouds.karaf.commands.compute.NodeInfoCommand">
+                <property name="computeServices" ref="computeServices"/>
+                <property name="cacheProvider" ref="cacheProvider"/>
+            </action>
+            <completers>
+                <ref component-id="activeNodeCompleter"/>
+                <null/>
+            </completers>
+            <optional-completers>
+                <entry key="--provider" value-ref="computeProviderCompleter"/>
+            </optional-completers>
+        </command>
         <command name="jclouds/group-runscript">
             <action class="org.jclouds.karaf.commands.compute.GroupRunScriptCommand">
                 <property name="computeServices" ref="computeServices"/>
