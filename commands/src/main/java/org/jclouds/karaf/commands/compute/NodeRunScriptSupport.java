@@ -64,6 +64,10 @@ public abstract class NodeRunScriptSupport extends ComputeCommandSupport {
         Set<? extends NodeMetadata> nodeMetaDataSet = getComputeService().listNodesDetailsMatching(getComputeFilter());
         if (nodeMetaDataSet != null && !nodeMetaDataSet.isEmpty()) {
             NodeMetadata nodeMetadata = nodeMetaDataSet.toArray(new NodeMetadata[0])[0];
+
+            //If we have multiple nodes we just want the headers, but not full details.
+            printNodeInfo(nodeMetaDataSet, nodeMetaDataSet.size() == 1, System.out);
+
             LoginCredentials credentials = nodeMetadata.getCredentials();
 
             if (user != null) {
@@ -75,15 +79,13 @@ public abstract class NodeRunScriptSupport extends ComputeCommandSupport {
             for (Map.Entry<? extends NodeMetadata, ExecResponse> entry : responseMap.entrySet()) {
                 ExecResponse response = entry.getValue();
                 NodeMetadata node = entry.getKey();
-                printNodeInfo(node, System.out);
-                System.out.println("");
                 System.out.println("");
                 if (response.getOutput() != null && !response.getOutput().isEmpty()) {
-                    System.out.println("Output:" + response.getOutput());
+                    System.out.println("Node:" + node.getId() + " Output:" + response.getOutput());
                 }
 
                 if (response.getError() != null && !response.getError().isEmpty()) {
-                    System.out.println("Error:" + response.getError());
+                    System.out.println("Node:" + node.getId() + " Error:" + response.getError());
                 }
             }
         }
