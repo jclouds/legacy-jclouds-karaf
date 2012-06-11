@@ -118,6 +118,11 @@
                             org.jclouds.blobstore;version=${jclouds.version},
                             org.jclouds.compute;version=${jclouds.version},
                             org.jclouds.ec2*;version=${jclouds.version};resolution:=optional,
+                            org.apache.felix.service.command,
+                            org.apache.felix.gogo.commands,
+                            org.apache.karaf.shell.console;version="[2.2,4)",
+                            org.apache.karaf.shell.console.commands;version="[2.2,4)",
+                            org.apache.karaf.shell.console.completer;version="[2.2,4)",
                             *
                         </Import-Package>
                         <Private-Package>org.jclouds.karaf.utils*</Private-Package>
