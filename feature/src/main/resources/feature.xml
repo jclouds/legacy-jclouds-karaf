@@ -98,6 +98,7 @@
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
         <feature version='${project.version}'>jclouds-driver-slf4j</feature>
         <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/openstack-keystone/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.api/openstack-nova/${jclouds.version}</bundle>
     </feature>
 
@@ -370,6 +371,7 @@
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-slf4j</feature>
         <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/openstack-keystone/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.api/swift/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/hpcloud-objectstorage/${jclouds.version}</bundle>
     </feature>
@@ -378,8 +380,7 @@
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-slf4j</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
-        <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/openstack-nova/${jclouds.version}</bundle>
+        <feature version='${project.version}'>jclouds-api-openstack-nova</feature>
         <bundle>mvn:org.jclouds.provider/hpcloud-compute/${jclouds.version}</bundle>
     </feature>
 
@@ -387,8 +388,7 @@
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-slf4j</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
-        <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/openstack-nova/${jclouds.version}</bundle>
+        <feature version='${project.version}'>jclouds-api-openstack-nova</feature>
         <bundle>mvn:org.jclouds.provider/trystack-nova/${jclouds.version}</bundle>
     </feature>
 
