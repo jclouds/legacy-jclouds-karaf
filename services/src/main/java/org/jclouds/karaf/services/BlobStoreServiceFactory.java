@@ -53,7 +53,10 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
 
 
     private final Map<String, ServiceRegistration> registrations = new ConcurrentHashMap<String, ServiceRegistration>();
+
     private final Map<String, Dictionary> pendingPids = new HashMap<String, Dictionary>();
+    private final Map<String, Dictionary> activePids = new HashMap<String, Dictionary>();
+
     private final Map<String, String> providerPids = new HashMap<String, String>();
     private final Map<String, String> apiPids = new HashMap<String, String>();
     private final Map<String, ProviderMetadata> installedProviders = new HashMap<String, ProviderMetadata>();
@@ -115,8 +118,10 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
                 newRegistration = bundleContext.registerService(
                         BlobStore.class.getName(), blobStore, properties);
 
-                //If all goes well remove the pending pid.
-                pendingPids.remove(pid);
+                //If all goes well move the pending pid to the active pids.
+                if (pendingPids.containsKey(pid)) {
+                    activePids.put(pid, pendingPids.remove(pid));
+                }
             }
         } catch (Exception ex) {
             LOGGER.error("Error creating blobstore service.", ex);
@@ -158,8 +163,12 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
     public void providerUninstalled(ProviderMetadata provider) {
         String pid = providerPids.get(provider.getId());
         if (pid != null) {
+            if (activePids.containsKey(pid)) {
+                pendingPids.put(pid, activePids.remove(pid));
+            }
             deleted(pid);
         }
+        installedProviders.remove(provider.getId());
     }
 
     @Override
@@ -168,7 +177,7 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
         //Check if there is a pid that requires the installed provider.
         String pid = apiPids.get(api.getId());
         if (pid != null) {
-            Dictionary properties = pendingPids.get(pid);
+            Dictionary properties = activePids.get(pid);
             try {
                 updated(pid, properties);
             } catch (ConfigurationException e) {
@@ -181,8 +190,12 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
     public void apiUninstalled(ApiMetadata api) {
         String pid = apiPids.get(api.getId());
         if (pid != null) {
+            if (activePids.containsKey(pid)) {
+                pendingPids.put(pid, activePids.remove(pid));
+            }
             deleted(pid);
         }
+        installedApis.remove(api.getId());
     }
 
 

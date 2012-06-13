@@ -60,7 +60,10 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
 
 
     private final Map<String, ServiceRegistration> registrations = new ConcurrentHashMap<String, ServiceRegistration>();
+
+    private final Map<String, Dictionary> activePids = new HashMap<String, Dictionary>();
     private final Map<String, Dictionary> pendingPids = new HashMap<String, Dictionary>();
+
     private final Map<String, String> providerPids = new HashMap<String, String>();
     private final Map<String, String> apiPids = new HashMap<String, String>();
 
@@ -159,7 +162,9 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
                         ComputeService.class.getName(), client, properties);
 
                 //If all goes well remove the pending pid.
-                pendingPids.remove(pid);
+                if (pendingPids.containsKey(pid)) {
+                    activePids.put(pid, pendingPids.remove(pid));
+                }
             }
         } catch (Exception ex) {
             LOGGER.error("Error creating compute service.", ex);
@@ -199,8 +204,12 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
     public void providerUninstalled(ProviderMetadata provider) {
         String pid = providerPids.get(provider.getId());
         if (pid != null) {
+            if (activePids.containsKey(pid)) {
+                pendingPids.put(pid, activePids.remove(pid));
+            }
             deleted(pid);
         }
+        installedProviders.remove(provider.getId());
     }
 
     @Override
@@ -222,8 +231,12 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
     public void apiUninstalled(ApiMetadata api) {
         String pid = apiPids.get(api.getId());
         if (pid != null) {
+            if (activePids.containsKey(pid)) {
+                pendingPids.put(pid, activePids.remove(pid));
+            }
             deleted(pid);
         }
+        installedApis.remove(api.getId());
     }
 
     public Map<String, ProviderMetadata> getInstalledProviders() {

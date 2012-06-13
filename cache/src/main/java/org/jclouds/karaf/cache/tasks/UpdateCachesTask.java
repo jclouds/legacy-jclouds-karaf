@@ -21,8 +21,12 @@ package org.jclouds.karaf.cache.tasks;
 import java.util.List;
 
 import org.jclouds.karaf.cache.Cacheable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UpdateCachesTask<T> implements Runnable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UpdateCachesTask.class);
 
     private final List<Cacheable<T>> cacheables;
     private final List<T> services;
@@ -38,7 +42,11 @@ public class UpdateCachesTask<T> implements Runnable {
             for (T service : services) {
                 if (cacheables != null && !cacheables.isEmpty()) {
                     for (Cacheable<T> cacheable : cacheables) {
-                        cacheable.updateOnAdded(service);
+                        try {
+                            cacheable.updateOnAdded(service);
+                        } catch (Throwable t) {
+                            LOGGER.warn("Error while updating cache:" + t.getMessage());
+                        }
                     }
                 }
             }
