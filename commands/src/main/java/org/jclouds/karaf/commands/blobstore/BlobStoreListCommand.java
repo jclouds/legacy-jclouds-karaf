@@ -19,28 +19,46 @@
 package org.jclouds.karaf.commands.blobstore;
 
 import org.apache.felix.gogo.commands.Command;
-import org.jclouds.karaf.core.BlobStoreProviderListener;
+import org.jclouds.karaf.core.BlobStoreProviderOrApiListener;
+import org.jclouds.karaf.core.BlobStoreProviderOrApiRegistry;
 
 @Command(scope = "jclouds", name = "blobstore-provider-list")
-public class BlobStoreListCommand extends BlobStoreCommandSupport  {
+public class BlobStoreListCommand extends BlobStoreCommandSupport {
 
-    private BlobStoreProviderListener blobStoreProviderListener;
+    private BlobStoreProviderOrApiRegistry blobStoreProviderOrApiRegistry;
 
     @Override
     protected Object doExecute() throws Exception {
         try {
-        printBlobStoreProviders(blobStoreProviderListener.getInstalledProviders(), getBlobStoreServices(),"",System.out);
-        }catch(Exception ex) {
+            if (blobStoreProviderOrApiRegistry.getInstalledApis() != null && !blobStoreProviderOrApiRegistry.getInstalledApis().isEmpty()) {
+                System.out.println("BlobStore APIs:");
+                System.out.println("---------------");
+                printBlobStoreApis(blobStoreProviderOrApiRegistry.getInstalledApis(), getBlobStoreServices(), "", System.out);
+            } else {
+                System.out.println("No blob store APIs found.");
+            }
+
+            System.out.println();
+            System.out.println();
+
+            System.out.println("BlobStore Providers:");
+            System.out.println("--------------------");
+            if (blobStoreProviderOrApiRegistry.getInstalledProviders() != null && !blobStoreProviderOrApiRegistry.getInstalledProviders().isEmpty()) {
+                printBlobStoreProviders(blobStoreProviderOrApiRegistry.getInstalledProviders(), getBlobStoreServices(), "", System.out);
+            } else {
+                System.out.println("No blob store providers found.");
+            }
+        } catch (Exception ex) {
             //noop
         }
         return null;
     }
 
-    public BlobStoreProviderListener getBlobStoreProviderListener() {
-        return blobStoreProviderListener;
+    public BlobStoreProviderOrApiRegistry getBlobStoreProviderOrApiRegistry() {
+        return blobStoreProviderOrApiRegistry;
     }
 
-    public void setBlobStoreProviderListener(BlobStoreProviderListener blobStoreProviderListener) {
-        this.blobStoreProviderListener = blobStoreProviderListener;
+    public void setBlobStoreProviderOrApiRegistry(BlobStoreProviderOrApiRegistry blobStoreProviderOrApiRegistry) {
+        this.blobStoreProviderOrApiRegistry = blobStoreProviderOrApiRegistry;
     }
 }

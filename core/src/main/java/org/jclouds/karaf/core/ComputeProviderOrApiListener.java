@@ -18,11 +18,9 @@
 
 package org.jclouds.karaf.core;
 
-import org.jclouds.providers.ProviderMetadata;
-
 /**
- * A {@link ProviderListener} that listens for BlobStore providers.
+ * A {@link ProviderOrApiListener} that listens for BlobStore providers.
  */
-public interface ComputeProviderListener extends ProviderListener {
+public interface ComputeProviderOrApiListener extends ProviderOrApiListener {
 
 }

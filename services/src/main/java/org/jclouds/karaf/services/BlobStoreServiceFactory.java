@@ -22,9 +22,11 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import org.jclouds.ContextBuilder;
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
-import org.jclouds.karaf.core.BlobStoreProviderListener;
+import org.jclouds.karaf.core.BlobStoreProviderOrApiListener;
+import org.jclouds.karaf.core.BlobStoreProviderOrApiRegistry;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.osgi.framework.BundleContext;
@@ -34,10 +36,14 @@ import org.osgi.service.cm.ManagedServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStoreProviderListener {
+public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStoreProviderOrApiListener, BlobStoreProviderOrApiRegistry {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BlobStoreServiceFactory.class);
 
@@ -49,7 +55,9 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
     private final Map<String, ServiceRegistration> registrations = new ConcurrentHashMap<String, ServiceRegistration>();
     private final Map<String, Dictionary> pendingPids = new HashMap<String, Dictionary>();
     private final Map<String, String> providerPids = new HashMap<String, String>();
+    private final Map<String, String> apiPids = new HashMap<String, String>();
     private final Map<String, ProviderMetadata> installedProviders = new HashMap<String, ProviderMetadata>();
+    private final Map<String, ApiMetadata> installedApis = new HashMap<String, ApiMetadata>();
 
 
     private final BundleContext bundleContext;
@@ -70,28 +78,38 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
         try {
             if (properties != null) {
                 Properties props = new Properties();
-                for (Enumeration e = properties.keys(); e.hasMoreElements();) {
+                for (Enumeration e = properties.keys(); e.hasMoreElements(); ) {
                     Object key = e.nextElement();
                     Object val = properties.get(key);
                     props.put(key, val);
                 }
-                String provider = (String) properties.get(PROVIDER);
+                String providerOrApi = (String) properties.get(PROVIDER);
 
-                if (!installedProviders.containsKey(provider)) {
+                if (!installedProviders.containsKey(providerOrApi) && !installedApis.containsKey(providerOrApi)) {
                     pendingPids.put(pid, properties);
-                    LOGGER.debug("Provider {} is not currently installed. Service will resume once the the provider is installed.", provider);
+                    LOGGER.debug("Provider {} is not currently installed. Service will resume once the the provider is installed.", providerOrApi);
                     return;
                 }
 
                 String identity = (String) properties.get(IDENTITY);
                 String credential = (String) properties.get(CREDENTIAL);
 
-                ProviderMetadata metadata = installedProviders.get(provider);
-                BlobStoreContext context = ContextBuilder.newBuilder(metadata)
-                    .credentials(identity, credential)
-                    .modules(ImmutableSet.<Module> of(new Log4JLoggingModule()))
-                    .overrides(props)
-                    .build(BlobStoreContext.class);
+                ProviderMetadata providerMetadata = installedProviders.get(providerOrApi);
+                ApiMetadata apiMetadata = installedApis.get(providerOrApi);
+
+                BlobStoreContext context = null;
+                ContextBuilder builder = null;
+                if (providerMetadata != null) {
+                    builder = ContextBuilder.newBuilder(providerMetadata);
+                } else if (apiMetadata != null) {
+                    builder = ContextBuilder.newBuilder(apiMetadata);
+                } else {
+                    return;
+                }
+                builder.credentials(identity, credential)
+                        .modules(ImmutableSet.<Module>of(new Log4JLoggingModule()))
+                        .overrides(props)
+                        .build(BlobStoreContext.class);
 
                 BlobStore blobStore = context.getBlobStore();
                 newRegistration = bundleContext.registerService(
@@ -101,9 +119,8 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
                 pendingPids.remove(pid);
             }
         } catch (Exception ex) {
-            LOGGER.error("Error creating blobstore service.",ex);
-        }
-        finally {
+            LOGGER.error("Error creating blobstore service.", ex);
+        } finally {
             ServiceRegistration oldRegistration = (newRegistration == null)
                     ? registrations.remove(pid)
                     : registrations.put(pid, newRegistration);
@@ -132,7 +149,7 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
             try {
                 updated(pid, properties);
             } catch (ConfigurationException e) {
-                LOGGER.error("Error while installing service for pending provider " + provider + " with pid "+ pid, e);
+                LOGGER.error("Error while installing service for pending provider " + provider + " with pid " + pid, e);
             }
         }
     }
@@ -145,7 +162,35 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
         }
     }
 
+    @Override
+    public void apiInstalled(ApiMetadata api) {
+        installedApis.put(api.getId(), api);
+        //Check if there is a pid that requires the installed provider.
+        String pid = apiPids.get(api.getId());
+        if (pid != null) {
+            Dictionary properties = pendingPids.get(pid);
+            try {
+                updated(pid, properties);
+            } catch (ConfigurationException e) {
+                LOGGER.error("Error while installing service for pending api " + api + " with pid " + pid, e);
+            }
+        }
+    }
+
+    @Override
+    public void apiUninstalled(ApiMetadata api) {
+        String pid = apiPids.get(api.getId());
+        if (pid != null) {
+            deleted(pid);
+        }
+    }
+
+
     public Map<String, ProviderMetadata> getInstalledProviders() {
         return installedProviders;
+    }
+
+    public Map<String, ApiMetadata> getInstalledApis() {
+        return installedApis;
     }
 }

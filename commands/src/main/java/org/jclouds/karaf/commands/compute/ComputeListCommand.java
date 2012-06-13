@@ -19,28 +19,47 @@
 package org.jclouds.karaf.commands.compute;
 
 import org.apache.felix.gogo.commands.Command;
-import org.jclouds.karaf.core.ComputeProviderListener;
+import org.jclouds.karaf.core.ComputeProviderOrApiRegistry;
 
-@Command(scope = "jclouds", name = "compute-provider-list")
+@Command(scope = "jclouds", name = "compute-list")
 public class ComputeListCommand extends ComputeCommandSupport {
 
-    private ComputeProviderListener computeProviderListener;
+    private ComputeProviderOrApiRegistry computeProviderOrApiRegistry;
 
     @Override
     protected Object doExecute() throws Exception {
         try {
-            printComputeProviders(computeProviderListener.getInstalledProviders(), getComputeServices(), "", System.out);
+            if (computeProviderOrApiRegistry.getInstalledApis() != null && !computeProviderOrApiRegistry.getInstalledApis().isEmpty()) {
+                System.out.println("Compute APIs:");
+                System.out.println("-------------");
+                printComputeApis(computeProviderOrApiRegistry.getInstalledApis(), getComputeServices(), "", System.out);
+            } else {
+                System.out.println("No compute APIs found.");
+            }
+
+            System.out.println();
+            System.out.println();
+
+            System.out.println("Compute Providers:");
+            System.out.println("------------------");
+            if (computeProviderOrApiRegistry.getInstalledProviders() != null && !computeProviderOrApiRegistry.getInstalledProviders().isEmpty()) {
+                printComputeProviders(computeProviderOrApiRegistry.getInstalledProviders(), getComputeServices(), "", System.out);
+            } else {
+                System.out.println("No compute providers found.");
+            }
+
+
         } catch (Exception ex) {
             //noope
         }
         return null;
     }
 
-    public ComputeProviderListener getComputeProviderListener() {
-        return computeProviderListener;
+    public ComputeProviderOrApiRegistry getComputeProviderOrApiRegistry() {
+        return computeProviderOrApiRegistry;
     }
 
-    public void setComputeProviderListener(ComputeProviderListener computeProviderListener) {
-        this.computeProviderListener = computeProviderListener;
+    public void setComputeProviderOrApiRegistry(ComputeProviderOrApiRegistry computeProviderOrApiRegistry) {
+        this.computeProviderOrApiRegistry = computeProviderOrApiRegistry;
     }
 }

@@ -18,10 +18,21 @@
 
 package org.jclouds.karaf.core;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.providers.ProviderMetadata;
 
+import java.util.Map;
+
 /**
- * A {@link ProviderListener} that listens for BlobStore providers.
+ * A simple listener which receives notifications when a cloud provider has been installed.
  */
-public interface BlobStoreProviderListener extends ProviderListener {
+public interface ProviderOrApiListener {
+
+    void providerInstalled(ProviderMetadata metadata);
+
+    void providerUninstalled(ProviderMetadata metadata);
+
+    void apiInstalled(ApiMetadata metadata);
+
+    void apiUninstalled(ApiMetadata metadata);
 }

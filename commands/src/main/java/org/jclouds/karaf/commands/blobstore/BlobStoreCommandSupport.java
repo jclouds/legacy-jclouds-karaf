@@ -31,6 +31,7 @@ import java.util.Map;
 
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.util.BlobStoreUtils;
@@ -53,7 +54,6 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
     public static final String PROVIDERFORMAT = "%-24s %-12s %-12s";
 
     private List<BlobStore> services;
-
 
 
     protected CacheProvider cacheProvider;
@@ -121,20 +121,22 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
 
     /**
      * Returns an InputStream to a {@link Blob}.
+     *
      * @param containerName
      * @param blobName
      * @return
      */
     public InputStream getBlobInputStream(String containerName, String blobName) throws Exception {
-      if (getBlobStore().blobExists(containerName, blobName)) {
-          return  getBlobStore().getBlob(containerName, blobName).getPayload().getInput();
-      } else {
-        throw new Exception("Blob " + blobName + " does not exist in conatiner "+containerName+".");
-      }
+        if (getBlobStore().blobExists(containerName, blobName)) {
+            return getBlobStore().getBlob(containerName, blobName).getPayload().getInput();
+        } else {
+            throw new Exception("Blob " + blobName + " does not exist in conatiner " + containerName + ".");
+        }
     }
 
     /**
      * Writes to the {@link Blob} by serializing an Object.
+     *
      * @param containerName
      * @param blobName
      * @param object
@@ -148,6 +150,7 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
 
     /**
      * Writes to the {@link Blob} using an InputStream.
+     *
      * @param bucket
      * @param blobName
      * @param is
@@ -248,7 +251,21 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
         out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
         for (String provider : providers.keySet()) {
             boolean registered = false;
-            for (BlobStore blobStore:blobStores) {
+            for (BlobStore blobStore : blobStores) {
+                if (blobStore.getContext().getProviderSpecificContext().getId().equals(provider)) {
+                    registered = true;
+                    break;
+                }
+            }
+            out.println(String.format(PROVIDERFORMAT, provider, "blobstore", registered));
+        }
+    }
+
+    protected void printBlobStoreApis(Map<String, ApiMetadata> apis, List<BlobStore> blobStores, String indent, PrintStream out) {
+        out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
+        for (String provider : apis.keySet()) {
+            boolean registered = false;
+            for (BlobStore blobStore : blobStores) {
                 if (blobStore.getContext().getProviderSpecificContext().getId().equals(provider)) {
                     registered = true;
                     break;

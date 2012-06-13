@@ -23,6 +23,7 @@ import java.util.*;
 import com.google.common.collect.Sets;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.karaf.shell.console.OsgiCommandSupport;
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.Hardware;
@@ -62,6 +63,20 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
     protected void printComputeProviders(Map<String, ProviderMetadata> providers, List<ComputeService> computeServices, String indent, PrintStream out) {
         out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
         for (String provider : providers.keySet()) {
+            boolean registered = false;
+            for (ComputeService computeService : computeServices) {
+                if (computeService.getContext().getProviderSpecificContext().getId().equals(provider)) {
+                    registered = true;
+                    break;
+                }
+            }
+            out.println(String.format(PROVIDERFORMAT, provider, "compute", registered));
+        }
+    }
+
+    protected void printComputeApis(Map<String, ApiMetadata> apis, List<ComputeService> computeServices, String indent, PrintStream out) {
+        out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
+        for (String provider : apis.keySet()) {
             boolean registered = false;
             for (ComputeService computeService : computeServices) {
                 if (computeService.getContext().getProviderSpecificContext().getId().equals(provider)) {

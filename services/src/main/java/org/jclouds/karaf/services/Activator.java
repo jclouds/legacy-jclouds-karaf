@@ -19,9 +19,10 @@ package org.jclouds.karaf.services;
 
 import java.util.Hashtable;
 
-import org.jclouds.karaf.core.BlobStoreProviderListener;
-import org.jclouds.karaf.core.ComputeProviderListener;
-import org.jclouds.karaf.core.internal.ProviderBundleListener;
+import org.jclouds.karaf.core.BlobStoreProviderOrApiListener;
+import org.jclouds.karaf.core.BlobStoreProviderOrApiRegistry;
+import org.jclouds.karaf.core.ComputeProviderOrApiListener;
+import org.jclouds.karaf.core.ComputeProviderOrApiRegistry;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
@@ -54,6 +55,7 @@ public class Activator implements BundleActivator {
 
     /**
      * Registers a {@link ManagedServiceFactory} for the jclouds compute.
+     *
      * @param context
      */
     private void registerComputeServiceFactory(BundleContext context) {
@@ -61,19 +63,20 @@ public class Activator implements BundleActivator {
         Hashtable<String, Object> properties = new Hashtable<String, Object>();
         properties.put(Constants.SERVICE_PID, "org.jclouds.compute");
         computeFactory = new ComputeServiceFactory(context);
-        computeFactoryRegistration = context.registerService(new String[] {ManagedServiceFactory.class.getName(), ComputeProviderListener.class.getName()},
+        computeFactoryRegistration = context.registerService(new String[]{ManagedServiceFactory.class.getName(), ComputeProviderOrApiListener.class.getName(), ComputeProviderOrApiRegistry.class.getName()},
                 computeFactory, properties);
     }
 
     /**
      * Registers a {@link ManagedServiceFactory} for the jclouds blobstore.
+     *
      * @param context
      */
     private void registerBlobstoreServiceFactory(BundleContext context) {
-       Hashtable<String, Object> properties = new Hashtable<String, Object>();
+        Hashtable<String, Object> properties = new Hashtable<String, Object>();
         properties.put(Constants.SERVICE_PID, "org.jclouds.blobstore");
         blobStoreFactory = new BlobStoreServiceFactory(context);
-        blobStoreFactoryRegistration = context.registerService(new String[] {ManagedServiceFactory.class.getName(),BlobStoreProviderListener.class.getName()},
+        blobStoreFactoryRegistration = context.registerService(new String[]{ManagedServiceFactory.class.getName(), BlobStoreProviderOrApiListener.class.getName(), BlobStoreProviderOrApiRegistry.class.getName()},
                 blobStoreFactory, properties);
     }
 }

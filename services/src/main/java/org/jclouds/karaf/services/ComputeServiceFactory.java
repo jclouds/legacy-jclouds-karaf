@@ -20,9 +20,11 @@ package org.jclouds.karaf.services;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 import org.jclouds.ContextBuilder;
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
-import org.jclouds.karaf.core.ComputeProviderListener;
+import org.jclouds.karaf.core.ComputeProviderOrApiListener;
+import org.jclouds.karaf.core.ComputeProviderOrApiRegistry;
 import org.jclouds.karaf.core.ComputeServiceEventProxy;
 import org.jclouds.karaf.core.CredentialStore;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
@@ -37,10 +39,14 @@ import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProviderListener  {
+public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProviderOrApiListener, ComputeProviderOrApiRegistry {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ComputeServiceFactory.class);
 
@@ -56,7 +62,10 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
     private final Map<String, ServiceRegistration> registrations = new ConcurrentHashMap<String, ServiceRegistration>();
     private final Map<String, Dictionary> pendingPids = new HashMap<String, Dictionary>();
     private final Map<String, String> providerPids = new HashMap<String, String>();
+    private final Map<String, String> apiPids = new HashMap<String, String>();
+
     private final Map<String, ProviderMetadata> installedProviders = new HashMap<String, ProviderMetadata>();
+    private final Map<String, ApiMetadata> installedApis = new HashMap<String, ApiMetadata>();
 
 
     private ServiceTracker credentialStoreTracker;
@@ -73,7 +82,7 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
             credentialStoreTracker.open();
             return (CredentialStore) credentialStoreTracker.waitForService(10000);
         } catch (InvalidSyntaxException e) {
-            LOGGER.error("Error looking up credential store.",e);
+            LOGGER.error("Error looking up credential store.", e);
         } catch (InterruptedException e) {
             LOGGER.error("Timed out waiting for store.", e);
         }
@@ -89,16 +98,16 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
         try {
             if (properties != null) {
                 Properties props = new Properties();
-                for (Enumeration e = properties.keys(); e.hasMoreElements();) {
+                for (Enumeration e = properties.keys(); e.hasMoreElements(); ) {
                     Object key = e.nextElement();
                     Object val = properties.get(key);
                     props.put(key, val);
                 }
                 String provider = (String) properties.get(PROVIDER);
 
-                if (!installedProviders.containsKey(provider)) {
+                if (!installedProviders.containsKey(provider) && !installedApis.containsKey(provider)) {
                     pendingPids.put(pid, properties);
-                    providerPids.put(provider,pid);
+                    providerPids.put(provider, pid);
                     LOGGER.debug("Provider {} is not currently installed. Service will resume once the the provider is installed.", provider);
                     return;
                 }
@@ -118,25 +127,30 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
                 }
 
                 CredentialStore credentialStore = lookupStore(storeType);
-                ProviderMetadata metadata = installedProviders.get(provider);
+                ProviderMetadata providerMetadata = installedProviders.get(provider);
+                ApiMetadata apiMetadata = installedApis.get(provider);
 
-                ContextBuilder builder = ContextBuilder.newBuilder(metadata);
+                ContextBuilder builder = null;
+                if (providerMetadata != null) {
+                    builder = ContextBuilder.newBuilder(providerMetadata);
+                } else if (apiMetadata != null) {
+                    builder = ContextBuilder.newBuilder(apiMetadata);
+                }
+
                 builder.modules(ImmutableSet.<Module>of(new Log4JLoggingModule(), new SshjSshClientModule()));
 
                 if (credentialStore != null) {
-                  builder.modules(ImmutableSet.<Module>of(credentialStore));
+                    builder.modules(ImmutableSet.<Module>of(credentialStore));
                 }
 
-                builder
-                    .credentials(identity, credential)
-                    .overrides(props);
+                builder.credentials(identity, credential).overrides(props);
 
                 ComputeServiceContext context = builder.build(ComputeServiceContext.class);
 
                 ComputeService client = null;
 
                 if (enableEventSupport) {
-                    client = new ComputeServiceEventProxy(bundleContext,context.getComputeService());
+                    client = new ComputeServiceEventProxy(bundleContext, context.getComputeService());
                 } else {
                     client = context.getComputeService();
                 }
@@ -148,9 +162,8 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
                 pendingPids.remove(pid);
             }
         } catch (Exception ex) {
-            LOGGER.error("Error creating compute service.",ex);
-        }
-        finally {
+            LOGGER.error("Error creating compute service.", ex);
+        } finally {
             ServiceRegistration oldRegistration = (newRegistration == null)
                     ? registrations.remove(pid)
                     : registrations.put(pid, newRegistration);
@@ -177,7 +190,7 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
             try {
                 updated(pid, properties);
             } catch (ConfigurationException e) {
-                LOGGER.error("Error while installing service for pending provider " + provider + " with pid "+ pid, e);
+                LOGGER.error("Error while installing service for pending provider " + provider + " with pid " + pid, e);
             }
         }
     }
@@ -190,7 +203,34 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
         }
     }
 
+    @Override
+    public void apiInstalled(ApiMetadata api) {
+        installedApis.put(api.getId(), api);
+        //Check if there is a pid that requires the installed provider.
+        String pid = apiPids.get(api.getId());
+        if (pid != null) {
+            Dictionary properties = pendingPids.get(pid);
+            try {
+                updated(pid, properties);
+            } catch (ConfigurationException e) {
+                LOGGER.error("Error while installing service for pending api " + api + " with pid " + pid, e);
+            }
+        }
+    }
+
+    @Override
+    public void apiUninstalled(ApiMetadata api) {
+        String pid = apiPids.get(api.getId());
+        if (pid != null) {
+            deleted(pid);
+        }
+    }
+
     public Map<String, ProviderMetadata> getInstalledProviders() {
         return installedProviders;
+    }
+
+    public Map<String, ApiMetadata> getInstalledApis() {
+        return installedApis;
     }
 }

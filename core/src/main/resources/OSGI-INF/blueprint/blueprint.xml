@@ -17,15 +17,15 @@
   -->
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-   <bean id="providerBundleListener" class="org.jclouds.karaf.core.internal.ProviderBundleListener" init-method="init" destroy-method="destroy">
+   <bean id="providerBundleListener" class="org.jclouds.karaf.core.internal.MetadataBundleListener" init-method="init" destroy-method="destroy">
        <property name="bundleContext" ref="blueprintBundleContext"/>
    </bean>
 
-    <reference-list interface="org.jclouds.karaf.core.BlobStoreProviderListener" availability="optional">
+    <reference-list interface="org.jclouds.karaf.core.BlobStoreProviderOrApiListener" availability="optional">
         <reference-listener ref="providerBundleListener" bind-method="registerBlobStoreListener" unbind-method="unregisterBlobStoreListener"/>
     </reference-list>
 
-    <reference-list interface="org.jclouds.karaf.core.ComputeProviderListener" availability="optional">
+    <reference-list interface="org.jclouds.karaf.core.ComputeProviderOrApiListener" availability="optional">
         <reference-listener ref="providerBundleListener" bind-method="registerComputeListener" unbind-method="unregisterComputeListener"/>
     </reference-list>
 

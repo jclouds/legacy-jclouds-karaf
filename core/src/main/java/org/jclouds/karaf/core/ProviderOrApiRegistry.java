@@ -18,19 +18,14 @@
 
 package org.jclouds.karaf.core;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.providers.ProviderMetadata;
 
 import java.util.Map;
 
-/**
- * A simple listener which receives notifications when a cloud provider has been installed.
- */
-public interface ProviderListener {
-
-    void providerInstalled(ProviderMetadata metadata);
-    void providerUninstalled(ProviderMetadata metadata);
+public interface ProviderOrApiRegistry {
 
     Map<String, ProviderMetadata> getInstalledProviders();
 
-
+    Map<String, ApiMetadata> getInstalledApis();
 }
