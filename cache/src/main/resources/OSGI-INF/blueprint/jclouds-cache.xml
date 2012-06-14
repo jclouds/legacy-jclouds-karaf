@@ -19,7 +19,7 @@
 -->
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-    <bean id="cacheProvider" class="org.jclouds.karaf.cache.internal.BasicCacheProvider"/>
+    <bean id="cacheProvider" class="org.jclouds.karaf.cache.BasicCacheProvider"/>
 
         <!-- Cache Managers -->
     <bean id="computeCacheManager" class="org.jclouds.karaf.cache.compute.ComputeCacheManager" init-method="init" destroy-method="destroy"/>

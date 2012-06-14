@@ -18,16 +18,22 @@
 package org.jclouds.karaf.commands.compute;
 
 import org.apache.felix.gogo.commands.Command;
+import org.jclouds.compute.ComputeService;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "image-list")
+@Command(scope = "jclouds", name = "image-list", description = "Lists the available images.")
 public class ImageListCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        printImages(getComputeService().listImages(), "", System.out);
+        ComputeService service = getComputeService();
+        if (service == null) {
+            System.out.println("Failed to find or create a compute service.");
+            return null;
+        }
+        printImages(service.listImages(), "", System.out);
         return null;
     }
 

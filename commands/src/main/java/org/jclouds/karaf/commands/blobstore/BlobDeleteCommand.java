@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
+import org.jclouds.blobstore.BlobStore;
 
 /**
  * @author: iocanel
@@ -40,17 +41,22 @@ public class BlobDeleteCommand extends BlobStoreCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
+        BlobStore blobStore = getBlobStore();
+        if (blobStore == null) {
+            System.out.println("Failed to find or create a blob store.");
+            return null;
+        }
         for (String container : containerNames) {
             if (!blobNames.isEmpty()) {
                 for (String blobName : blobNames) {
                     if (getBlobStore().blobExists(container, blobName)) {
                         getBlobStore().removeBlob(container, blobName);
-                        cacheProvider.getProviderCacheForType("blob").remove(getBlobStore().getContext().getProviderSpecificContext().getId(),blobName);
+                        cacheProvider.getProviderCacheForType("blob").remove(blobStore.getContext().getProviderSpecificContext().getId(),blobName);
                     }
                 }
             } else {
                 getBlobStore().deleteContainer(container);
-                cacheProvider.getProviderCacheForType("container").remove(getBlobStore().getContext().getProviderSpecificContext().getId(),container);
+                cacheProvider.getProviderCacheForType("container").remove(blobStore.getContext().getProviderSpecificContext().getId(),container);
             }
         }
         return null;

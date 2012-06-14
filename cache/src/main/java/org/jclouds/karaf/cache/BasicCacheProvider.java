@@ -16,7 +16,7 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.cache.internal;
+package org.jclouds.karaf.cache;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

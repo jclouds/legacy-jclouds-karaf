@@ -17,14 +17,15 @@
  */
 package org.jclouds.karaf.commands.compute;
 
-import java.io.PrintStream;
-import java.util.*;
-
-import com.google.common.collect.Sets;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.Module;
 import org.apache.felix.gogo.commands.Option;
-import org.apache.karaf.shell.console.OsgiCommandSupport;
+import org.apache.karaf.shell.console.AbstractAction;
+import org.jclouds.ContextBuilder;
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.compute.ComputeService;
+import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Image;
@@ -33,15 +34,27 @@ import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.domain.Processor;
 import org.jclouds.domain.Location;
 import org.jclouds.karaf.cache.CacheProvider;
+import org.jclouds.karaf.cache.BasicCacheProvider;
+import org.jclouds.karaf.utils.EnvHelper;
 import org.jclouds.karaf.utils.compute.ComputeHelper;
 import org.jclouds.providers.ProviderMetadata;
+import org.jclouds.sshj.config.SshjSshClientModule;
 import org.osgi.service.cm.ConfigurationAdmin;
+
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-public abstract class ComputeCommandSupport extends OsgiCommandSupport {
+public abstract class ComputeCommandSupport extends AbstractAction {
 
 
     public static final String NODEFORMAT = "%s%-30s %-32s %-20s %-12s %-12s";
@@ -53,11 +66,20 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
 
 
     private ConfigurationAdmin configurationAdmin;
-    private List<ComputeService> computeServices;
-    protected CacheProvider cacheProvider;
+    private List<ComputeService> computeServices = new ArrayList<ComputeService>();
+    protected CacheProvider cacheProvider = new BasicCacheProvider();
 
-    @Option(name = "--provider")
+    @Option(name = "--provider", description = "The provider or api to use.")
     protected String provider;
+
+    @Option(name = "--identity", description = "The identity to use for creating a compute service.")
+    protected String identity;
+
+    @Option(name = "--credential", description = "The credential to use for a compute service.")
+    protected String credential;
+
+    @Option(name = "--endpoint", description = "The endpoint to use for a compute service.")
+    protected String endpint;
 
 
     protected void printComputeProviders(Map<String, ProviderMetadata> providers, List<ComputeService> computeServices, String indent, PrintStream out) {
@@ -160,6 +182,7 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
 
     /**
      * Returns a comma separated list of the {@NodeMetadata} public addresses.
+     *
      * @param node
      * @return
      */
@@ -180,6 +203,7 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
 
     /**
      * Returns a comma separated list of the {@NodeMetadata} private addresses.
+     *
      * @param node
      * @return
      */
@@ -198,7 +222,7 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
         return sb.toString();
     }
 
-    protected void printNodeInfo(Set<? extends NodeMetadata> nodes , boolean details, PrintStream out) {
+    protected void printNodeInfo(Set<? extends NodeMetadata> nodes, boolean details, PrintStream out) {
         printNodes(nodes, "", out);
         if (details) {
             for (NodeMetadata node : nodes) {
@@ -255,7 +279,25 @@ public abstract class ComputeCommandSupport extends OsgiCommandSupport {
     }
 
     protected ComputeService getComputeService() {
-        return ComputeHelper.getComputeService(provider, computeServices);
+        ComputeService computeService = null;
+        String providerValue = EnvHelper.getProvider(provider);
+        String identityValue = EnvHelper.getIdentity(identity);
+        String credentialValue = EnvHelper.getCredential(credential);
+        boolean canCreateService = !Strings.isNullOrEmpty(providerValue) && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);
+
+        try {
+            computeService = ComputeHelper.getComputeService(provider, computeServices);
+        } catch (Throwable t) {
+            if (!canCreateService) {
+                throw new RuntimeException(t.getMessage());
+            }
+        }
+
+        if (computeService == null && canCreateService) {
+            ComputeServiceContext context = ContextBuilder.newBuilder(providerValue).credentials(identityValue, credentialValue).modules(ImmutableSet.<Module>of(new SshjSshClientModule())).build(ComputeServiceContext.class);
+            computeService = context.getComputeService();
+        }
+        return computeService;
     }
 
     public CacheProvider getCacheProvider() {

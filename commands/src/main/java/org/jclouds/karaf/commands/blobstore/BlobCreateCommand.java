@@ -22,6 +22,8 @@ import java.util.List;
 
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.jclouds.blobstore.BlobStore;
+import org.jclouds.compute.ComputeService;
 
 /**
  * @author: iocanel
@@ -34,8 +36,13 @@ public class BlobCreateCommand extends BlobStoreCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
+        BlobStore blobStore = getBlobStore();
+        if (blobStore == null) {
+            System.out.println("Failed to find or create a blob store.");
+            return null;
+        }
         for (String container : containerNames) {
-            getBlobStore().createContainerInLocation(null, container);
+            blobStore.createContainerInLocation(null, container);
         }
         return null;
     }

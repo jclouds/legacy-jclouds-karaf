@@ -19,6 +19,7 @@
 package org.jclouds.karaf.commands.blobstore;
 
 import org.apache.felix.gogo.commands.Command;
+import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.options.ListContainerOptions;
@@ -33,12 +34,17 @@ public class BlobListCommand extends BlobStoreCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
+        BlobStore blobStore = getBlobStore();
+        if (blobStore == null) {
+            System.out.println("Failed to find or create a blob store.");
+            return null;
+        }
         System.out.println(String.format(LISTFORMAT, "[Container]", "[Blob]"));
-        for (StorageMetadata containerMetadata : getBlobStore().list()) {
+        for (StorageMetadata containerMetadata : blobStore.list()) {
             String containerName = containerMetadata.getName();
 
             cacheProvider.getProviderCacheForType("container").put(containerMetadata.getProviderId(),containerName);
-            PageSet<? extends StorageMetadata> blobStoreMetadatas = getBlobStore().list(containerName, ListContainerOptions.Builder.recursive());
+            PageSet<? extends StorageMetadata> blobStoreMetadatas = blobStore.list(containerName, ListContainerOptions.Builder.recursive());
 
             if (blobStoreMetadatas == null || !blobStoreMetadatas.isEmpty()) {
                 for (StorageMetadata blobMetadata : blobStoreMetadatas) {

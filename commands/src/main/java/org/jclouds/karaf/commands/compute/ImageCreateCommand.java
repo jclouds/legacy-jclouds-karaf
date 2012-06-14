@@ -20,11 +20,12 @@ package org.jclouds.karaf.commands.compute;
 import com.google.common.util.concurrent.ListenableFuture;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.ImageTemplate;
 import org.jclouds.compute.extensions.ImageExtension;
 
-@Command(scope = "jclouds", name = "image-create")
+@Command(scope = "jclouds", name = "image-create", description = "Create an image from an existing node.")
 public class ImageCreateCommand extends ComputeCommandSupport {
 
     @Argument(name = "id", index = 0, description = "The id of the node to use as a template.", required = true, multiValued = false)
@@ -36,11 +37,17 @@ public class ImageCreateCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        if (!getComputeService().getImageExtension().isPresent()) {
+        ComputeService service = getComputeService();
+        if (service == null) {
+            System.out.println("Failed to find or create a compute service.");
+            return null;
+        }
+
+        if (!service.getImageExtension().isPresent()) {
             System.out.print("Provider " + getComputeService().getContext().unwrap().getProviderMetadata().getId() + " does not currently provide image creation support.");
             return null;
         }
-        ImageExtension imageExtension = getComputeService().getImageExtension().get();
+        ImageExtension imageExtension = service.getImageExtension().get();
         ImageTemplate imageTemplate = imageExtension.buildImageTemplateFromNode(name, id);
         ListenableFuture<Image> imageFuture = imageExtension.createImage(imageTemplate);
         Image image = imageFuture.get();

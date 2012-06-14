@@ -19,13 +19,14 @@ package org.jclouds.karaf.commands.compute;
 
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.jclouds.compute.ComputeService;
 
 import java.util.List;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "node-destroy")
+@Command(scope = "jclouds", name = "node-destroy", description = "Destroys the specified nodes.")
 public class NodeDestroyCommand extends ComputeCommandSupport {
 
     @Argument(name = "id", description = "The ids of the nodes to destroy.", required = true, multiValued = true)
@@ -33,11 +34,16 @@ public class NodeDestroyCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
+        ComputeService service = getComputeService();
+        if (service == null) {
+            System.out.println("Failed to find or create a compute service.");
+        }
+
         for (String id : ids) {
-            getComputeService().destroyNode(id);
-            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), id);
-            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), id);
-            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), id);
+            service.destroyNode(id);
+            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(service.getContext().getProviderSpecificContext().getId(), id);
+            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(service.getContext().getProviderSpecificContext().getId(), id);
+            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(service.getContext().getProviderSpecificContext().getId(), id);
         }
         return null;
     }

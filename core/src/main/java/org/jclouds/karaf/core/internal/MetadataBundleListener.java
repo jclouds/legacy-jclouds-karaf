@@ -359,7 +359,7 @@ public class MetadataBundleListener implements BundleListener {
             providerOrApiListener.providerUninstalled(provider);
         }
         for (ApiMetadata api : computeApis) {
-            providerOrApiListener.apiInstalled(api);
+            providerOrApiListener.apiUninstalled(api);
         }
     }
 

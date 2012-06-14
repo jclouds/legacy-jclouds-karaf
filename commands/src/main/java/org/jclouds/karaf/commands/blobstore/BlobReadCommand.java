@@ -29,6 +29,7 @@ import org.apache.felix.gogo.commands.Option;
 
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
+import org.jclouds.blobstore.BlobStore;
 
 /**
  * @author: iocanel
@@ -42,23 +43,29 @@ public class BlobReadCommand extends BlobStoreCommandSupport {
     @Argument(index = 1, name = "blobName", description = "The name of the blob", required = true, multiValued = false)
     String blobName;
 
-    @Option(name = "-f", aliases ="--to-file", description = "The file to store the blob", required = false, multiValued = false)
+    @Option(name = "-f", aliases = "--to-file", description = "The file to store the blob", required = false, multiValued = false)
     String file;
 
-    @Option(name = "-d", aliases ="--display", description = "Display the content to the console", required = false, multiValued = false)
+    @Option(name = "-d", aliases = "--display", description = "Display the content to the console", required = false, multiValued = false)
     Boolean display;
 
     @Override
     protected Object doExecute() throws Exception {
+        BlobStore blobStore = getBlobStore();
+        if (blobStore == null) {
+            System.out.println("Failed to find or create a blob store.");
+            return null;
+        }
+
         if (!Strings.isNullOrEmpty(file)) {
             File f = new File(file);
             if (!f.exists() && f.createNewFile()) {
-                ByteStreams.copy(getBlobInputStream(containerName, blobName), new FileOutputStream(f));
+                ByteStreams.copy(getBlobInputStream(blobStore, containerName, blobName), new FileOutputStream(f));
             }
         }
 
         if (display) {
-            InputStream inputStream = getBlobInputStream(containerName, blobName);
+            InputStream inputStream = getBlobInputStream(blobStore, containerName, blobName);
             System.err.println(new String(ByteStreams.toByteArray(inputStream)));
         }
         return null;

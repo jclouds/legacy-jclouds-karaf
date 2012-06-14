@@ -35,7 +35,7 @@ import org.jclouds.scriptbuilder.statements.login.AdminAccess;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "node-create")
+@Command(scope = "jclouds", name = "node-create", description = "Creates a node.")
 public class NodeCreateCommand extends ComputeCommandSupport {
     @Option(name = "--adminAccess")
     private boolean adminAccess;
@@ -84,6 +84,9 @@ public class NodeCreateCommand extends ComputeCommandSupport {
     @Override
     protected Object doExecute() throws Exception {
         ComputeService service = getComputeService();
+        if (service == null) {
+            System.out.println("Failed to find or create a compute service.");
+        }
 
         TemplateBuilder builder = service.templateBuilder();
         builder.any();
@@ -142,9 +145,9 @@ public class NodeCreateCommand extends ComputeCommandSupport {
         }
 
         for (NodeMetadata node : metadatas) {
-            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).put(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
-            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).put(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
-            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).put(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
+            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).put(service.getContext().getProviderSpecificContext().getId(), node.getId());
+            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).put(service.getContext().getProviderSpecificContext().getId(), node.getId());
+            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).put(service.getContext().getProviderSpecificContext().getId(), node.getId());
         }
 
         return null;

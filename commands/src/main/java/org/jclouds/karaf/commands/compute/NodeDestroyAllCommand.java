@@ -22,6 +22,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import org.apache.felix.gogo.commands.Command;
+import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.NodeMetadata;
 
 import com.google.common.base.Predicate;
@@ -29,12 +30,17 @@ import com.google.common.base.Predicate;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "node-destroy-all")
+@Command(scope = "jclouds", name = "node-destroy-all", description = "Destroys all nodes.")
 public class NodeDestroyAllCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        Set<? extends NodeMetadata> nodeMetadatas = getComputeService().destroyNodesMatching(new Predicate<NodeMetadata>() {
+        ComputeService service = getComputeService();
+        if (service == null) {
+            System.out.println("Failed to find or create a compute service.");
+            return null;
+        }
+        Set<? extends NodeMetadata> nodeMetadatas = service.destroyNodesMatching(new Predicate<NodeMetadata>() {
             @Override
             public boolean apply(@Nullable NodeMetadata input) {
                 return true;
@@ -47,9 +53,9 @@ public class NodeDestroyAllCommand extends ComputeCommandSupport {
         }
 
         for (NodeMetadata node : nodeMetadatas) {
-            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
-            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
-            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
+            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(service.getContext().getProviderSpecificContext().getId(), node.getId());
+            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(service.getContext().getProviderSpecificContext().getId(), node.getId());
+            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(service.getContext().getProviderSpecificContext().getId(), node.getId());
         }
         return null;
     }

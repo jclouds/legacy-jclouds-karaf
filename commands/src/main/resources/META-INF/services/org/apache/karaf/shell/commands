@@ -1,0 +1,12 @@
+org.jclouds.karaf.commands.compute.ImageListCommand
+org.jclouds.karaf.commands.compute.HardwareListCommand
+org.jclouds.karaf.commands.compute.LocationListCommand
+org.jclouds.karaf.commands.compute.NodeListCommand
+org.jclouds.karaf.commands.compute.NodeCreateCommand
+org.jclouds.karaf.commands.compute.NodeDestroyCommand
+org.jclouds.karaf.commands.compute.NodeInfoCommand
+org.jclouds.karaf.commands.compute.NodeSuspendCommand
+org.jclouds.karaf.commands.compute.NodeResumeCommand
+org.jclouds.karaf.commands.compute.NodeRunScriptCommand
+org.jclouds.karaf.commands.compute.GroupDestroyCommand
+org.jclouds.karaf.commands.compute.GroupRunScriptCommand

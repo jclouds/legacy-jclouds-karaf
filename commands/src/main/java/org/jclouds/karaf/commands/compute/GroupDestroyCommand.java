@@ -25,6 +25,7 @@ import javax.annotation.Nullable;
 
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.NodeMetadata;
 
 import com.google.common.base.Predicate;
@@ -32,7 +33,7 @@ import com.google.common.base.Predicate;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "group-destroy")
+@Command(scope = "jclouds", name = "group-destroy", description = "Destroys a group of nodes.")
 public class GroupDestroyCommand extends ComputeCommandSupport {
 
     @Argument(index = 0, name = "group", description = "The groups of nodes to destroy.", required = true, multiValued = true)
@@ -40,10 +41,15 @@ public class GroupDestroyCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
+        ComputeService service = getComputeService();
+        if (service == null) {
+            System.out.println("Failed to find or create a compute service.");
+            return null;
+        }
         Set<NodeMetadata> aggregatedMetadata = new LinkedHashSet<NodeMetadata>();
 
         for (final String group : groups) {
-            Set<? extends NodeMetadata> nodeMetadatas = getComputeService().destroyNodesMatching(new Predicate<NodeMetadata>() {
+            Set<? extends NodeMetadata> nodeMetadatas = service.destroyNodesMatching(new Predicate<NodeMetadata>() {
                 @Override
                 public boolean apply(@Nullable NodeMetadata input) {
                     return input.getGroup().contains(group);
@@ -51,9 +57,9 @@ public class GroupDestroyCommand extends ComputeCommandSupport {
             });
 
             for (NodeMetadata node : nodeMetadatas) {
-                cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
-                cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
-                cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(getComputeService().getContext().getProviderSpecificContext().getId(), node.getId());
+                cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(service.getContext().getProviderSpecificContext().getId(), node.getId());
+                cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(service.getContext().getProviderSpecificContext().getId(), node.getId());
+                cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(service.getContext().getProviderSpecificContext().getId(), node.getId());
                 aggregatedMetadata.add(node);
             }
         }

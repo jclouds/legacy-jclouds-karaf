@@ -17,6 +17,23 @@
  */
 package org.jclouds.karaf.commands.blobstore;
 
+import com.google.common.base.Strings;
+import com.google.common.io.ByteStreams;
+import org.apache.felix.gogo.commands.Option;
+import org.apache.karaf.shell.console.AbstractAction;
+import org.jclouds.ContextBuilder;
+import org.jclouds.apis.ApiMetadata;
+import org.jclouds.blobstore.BlobStore;
+import org.jclouds.blobstore.BlobStoreContext;
+import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.util.BlobStoreUtils;
+import org.jclouds.karaf.cache.CacheProvider;
+import org.jclouds.karaf.utils.EnvHelper;
+import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
+import org.jclouds.providers.ProviderMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -25,41 +42,33 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.felix.gogo.commands.Option;
-import org.apache.karaf.shell.console.OsgiCommandSupport;
-import org.jclouds.apis.ApiMetadata;
-import org.jclouds.blobstore.BlobStore;
-import org.jclouds.blobstore.domain.Blob;
-import org.jclouds.blobstore.util.BlobStoreUtils;
-import org.jclouds.karaf.cache.CacheProvider;
-import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
-import org.jclouds.providers.ProviderMetadata;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Strings;
-import com.google.common.io.ByteStreams;
-
 /**
  * @author iocanel
  */
-public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
+public abstract class BlobStoreCommandSupport extends AbstractAction {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BlobStoreCommandSupport.class);
 
     public static final String PROVIDERFORMAT = "%-24s %-12s %-12s";
 
-    private List<BlobStore> services;
+    private List<BlobStore> services = new ArrayList<BlobStore>();
 
 
     protected CacheProvider cacheProvider;
 
-    @Option(name = "--provider")
+    @Option(name = "--provider", description = "The provider or api to use.")
     protected String provider;
+
+    @Option(name = "--identity", description = "The identity to use for creating a blob store.")
+    protected String identity;
+
+    @Option(name = "--credential", description = "The credential to use for a blob store.")
+    protected String credential;
 
     public void setBlobStoreServices(List<BlobStore> services) {
         this.services = services;
@@ -74,7 +83,23 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
     }
 
     protected BlobStore getBlobStore() {
-        return BlobStoreHelper.getBlobStore(provider, services);
+        BlobStore blobStore = null;
+        String providerValue = EnvHelper.getProvider(provider);
+        String identityValue = EnvHelper.getIdentity(identity);
+        String credentialValue = EnvHelper.getCredential(credential);
+        boolean canCreateService = !Strings.isNullOrEmpty(providerValue) && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);
+        try {
+            blobStore = BlobStoreHelper.getBlobStore(provider, services);
+        } catch (Throwable t) {
+            if (!canCreateService) {
+                throw new RuntimeException(t.getMessage());
+            }
+        }
+        if (blobStore == null && canCreateService) {
+            BlobStoreContext context = ContextBuilder.newBuilder(providerValue).credentials(identityValue, credentialValue).build(BlobStoreContext.class);
+            blobStore = context.getBlobStore();
+        }
+        return blobStore;
     }
 
     /**
@@ -126,8 +151,8 @@ public abstract class BlobStoreCommandSupport extends OsgiCommandSupport {
      * @param blobName
      * @return
      */
-    public InputStream getBlobInputStream(String containerName, String blobName) throws Exception {
-        if (getBlobStore().blobExists(containerName, blobName)) {
+    public InputStream getBlobInputStream(BlobStore blobStore, String containerName, String blobName) throws Exception {
+        if (blobStore.blobExists(containerName, blobName)) {
             return getBlobStore().getBlob(containerName, blobName).getPayload().getInput();
         } else {
             throw new Exception("Blob " + blobName + " does not exist in conatiner " + containerName + ".");

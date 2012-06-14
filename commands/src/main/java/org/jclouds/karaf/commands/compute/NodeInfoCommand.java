@@ -20,6 +20,7 @@ package org.jclouds.karaf.commands.compute;
 import com.google.common.collect.Sets;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeState;
@@ -29,7 +30,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "node-info")
+@Command(scope = "jclouds", name = "node-info", description = "Displays detailed information about a node.")
 public class NodeInfoCommand extends ComputeCommandSupport {
 
     @Argument(name = "id", description = "The id of the node.", required = true, multiValued = false)
@@ -37,7 +38,13 @@ public class NodeInfoCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        NodeMetadata node = getComputeService().getNodeMetadata(id);
+        ComputeService service = getComputeService();
+        if (service == null) {
+            System.out.println("Failed to find or create a compute service.");
+            return null;
+        }
+
+        NodeMetadata node = service.getNodeMetadata(id);
         printNodeInfo(Sets.newHashSet(node), true, System.out);
         return null;
     }

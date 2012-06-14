@@ -18,16 +18,22 @@
 package org.jclouds.karaf.commands.compute;
 
 import org.apache.felix.gogo.commands.Command;
+import org.jclouds.compute.ComputeService;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "location-list")
+@Command(scope = "jclouds", name = "location-list", description = "Lists the available locations.")
 public class LocationListCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        printLocations(getComputeService(), "", System.out);
+        ComputeService service = getComputeService();
+        if (service == null) {
+            System.out.println("Failed to find or create a compute service.");
+            return null;
+        }
+        printLocations(service, "", System.out);
         return null;
     }
 

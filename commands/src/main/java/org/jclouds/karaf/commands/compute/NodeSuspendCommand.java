@@ -19,11 +19,12 @@ package org.jclouds.karaf.commands.compute;
 
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.jclouds.compute.ComputeService;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "node-suspend")
+@Command(scope = "jclouds", name = "node-suspend", description = "Suspsends a node.")
 public class NodeSuspendCommand extends ComputeCommandSupport {
 
     @Argument(name = "id", description = "The id of the node.", required = true, multiValued = false)
@@ -31,7 +32,12 @@ public class NodeSuspendCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        getComputeService().suspendNode(id);
+        ComputeService service = getComputeService();
+        if (service == null) {
+            System.out.println("Failed to find or create a compute service.");
+            return null;
+        }
+        service.suspendNode(id);
         return null;
     }
 }

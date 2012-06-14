@@ -24,8 +24,6 @@ import org.jclouds.compute.ComputeService;
 
 public class ComputeHelper {
 
-
-
     public static ComputeService getComputeService(String provider, List<ComputeService> services) {
         if (provider != null) {
             ComputeService service = null;

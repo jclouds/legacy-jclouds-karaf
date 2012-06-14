@@ -32,6 +32,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import org.apache.felix.gogo.commands.Option;
+import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.ExecResponse;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -61,7 +62,12 @@ public abstract class NodeRunScriptSupport extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        Set<? extends NodeMetadata> nodeMetaDataSet = getComputeService().listNodesDetailsMatching(getComputeFilter());
+        ComputeService service = getComputeService();
+        if (service == null) {
+            System.out.println("Failed to find or create a compute service.");
+            return null;
+        }
+        Set<? extends NodeMetadata> nodeMetaDataSet = service.listNodesDetailsMatching(getComputeFilter());
         if (nodeMetaDataSet != null && !nodeMetaDataSet.isEmpty()) {
             NodeMetadata nodeMetadata = nodeMetaDataSet.toArray(new NodeMetadata[0])[0];
 
@@ -74,7 +80,7 @@ public abstract class NodeRunScriptSupport extends ComputeCommandSupport {
                 credentials = credentials.toBuilder().user(user).build();
             }
 
-            Map<? extends NodeMetadata, ExecResponse> responseMap = getComputeService().runScriptOnNodesMatching(getNodeFilter(), getScript(), overrideLoginCredentials(credentials).runAsRoot(false));
+            Map<? extends NodeMetadata, ExecResponse> responseMap = service.runScriptOnNodesMatching(getNodeFilter(), getScript(), overrideLoginCredentials(credentials).runAsRoot(false));
 
             for (Map.Entry<? extends NodeMetadata, ExecResponse> entry : responseMap.entrySet()) {
                 ExecResponse response = entry.getValue();
