@@ -502,6 +502,22 @@
         <bundle>mvn:org.jclouds.provider/trmk-vcloudexpress/${jclouds.version}</bundle>
     </feature>
 
+
+    <!-- Lab Features -->
+    <feature name='jclouds-api-joyent-sdc' description='Joyent Cloud' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-compute</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <feature version='${project.version}'>jclouds-driver-slf4j</feature>
+        <bundle>mvn:org.jclouds.labs/joyent-sdc/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name='jclouds-joyent' description='Joyent Cloud' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds-api-joyent-sdc</feature>
+        <bundle>mvn:org.jclouds.labs/joyentcloud/${jclouds.version}</bundle>
+    </feature>
+
+
     <feature name="jclouds-services" description="OSGi Service Factories for JClouds" version="${project.version}" resolver="(obr)">
         <configfile finalname="/etc/org.jclouds.credentials.cfg">mvn:org.jclouds.karaf/jclouds-karaf/${project.version}/cfg/credentials</configfile>
         <feature version='${project.version}'>jclouds</feature>
