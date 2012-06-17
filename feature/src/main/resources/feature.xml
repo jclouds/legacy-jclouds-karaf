@@ -85,6 +85,15 @@
         <bundle>mvn:org.jclouds.api/byon/${jclouds.version}</bundle>
     </feature>
 
+    <feature name='jclouds-api-swift' description='JClouds - API - Swift' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds-compute</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
+        <bundle dependency='true'>mvn:org.jclouds.api/openstack-keystone/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.api/swift/${jclouds.version}</bundle>
+    </feature>
+
     <feature name='jclouds-api-nova' description='JClouds - API - Nova' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds-compute</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
@@ -206,18 +215,16 @@
     <feature name='jclouds-cloudfiles-uk' description='Cloudfiles UK' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
-        <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
+        <feature version='${project.version}'>jclouds-api-swift</feature>
         <bundle dependency='true'>mvn:org.jclouds.api/cloudfiles/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/swift/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/cloudfiles-uk/${jclouds.version}</bundle>
     </feature>
 
     <feature name='jclouds-cloudfiles-us' description='Cloudfiles US' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
-        <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
+        <feature version='${project.version}'>jclouds-api-swift</feature>
         <bundle dependency='true'>mvn:org.jclouds.api/cloudfiles/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/swift/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/cloudfiles-us/${jclouds.version}</bundle>
     </feature>
 
@@ -370,9 +377,7 @@
     <feature name='jclouds-hpcloud-objectstorage' description='HP Cloud Object Storage' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-slf4j</feature>
-        <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/openstack-keystone/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/swift/${jclouds.version}</bundle>
+        <feature version='${project.version}'>jclouds-api-swift</feature>
         <bundle>mvn:org.jclouds.provider/hpcloud-objectstorage/${jclouds.version}</bundle>
     </feature>
 
