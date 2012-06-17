@@ -109,7 +109,7 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
                 } else {
                     return;
                 }
-                builder.credentials(identity, credential)
+                context = builder.credentials(identity, credential)
                         .modules(ImmutableSet.<Module>of(new Log4JLoggingModule()))
                         .overrides(props)
                         .build(BlobStoreContext.class);
