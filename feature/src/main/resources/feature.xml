@@ -111,12 +111,22 @@
         <bundle>mvn:org.jclouds.api/openstack-nova/${jclouds.version}</bundle>
     </feature>
 
-    <feature name="jclouds-api-s3" description="" version="${project.version}" resolver="(obr)">
+    <feature name="jclouds-api-s3" description="S3 API" version="${project.version}" resolver="(obr)">
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name="jclouds-api-ec2" description="EC2 API" version="${project.version}" resolver="(obr)">
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.api/ec2/${jclouds.version}</bundle>
     </feature>
 
 
@@ -167,10 +177,8 @@
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
-        <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
+        <feature version='${project.version}'>jclouds-api-ec2</feature>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.api/ec2/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/aws-ec2/${jclouds.version}</bundle>
     </feature>
 
@@ -346,12 +354,8 @@
 
     <feature name='jclouds-eucalyptus-ec2' description='Eucalyptus Partner - EC2' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
-        <feature version='${project.version}'>jclouds-driver-log4j</feature>
-        <feature version='${project.version}'>jclouds-driver-sshj</feature>
         <feature version='${project.version}'>jclouds-api-eucalyptus</feature>
-        <bundle dependency='true'>mvn:org.jclouds.api/ec2/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
+        <feature version='${project.version}'>jclouds-api-ec2</feature>
         <bundle>mvn:org.jclouds.provider/eucalyptus-partnercloud-ec2/${jclouds.version}</bundle>
     </feature>
 
@@ -520,6 +524,16 @@
     <feature name='jclouds-joyent' description='Joyent Cloud' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds-api-joyent-sdc</feature>
         <bundle>mvn:org.jclouds.labs/joyentcloud/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name='jclouds-greenqloud-storage' description='GreenQloud Simple Storage Service (S3) provider' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds-api-s3</feature>
+        <bundle>mvn:org.jclouds.labs/greenqloud-storage/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name='jclouds-greenqloud-compute' description='Compute implementation targeted to GreenQloud Web Services' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds-api-ec2</feature>
+        <bundle>mvn:org.jclouds.labs/greenqloud-compute/${jclouds.version}</bundle>
     </feature>
 
 
