@@ -79,7 +79,7 @@ public abstract class ComputeCommandSupport extends AbstractAction {
     protected String credential;
 
     @Option(name = "--endpoint", description = "The endpoint to use for a compute service.")
-    protected String endpint;
+    protected String endpoint;
 
 
     protected void printComputeProviders(Map<String, ProviderMetadata> providers, List<ComputeService> computeServices, String indent, PrintStream out) {
@@ -283,6 +283,7 @@ public abstract class ComputeCommandSupport extends AbstractAction {
         String providerValue = EnvHelper.getProvider(provider);
         String identityValue = EnvHelper.getIdentity(identity);
         String credentialValue = EnvHelper.getCredential(credential);
+        String endpointValue = EnvHelper.getEndpoint(endpoint);
         boolean canCreateService = !Strings.isNullOrEmpty(providerValue) && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);
 
         try {
@@ -294,8 +295,11 @@ public abstract class ComputeCommandSupport extends AbstractAction {
         }
 
         if (computeService == null && canCreateService) {
-            ComputeServiceContext context = ContextBuilder.newBuilder(providerValue).credentials(identityValue, credentialValue).modules(ImmutableSet.<Module>of(new SshjSshClientModule())).build(ComputeServiceContext.class);
-            computeService = context.getComputeService();
+            ContextBuilder builder = ContextBuilder.newBuilder(providerValue).credentials(identityValue,credentialValue).modules(ImmutableSet.<Module>of(new SshjSshClientModule()));
+            if (!Strings.isNullOrEmpty(endpointValue)) {
+                builder = builder.endpoint(endpointValue);
+            }
+            computeService = builder.build(ComputeServiceContext.class).getComputeService();
         }
         return computeService;
     }
