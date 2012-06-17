@@ -52,7 +52,6 @@ public class MiscFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
     }
 
     @Test
-    @Ignore("Currently this feature is bugged")
     public void testEucalyptusS3Feature() throws Exception {
         installAndCheckFeature("jclouds-eucalyptus-s3");
     }

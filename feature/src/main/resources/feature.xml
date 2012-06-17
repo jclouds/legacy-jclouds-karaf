@@ -111,6 +111,14 @@
         <bundle>mvn:org.jclouds.api/openstack-nova/${jclouds.version}</bundle>
     </feature>
 
+    <feature name="jclouds-api-s3" description="" version="${project.version}" resolver="(obr)">
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
+        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
+    </feature>
+
 
     <!-- Drivers -->
     <feature name='jclouds-driver-jsch' description='JClouds - Drivers - Jsch' version='${project.version}' resolver='(obr)'>
@@ -169,17 +177,16 @@
     <feature name='jclouds-aws-s3' description='Amazon Web Service - S3' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
-        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>        <bundle dependency='true'>mvn:joda-time/joda-time/${joda.version}</bundle>
+        <feature version='${project.version}'>jclouds-api-s3</feature>
         <bundle dependency='true'>mvn:io.netty/netty/${netty.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.httpcomponents/httpcore-osgi/${httpcore.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.httpcomponents/httpclient-osgi/${httpclient.version}</bundle>
+        <bundle dependency='true'>mvn:joda-time/joda-time/${joda.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-joda/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-netty/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-bouncycastle/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-enterprise/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-apachehc/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/aws-s3/${jclouds.version}</bundle>
     </feature>
 
@@ -332,10 +339,8 @@
     <feature name='jclouds-eucalyptus-s3' description='Eucalyptus Partner - S3' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
-        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
+        <feature version='${project.version}'>jclouds-api-s3</feature>
         <bundle dependency='true'>mvn:org.jclouds.api/walrus/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/eucalyptus-partnercloud-s3/${jclouds.version}</bundle>
     </feature>
 
