@@ -167,7 +167,7 @@
         <junit.version>4.8.2</junit.version>
         <jzlib.bundle.version>1.0.7_1</jzlib.bundle.version>
         <jzlib.version>1.0.7</jzlib.version>
-        <karaf.version>2.2.5</karaf.version>
+        <karaf.version>2.2.7</karaf.version>
         <net.oauth.bundle.version>20100527_1</net.oauth.bundle.version>
         <netty.bundle.version>3.3.1.Final</netty.bundle.version>
         <osgi.version>4.2.0</osgi.version>
