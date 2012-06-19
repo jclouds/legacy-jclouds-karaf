@@ -70,6 +70,9 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
     @Option(name = "--credential", description = "The credential to use for a blob store.")
     protected String credential;
 
+    @Option(name = "--endpoint", description = "The endpoint to use for a blob store.")
+    protected String endpoint;
+
     public void setBlobStoreServices(List<BlobStore> services) {
         this.services = services;
     }
@@ -87,6 +90,7 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
         String providerValue = EnvHelper.getProvider(provider);
         String identityValue = EnvHelper.getIdentity(identity);
         String credentialValue = EnvHelper.getCredential(credential);
+        String endpointValue = EnvHelper.getEndpoint(endpoint);
         boolean canCreateService = !Strings.isNullOrEmpty(providerValue) && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);
         try {
             blobStore = BlobStoreHelper.getBlobStore(provider, services);
@@ -96,7 +100,11 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
             }
         }
         if (blobStore == null && canCreateService) {
-            BlobStoreContext context = ContextBuilder.newBuilder(providerValue).credentials(identityValue, credentialValue).build(BlobStoreContext.class);
+            ContextBuilder builder = ContextBuilder.newBuilder(providerValue).credentials(identityValue, credentialValue);
+            if (!Strings.isNullOrEmpty(endpointValue)) {
+                builder = builder.endpoint(endpoint);
+            }
+            BlobStoreContext context = builder.build(BlobStoreContext.class);
             blobStore = context.getBlobStore();
         }
         return blobStore;
