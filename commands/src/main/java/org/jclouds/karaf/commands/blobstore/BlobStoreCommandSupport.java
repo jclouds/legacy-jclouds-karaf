@@ -27,6 +27,7 @@ import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.util.BlobStoreUtils;
+import org.jclouds.karaf.cache.BasicCacheProvider;
 import org.jclouds.karaf.cache.CacheProvider;
 import org.jclouds.karaf.utils.EnvHelper;
 import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
@@ -59,7 +60,7 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
     private List<BlobStore> services = new ArrayList<BlobStore>();
 
 
-    protected CacheProvider cacheProvider;
+    protected CacheProvider cacheProvider = new BasicCacheProvider();
 
     @Option(name = "--provider", description = "The provider or api to use.")
     protected String provider;
