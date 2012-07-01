@@ -23,7 +23,7 @@ public class EnvHelper {
     public static final String JCLOUDS_PROVIDER = "JCLOUDS_PROVIDER";
     public static final String JCLOUDS_IDENTITY = "JCLOUDS_IDENTITY";
     public static final String JCLOUDS_CREDENTIAL = "JCLOUDS_CREDENTIAL";
-    public static final String JCLOUDS_ENDPOINT = "JCLOUDS_ENDPOIT";
+    public static final String JCLOUDS_ENDPOINT = "JCLOUDS_ENDPOINT";
 
     private EnvHelper() {
         //Utility Class
