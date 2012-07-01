@@ -17,6 +17,7 @@
 
 package org.jclouds.karaf.services;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 import org.jclouds.ContextBuilder;
@@ -51,6 +52,7 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
     private static final Logger LOGGER = LoggerFactory.getLogger(ComputeServiceFactory.class);
 
     public static final String PROVIDER = "provider";
+    public static final String ENDPOINT = "endpoint";
     public static final String IDENTITY = "identity";
     public static final String CREDENTIAL = "credential";
     public static final String NODE_EVENT_SUPPORT = "eventsupport";
@@ -117,6 +119,7 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
 
                 String identity = (String) properties.get(IDENTITY);
                 String credential = (String) properties.get(CREDENTIAL);
+                String endpoint = (String) properties.get(ENDPOINT);
                 String storeType = (String) properties.get(CREDENTIAL_STORE);
                 String eventSupport = (String) properties.get(NODE_EVENT_SUPPORT);
                 Boolean enableEventSupport = false;
@@ -138,6 +141,10 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
                     builder = ContextBuilder.newBuilder(providerMetadata);
                 } else if (apiMetadata != null) {
                     builder = ContextBuilder.newBuilder(apiMetadata);
+                }
+
+                if (!Strings.isNullOrEmpty(endpoint)) {
+                    builder = builder.endpoint(endpoint);
                 }
 
                 builder.modules(ImmutableSet.<Module>of(new Log4JLoggingModule(), new SshjSshClientModule()));

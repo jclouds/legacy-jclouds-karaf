@@ -18,6 +18,7 @@
 
 package org.jclouds.karaf.services;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
@@ -48,6 +49,7 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
     private static final Logger LOGGER = LoggerFactory.getLogger(BlobStoreServiceFactory.class);
 
     public static final String PROVIDER = "provider";
+    public static final String ENDPOINT = "endpoint";
     public static final String IDENTITY = "identity";
     public static final String CREDENTIAL = "credential";
 
@@ -94,6 +96,7 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
                     return;
                 }
 
+                String endpoint = (String) properties.get(ENDPOINT);
                 String identity = (String) properties.get(IDENTITY);
                 String credential = (String) properties.get(CREDENTIAL);
 
@@ -108,6 +111,10 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
                     builder = ContextBuilder.newBuilder(apiMetadata);
                 } else {
                     return;
+                }
+
+                if (!Strings.isNullOrEmpty(endpoint)) {
+                    builder = builder.endpoint(endpoint);
                 }
                 context = builder.credentials(identity, credential)
                         .modules(ImmutableSet.<Module>of(new Log4JLoggingModule()))
