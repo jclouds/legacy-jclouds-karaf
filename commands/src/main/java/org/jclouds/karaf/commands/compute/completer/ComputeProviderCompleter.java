@@ -21,6 +21,7 @@ package org.jclouds.karaf.commands.compute.completer;
 import org.apache.karaf.shell.console.Completer;
 import org.apache.karaf.shell.console.completer.StringsCompleter;
 import org.jclouds.compute.ComputeService;
+import org.jclouds.providers.Providers;
 
 import java.util.List;
 
@@ -34,7 +35,10 @@ public class ComputeProviderCompleter implements Completer {
         try {
             if (computeServices != null) {
                 for (ComputeService computeService : computeServices) {
-                    delegate.getStrings().add(computeService.getContext().getProviderSpecificContext().getId());
+                    String id = computeService.getContext().unwrap().getId();
+                    if (Providers.withId(id) != null) {
+                        delegate.getStrings().add(computeService.getContext().unwrap().getId());
+                    }
                 }
             }
         } catch (Exception ex) {

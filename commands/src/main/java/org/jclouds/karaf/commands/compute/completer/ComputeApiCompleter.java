@@ -16,42 +16,42 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.blobstore.completer;
+package org.jclouds.karaf.commands.compute.completer;
 
 import org.apache.karaf.shell.console.Completer;
 import org.apache.karaf.shell.console.completer.StringsCompleter;
-import org.jclouds.blobstore.BlobStore;
-import org.jclouds.providers.Providers;
+import org.jclouds.apis.Apis;
+import org.jclouds.compute.ComputeService;
 
 import java.util.List;
 
-public class BlobStoreProviderCompleter implements Completer {
+public class ComputeApiCompleter implements Completer {
 
     private final StringsCompleter delegate = new StringsCompleter();
-    private List<? extends BlobStore> blobStoreServices;
+    private List<? extends ComputeService> computeServices;
 
     @Override
     public int complete(String buffer, int cursor, List<String> candidates) {
         try {
-            if (blobStoreServices != null) {
-                for (BlobStore blobStore : blobStoreServices) {
-                    String id = blobStore.getContext().unwrap().getId();
-                    if (Providers.withId(id) != null) {
-                        delegate.getStrings().add(id);
+                if (computeServices != null) {
+                for (ComputeService computeService : computeServices) {
+                    String id = computeService.getContext().unwrap().getId();
+                    if (Apis.withId(id) != null) {
+                        delegate.getStrings().add(computeService.getContext().unwrap().getId());
                     }
                 }
             }
         } catch (Exception ex) {
             //noop
         }
-        return delegate.complete(buffer, cursor, candidates);
+        return delegate.complete(buffer,cursor,candidates);
     }
 
-    public List<? extends BlobStore> getBlobStoreServices() {
-        return blobStoreServices;
+    public List<? extends ComputeService> getComputeServices() {
+        return computeServices;
     }
 
-    public void setBlobStoreServices(List<? extends BlobStore> blobStoreServices) {
-        this.blobStoreServices = blobStoreServices;
+    public void setComputeServices(List<? extends ComputeService> computeServices) {
+        this.computeServices = computeServices;
     }
 }

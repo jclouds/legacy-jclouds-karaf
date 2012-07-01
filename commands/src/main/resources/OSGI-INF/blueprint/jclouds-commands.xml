@@ -28,6 +28,7 @@
             </action>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
+                <entry key="--api" value-ref="computeApiCompleter"/>
                 <entry key="--imageId" value-ref="imageCompleter"/>
                 <entry key="--locationId" value-ref="locationCompleter"/>
                 <entry key="--hardwareId" value-ref="hardwareCompleter"/>
@@ -44,6 +45,7 @@
             </completers>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
+                <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/node-destroy-all">
@@ -53,6 +55,7 @@
             </action>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
+                <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/group-destroy">
@@ -65,6 +68,7 @@
             </completers>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
+                <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/node-suspend">
@@ -77,6 +81,7 @@
             </completers>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
+                <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/node-resume">
@@ -89,6 +94,7 @@
             </completers>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
+                <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/node-runscript">
@@ -102,6 +108,7 @@
             </completers>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
+                <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/node-info">
@@ -115,6 +122,7 @@
             </completers>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
+                <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/group-runscript">
@@ -134,6 +142,7 @@
             </action>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
+                <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/compute-provider-list">
@@ -157,6 +166,7 @@
             </action>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
+                <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/hardware-list">
@@ -166,6 +176,7 @@
             </action>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
+                <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/location-list">
@@ -175,6 +186,7 @@
             </action>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
+                <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/image-list">
@@ -184,6 +196,7 @@
             </action>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
+                <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/image-create">
@@ -197,6 +210,7 @@
             </completers>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
+                <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/blobstore-write">
@@ -211,6 +225,7 @@
             </completers>
             <optional-completers>
                 <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
+                <entry key="--api" value-ref="blobStoreApiCompleter"/>
             </optional-completers>
         </command>
 
@@ -226,6 +241,7 @@
             </completers>
             <optional-completers>
                 <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
+                <entry key="--api" value-ref="blobStoreApiCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/blobstore-list">
@@ -235,6 +251,7 @@
             </action>
             <optional-completers>
                 <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
+                <entry key="--api" value-ref="blobStoreApiCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/blobstore-create">
@@ -244,6 +261,7 @@
             </action>
             <optional-completers>
                 <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
+                <entry key="--api" value-ref="blobStoreApiCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/blobstore-delete">
@@ -256,6 +274,7 @@
             </completers>
             <optional-completers>
                 <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
+                <entry key="--api" value-ref="blobStoreApiCompleter"/>
             </optional-completers>
         </command>
     </command-bundle>
@@ -276,8 +295,17 @@
         <property name="blobStoreServices" ref="blobStoreServices"/>
     </bean>
 
+    <bean id="blobStoreApiCompleter"
+          class="org.jclouds.karaf.commands.blobstore.completer.BlobStoreApiCompleter">
+        <property name="blobStoreServices" ref="blobStoreServices"/>
+    </bean>
+
     <!-- Compute Completers -->
     <bean id="computeProviderCompleter" class="org.jclouds.karaf.commands.compute.completer.ComputeProviderCompleter">
+        <property name="computeServices" ref="computeServices"/>
+    </bean>
+
+    <bean id="computeApiCompleter" class="org.jclouds.karaf.commands.compute.completer.ComputeApiCompleter">
         <property name="computeServices" ref="computeServices"/>
     </bean>
 

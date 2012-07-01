@@ -52,6 +52,7 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
     private static final Logger LOGGER = LoggerFactory.getLogger(ComputeServiceFactory.class);
 
     public static final String PROVIDER = "provider";
+    public static final String API = "api";
     public static final String ENDPOINT = "endpoint";
     public static final String IDENTITY = "identity";
     public static final String CREDENTIAL = "credential";
@@ -108,12 +109,21 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
                     Object val = properties.get(key);
                     props.put(key, val);
                 }
-                String provider = (String) properties.get(PROVIDER);
 
-                if (!installedProviders.containsKey(provider) && !installedApis.containsKey(provider)) {
+                String provider = (String) properties.get(PROVIDER);
+                String api = (String) properties.get(API);
+
+                ProviderMetadata providerMetadata = null;
+                ApiMetadata apiMetadata = null;
+
+                if (!Strings.isNullOrEmpty(provider) && installedProviders.containsKey(provider)) {
+                    providerMetadata = installedProviders.get(provider);
+
+                } if (!Strings.isNullOrEmpty(api) && installedApis.containsKey(api)) {
+                    apiMetadata = installedApis.get(api);
+                } else {
                     pendingPids.put(pid, properties);
-                    providerPids.put(provider, pid);
-                    LOGGER.debug("Provider {} is not currently installed. Service will resume once the the provider is installed.", provider);
+                    LOGGER.debug("Provider {} or Api {} is not currently installed. Service will resume once the the provider is installed.", provider, api);
                     return;
                 }
 
@@ -133,8 +143,6 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
                 }
 
                 CredentialStore credentialStore = lookupStore(storeType);
-                ProviderMetadata providerMetadata = installedProviders.get(provider);
-                ApiMetadata apiMetadata = installedApis.get(provider);
 
                 ContextBuilder builder = null;
                 if (providerMetadata != null) {

@@ -20,12 +20,13 @@ package org.jclouds.karaf.commands.blobstore.completer;
 
 import org.apache.karaf.shell.console.Completer;
 import org.apache.karaf.shell.console.completer.StringsCompleter;
+import org.jclouds.apis.Apis;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.providers.Providers;
 
 import java.util.List;
 
-public class BlobStoreProviderCompleter implements Completer {
+public class BlobStoreApiCompleter implements Completer {
 
     private final StringsCompleter delegate = new StringsCompleter();
     private List<? extends BlobStore> blobStoreServices;
@@ -36,7 +37,7 @@ public class BlobStoreProviderCompleter implements Completer {
             if (blobStoreServices != null) {
                 for (BlobStore blobStore : blobStoreServices) {
                     String id = blobStore.getContext().unwrap().getId();
-                    if (Providers.withId(id) != null) {
+                    if (Apis.withId(id) != null) {
                         delegate.getStrings().add(id);
                     }
                 }

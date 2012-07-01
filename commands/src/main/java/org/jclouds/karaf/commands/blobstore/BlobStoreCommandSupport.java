@@ -62,8 +62,11 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
 
     protected CacheProvider cacheProvider = new BasicCacheProvider();
 
-    @Option(name = "--provider", description = "The provider or api to use.")
+    @Option(name = "--provider", description = "The provider to use.")
     protected String provider;
+
+    @Option(name = "--api", description = "The api to use.")
+    protected String api;
 
     @Option(name = "--identity", description = "The identity to use for creating a blob store.")
     protected String identity;
@@ -89,19 +92,25 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
     protected BlobStore getBlobStore() {
         BlobStore blobStore = null;
         String providerValue = EnvHelper.getProvider(provider);
+        String apiValue = EnvHelper.getApi(api);
         String identityValue = EnvHelper.getIdentity(identity);
         String credentialValue = EnvHelper.getCredential(credential);
         String endpointValue = EnvHelper.getEndpoint(endpoint);
-        boolean canCreateService = !Strings.isNullOrEmpty(providerValue) && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);
+
+        boolean canCreateService = (!Strings.isNullOrEmpty(providerValue) || !Strings.isNullOrEmpty(providerValue))
+                && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);
+
+        String providerOrApiValue = !Strings.isNullOrEmpty(providerValue) ? providerValue : apiValue;
+
         try {
-            blobStore = BlobStoreHelper.getBlobStore(provider, services);
+            blobStore = BlobStoreHelper.getBlobStore(providerOrApiValue, services);
         } catch (Throwable t) {
             if (!canCreateService) {
                 throw new RuntimeException(t.getMessage());
             }
         }
         if (blobStore == null && canCreateService) {
-            ContextBuilder builder = ContextBuilder.newBuilder(providerValue).credentials(identityValue, credentialValue);
+            ContextBuilder builder = ContextBuilder.newBuilder(providerOrApiValue).credentials(identityValue, credentialValue);
             if (!Strings.isNullOrEmpty(endpointValue)) {
                 builder = builder.endpoint(endpoint);
             }

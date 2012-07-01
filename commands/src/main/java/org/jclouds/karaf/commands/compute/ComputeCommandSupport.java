@@ -69,8 +69,11 @@ public abstract class ComputeCommandSupport extends AbstractAction {
     private List<ComputeService> computeServices = new ArrayList<ComputeService>();
     protected CacheProvider cacheProvider = new BasicCacheProvider();
 
-    @Option(name = "--provider", description = "The provider or api to use.")
+    @Option(name = "--provider", description = "The provider or use.")
     protected String provider;
+
+    @Option(name = "--api", description = "The api or use.")
+    protected String api;
 
     @Option(name = "--identity", description = "The identity to use for creating a compute service.")
     protected String identity;
@@ -98,15 +101,15 @@ public abstract class ComputeCommandSupport extends AbstractAction {
 
     protected void printComputeApis(Map<String, ApiMetadata> apis, List<ComputeService> computeServices, String indent, PrintStream out) {
         out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
-        for (String provider : apis.keySet()) {
+        for (String api : apis.keySet()) {
             boolean registered = false;
             for (ComputeService computeService : computeServices) {
-                if (computeService.getContext().getProviderSpecificContext().getId().equals(provider)) {
+                if (computeService.getContext().getProviderSpecificContext().getId().equals(api)) {
                     registered = true;
                     break;
                 }
             }
-            out.println(String.format(PROVIDERFORMAT, provider, "compute", registered));
+            out.println(String.format(PROVIDERFORMAT, api, "compute", registered));
         }
     }
 
@@ -271,7 +274,7 @@ public abstract class ComputeCommandSupport extends AbstractAction {
     }
 
     protected List<ComputeService> getComputeServices() {
-        if (provider == null) {
+        if (provider == null && api == null) {
             return computeServices;
         } else {
             return Collections.singletonList(getComputeService());
@@ -281,13 +284,18 @@ public abstract class ComputeCommandSupport extends AbstractAction {
     protected ComputeService getComputeService() {
         ComputeService computeService = null;
         String providerValue = EnvHelper.getProvider(provider);
+        String apiValue = EnvHelper.getProvider(api);
         String identityValue = EnvHelper.getIdentity(identity);
         String credentialValue = EnvHelper.getCredential(credential);
         String endpointValue = EnvHelper.getEndpoint(endpoint);
-        boolean canCreateService = !Strings.isNullOrEmpty(providerValue) && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);
+        boolean canCreateService = (!Strings.isNullOrEmpty(providerValue) || !Strings.isNullOrEmpty(providerValue))
+                && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);
+
+        String providerOrApiValue = !Strings.isNullOrEmpty(providerValue) ? providerValue : apiValue;
 
         try {
-            computeService = ComputeHelper.getComputeService(provider, computeServices);
+
+            computeService = ComputeHelper.getComputeService(providerOrApiValue, computeServices);
         } catch (Throwable t) {
             if (!canCreateService) {
                 throw new RuntimeException(t.getMessage());
@@ -295,7 +303,7 @@ public abstract class ComputeCommandSupport extends AbstractAction {
         }
 
         if (computeService == null && canCreateService) {
-            ContextBuilder builder = ContextBuilder.newBuilder(providerValue).credentials(identityValue,credentialValue).modules(ImmutableSet.<Module>of(new SshjSshClientModule()));
+            ContextBuilder builder = ContextBuilder.newBuilder(providerOrApiValue).credentials(identityValue,credentialValue).modules(ImmutableSet.<Module>of(new SshjSshClientModule()));
             if (!Strings.isNullOrEmpty(endpointValue)) {
                 builder = builder.endpoint(endpointValue);
             }

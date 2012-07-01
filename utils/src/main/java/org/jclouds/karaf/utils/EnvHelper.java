@@ -21,6 +21,7 @@ package org.jclouds.karaf.utils;
 public class EnvHelper {
 
     public static final String JCLOUDS_PROVIDER = "JCLOUDS_PROVIDER";
+    public static final String JCLOUDS_API = "JCLOUDS_API";
     public static final String JCLOUDS_IDENTITY = "JCLOUDS_IDENTITY";
     public static final String JCLOUDS_CREDENTIAL = "JCLOUDS_CREDENTIAL";
     public static final String JCLOUDS_ENDPOINT = "JCLOUDS_ENDPOINT";
@@ -40,6 +41,19 @@ public class EnvHelper {
             return provider;
         } else {
             return System.getenv(JCLOUDS_PROVIDER);
+        }
+    }
+
+    /**
+     * Returns the provider value and falls back to env if the specified value is null.
+     * @param api
+     * @return
+     */
+    public static String getApi(String api) {
+        if (api != null) {
+            return api;
+        } else {
+            return System.getenv(JCLOUDS_API);
         }
     }
 
