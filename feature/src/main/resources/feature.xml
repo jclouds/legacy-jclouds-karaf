@@ -129,6 +129,14 @@
         <bundle>mvn:org.jclouds.api/ec2/${jclouds.version}</bundle>
     </feature>
 
+    <feature name="jclouds-api-cloudstack" description="Cloudstack API" version="${project.version}" resolver="(obr)">
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-compute</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <bundle>mvn:org.jclouds.api/cloudstack/${jclouds.version}</bundle>
+    </feature>
+
 
     <!-- Drivers -->
     <feature name='jclouds-driver-jsch' description='JClouds - Drivers - Jsch' version='${project.version}' resolver='(obr)'>

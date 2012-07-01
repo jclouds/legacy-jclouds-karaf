@@ -59,5 +59,10 @@ public class ApisFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
     public void testOpenStackNovaFeature() throws Exception {
         installAndCheckFeature("jclouds-api-openstack-nova");
     }
+
+    @Test
+    public void testCloudStackFeature() throws Exception {
+        installAndCheckFeature("jclouds-api-cloudstack");
+    }
     
 }
