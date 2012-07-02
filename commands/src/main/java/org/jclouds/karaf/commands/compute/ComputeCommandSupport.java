@@ -291,7 +291,7 @@ public abstract class ComputeCommandSupport extends AbstractAction {
         String identityValue = EnvHelper.getComputeIdentity(identity);
         String credentialValue = EnvHelper.getComputeCredential(credential);
         String endpointValue = EnvHelper.getComputeEndpoint(endpoint);
-        boolean canCreateService = (!Strings.isNullOrEmpty(providerValue) || !Strings.isNullOrEmpty(providerValue))
+        boolean canCreateService = (!Strings.isNullOrEmpty(providerValue) || !Strings.isNullOrEmpty(apiValue))
                 && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);
 
         String providerOrApiValue = !Strings.isNullOrEmpty(providerValue) ? providerValue : apiValue;

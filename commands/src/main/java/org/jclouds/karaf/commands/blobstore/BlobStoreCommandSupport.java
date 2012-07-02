@@ -100,7 +100,7 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
         String credentialValue = EnvHelper.getBlobStoreCredential(credential);
         String endpointValue = EnvHelper.getBlobStoreEndpoint(endpoint);
 
-        boolean canCreateService = (!Strings.isNullOrEmpty(providerValue) || !Strings.isNullOrEmpty(providerValue))
+        boolean canCreateService = (!Strings.isNullOrEmpty(providerValue) || !Strings.isNullOrEmpty(apiValue))
                 && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);
 
         String providerOrApiValue = !Strings.isNullOrEmpty(providerValue) ? providerValue : apiValue;
