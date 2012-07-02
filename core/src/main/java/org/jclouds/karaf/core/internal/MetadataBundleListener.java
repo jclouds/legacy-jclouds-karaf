@@ -57,8 +57,8 @@ public class MetadataBundleListener implements BundleListener {
     private Set<ApiMetadata> computeApis = new HashSet<ApiMetadata>();
     private Set<ApiMetadata> blobStoreApis = new HashSet<ApiMetadata>();
 
-    private final List<ComputeProviderOrApiListener> computeOrApiListeners = new LinkedList<ComputeProviderOrApiListener>();
-    private final List<BlobStoreProviderOrApiListener> blobStoreOrApiListeners = new LinkedList<BlobStoreProviderOrApiListener>();
+    private final List<ComputeProviderOrApiListener> computeProviderOrApiListeners = new LinkedList<ComputeProviderOrApiListener>();
+    private final List<BlobStoreProviderOrApiListener> blobStoreProviderOrApiListeners = new LinkedList<BlobStoreProviderOrApiListener>();
 
 
     private BundleContext bundleContext;
@@ -236,12 +236,12 @@ public class MetadataBundleListener implements BundleListener {
         if (metadata != null) {
             if (ProviderPredicates.viewableAs(TypeToken.of(ComputeServiceContext.class)).apply(metadata)) {
                 computeProviders.add(metadata);
-                for (ProviderOrApiListener providerOrApiListener : computeOrApiListeners) {
+                for (ProviderOrApiListener providerOrApiListener : computeProviderOrApiListeners) {
                     providerOrApiListener.providerInstalled(metadata);
                 }
             } else if (ProviderPredicates.viewableAs(TypeToken.of(BlobStoreContext.class)).apply(metadata)) {
                 blobStoreProviders.add(metadata);
-                for (ProviderOrApiListener providerOrApiListener : blobStoreOrApiListeners) {
+                for (ProviderOrApiListener providerOrApiListener : blobStoreProviderOrApiListeners) {
                     providerOrApiListener.providerInstalled(metadata);
                 }
             }
@@ -257,12 +257,12 @@ public class MetadataBundleListener implements BundleListener {
         if (metadata != null) {
             if (ApiPredicates.viewableAs(TypeToken.of(ComputeServiceContext.class)).apply(metadata)) {
                 computeApis.add(metadata);
-                for (ProviderOrApiListener providerOrApiListener : computeOrApiListeners) {
+                for (ProviderOrApiListener providerOrApiListener : computeProviderOrApiListeners) {
                     providerOrApiListener.apiInstalled(metadata);
                 }
             } else if (ApiPredicates.viewableAs(TypeToken.of(BlobStoreContext.class)).apply(metadata)) {
                 blobStoreApis.add(metadata);
-                for (ProviderOrApiListener providerOrApiListener : blobStoreOrApiListeners) {
+                for (ProviderOrApiListener providerOrApiListener : blobStoreProviderOrApiListeners) {
                     providerOrApiListener.apiInstalled(metadata);
                 }
             }
@@ -278,12 +278,12 @@ public class MetadataBundleListener implements BundleListener {
         if (metadata != null) {
             if (ProviderPredicates.viewableAs(TypeToken.of(ComputeServiceContext.class)).apply(metadata)) {
                 computeProviders.remove(metadata);
-                for (ProviderOrApiListener providerOrApiListener : computeOrApiListeners) {
+                for (ProviderOrApiListener providerOrApiListener : computeProviderOrApiListeners) {
                     providerOrApiListener.providerUninstalled(metadata);
                 }
             } else if (ProviderPredicates.viewableAs(TypeToken.of(BlobStoreContext.class)).apply(metadata)) {
                 blobStoreProviders.remove(metadata);
-                for (ProviderOrApiListener providerOrApiListener : blobStoreOrApiListeners) {
+                for (ProviderOrApiListener providerOrApiListener : blobStoreProviderOrApiListeners) {
                     providerOrApiListener.providerUninstalled(metadata);
                 }
             }
@@ -299,12 +299,12 @@ public class MetadataBundleListener implements BundleListener {
         if (metadata != null) {
             if (ApiPredicates.viewableAs(TypeToken.of(ComputeServiceContext.class)).apply(metadata)) {
                 computeApis.remove(metadata);
-                for (ProviderOrApiListener providerOrApiListener : computeOrApiListeners) {
+                for (ProviderOrApiListener providerOrApiListener : computeProviderOrApiListeners) {
                     providerOrApiListener.apiUninstalled(metadata);
                 }
             } else if (ApiPredicates.viewableAs(TypeToken.of(BlobStoreContext.class)).apply(metadata)) {
                 blobStoreApis.remove(metadata);
-                for (ProviderOrApiListener providerOrApiListener : blobStoreOrApiListeners) {
+                for (ProviderOrApiListener providerOrApiListener : blobStoreProviderOrApiListeners) {
                     providerOrApiListener.apiUninstalled(metadata);
                 }
             }
@@ -318,7 +318,7 @@ public class MetadataBundleListener implements BundleListener {
      * @param providerOrApiListener
      */
     public void registerComputeListener(ComputeProviderOrApiListener providerOrApiListener) {
-        this.computeOrApiListeners.add(providerOrApiListener);
+        this.computeProviderOrApiListeners.add(providerOrApiListener);
         for (ProviderMetadata provider : computeProviders) {
             providerOrApiListener.providerInstalled(provider);
         }
@@ -329,12 +329,14 @@ public class MetadataBundleListener implements BundleListener {
     }
 
     public void unregisterComputeListener(ComputeProviderOrApiListener providerOrApiListener) {
-        this.computeOrApiListeners.remove(providerOrApiListener);
-        for (ProviderMetadata provider : computeProviders) {
-            providerOrApiListener.providerUninstalled(provider);
-        }
-        for (ApiMetadata api : computeApis) {
-            providerOrApiListener.apiInstalled(api);
+        if (providerOrApiListener != null) {
+            this.computeProviderOrApiListeners.remove(providerOrApiListener);
+            for (ProviderMetadata provider : computeProviders) {
+                providerOrApiListener.providerUninstalled(provider);
+            }
+            for (ApiMetadata api : computeApis) {
+                providerOrApiListener.apiUninstalled(api);
+            }
         }
     }
 
@@ -344,7 +346,7 @@ public class MetadataBundleListener implements BundleListener {
      * @param providerOrApiListener
      */
     public void registerBlobStoreListener(BlobStoreProviderOrApiListener providerOrApiListener) {
-        this.blobStoreOrApiListeners.add(providerOrApiListener);
+        this.blobStoreProviderOrApiListeners.add(providerOrApiListener);
         for (ProviderMetadata provider : blobStoreProviders) {
             providerOrApiListener.providerInstalled(provider);
         }
@@ -354,12 +356,14 @@ public class MetadataBundleListener implements BundleListener {
     }
 
     public void unregisterBlobStoreListener(BlobStoreProviderOrApiListener providerOrApiListener) {
-        this.blobStoreOrApiListeners.remove(providerOrApiListener);
-        for (ProviderMetadata provider : blobStoreProviders) {
-            providerOrApiListener.providerUninstalled(provider);
-        }
-        for (ApiMetadata api : computeApis) {
-            providerOrApiListener.apiUninstalled(api);
+        if (providerOrApiListener != null) {
+            this.blobStoreProviderOrApiListeners.remove(providerOrApiListener);
+            for (ProviderMetadata provider : blobStoreProviders) {
+                providerOrApiListener.providerUninstalled(provider);
+            }
+            for (ApiMetadata api : computeApis) {
+                providerOrApiListener.apiUninstalled(api);
+            }
         }
     }
 

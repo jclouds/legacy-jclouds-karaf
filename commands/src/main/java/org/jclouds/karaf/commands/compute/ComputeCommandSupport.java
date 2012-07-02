@@ -90,7 +90,7 @@ public abstract class ComputeCommandSupport extends AbstractAction {
         for (String provider : providers.keySet()) {
             boolean registered = false;
             for (ComputeService computeService : computeServices) {
-                if (computeService.getContext().getProviderSpecificContext().getId().equals(provider)) {
+                if (computeService.getContext().unwrap().getId().equals(provider)) {
                     registered = true;
                     break;
                 }

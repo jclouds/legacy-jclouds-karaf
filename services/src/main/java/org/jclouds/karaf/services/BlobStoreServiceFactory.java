@@ -20,7 +20,6 @@ package org.jclouds.karaf.services;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
-import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import org.jclouds.ContextBuilder;
 import org.jclouds.apis.ApiMetadata;
@@ -33,42 +32,18 @@ import org.jclouds.providers.ProviderMetadata;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
-import org.osgi.service.cm.ManagedServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Dictionary;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
 
-public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStoreProviderOrApiListener, BlobStoreProviderOrApiRegistry {
+public class BlobStoreServiceFactory extends ServiceFactorySupport implements BlobStoreProviderOrApiListener, BlobStoreProviderOrApiRegistry {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BlobStoreServiceFactory.class);
 
-    public static final String PROVIDER = "provider";
-    public static final String API = "api";
-    public static final String ENDPOINT = "endpoint";
-    public static final String IDENTITY = "identity";
-    public static final String CREDENTIAL = "credential";
-
-
-    private final Map<String, ServiceRegistration> registrations = new ConcurrentHashMap<String, ServiceRegistration>();
-
-    private final Map<String, Dictionary> pendingPids = new HashMap<String, Dictionary>();
-    private final Map<String, Dictionary> activePids = new HashMap<String, Dictionary>();
-
-    private final Map<String, String> providerPids = new HashMap<String, String>();
-    private final Map<String, String> apiPids = new HashMap<String, String>();
-    private final Map<String, ProviderMetadata> installedProviders = new HashMap<String, ProviderMetadata>();
-    private final Map<String, ApiMetadata> installedApis = new HashMap<String, ApiMetadata>();
-
-
     private final BundleContext bundleContext;
-    private AbstractModule credentialStore;
-
 
     public BlobStoreServiceFactory(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
@@ -79,9 +54,9 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
     }
 
     public void updated(String pid, Dictionary properties) throws ConfigurationException {
-        System.out.println("Updating configuration properties for BlobStore " + pid);
         ServiceRegistration newRegistration = null;
         try {
+            lock.tryLock();
             if (properties != null) {
                 Properties props = new Properties();
                 for (Enumeration e = properties.keys(); e.hasMoreElements(); ) {
@@ -95,16 +70,23 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
                 ProviderMetadata providerMetadata = null;
                 ApiMetadata apiMetadata = null;
 
+
                 if (!Strings.isNullOrEmpty(provider) && installedProviders.containsKey(provider)) {
                     providerMetadata = installedProviders.get(provider);
-
-                } if (!Strings.isNullOrEmpty(api) && installedApis.containsKey(api)) {
+                } else if (!Strings.isNullOrEmpty(api) && installedApis.containsKey(api)) {
                     apiMetadata = installedApis.get(api);
                 } else {
+                    if (!Strings.isNullOrEmpty(provider)) {
+                        providerPids.put(provider, pid);
+                    }
+                    if (!Strings.isNullOrEmpty(api)) {
+                        apiPids.put(api, pid);
+                    }
                     pendingPids.put(pid, properties);
-                    LOGGER.debug("Provider {} or Api {} is not currently installed. Service will resume once the the provider is installed.", provider, api);
+                    LOGGER.warn("Provider {} or Api {} is not currently installed. Service will resume once the the provider is installed.", provider, api);
                     return;
                 }
+
 
                 String endpoint = (String) properties.get(ENDPOINT);
                 String identity = (String) properties.get(IDENTITY);
@@ -147,77 +129,9 @@ public class BlobStoreServiceFactory implements ManagedServiceFactory, BlobStore
                 System.out.println("Unregistering BlobStore " + pid);
                 oldRegistration.unregister();
             }
-        }
-    }
-
-    public void deleted(String pid) {
-        System.out.println("BlobStore deleted (" + pid + ")");
-        ServiceRegistration oldRegistration = registrations.remove(pid);
-        if (oldRegistration != null) {
-            oldRegistration.unregister();
-        }
-    }
-
-    @Override
-    public void providerInstalled(ProviderMetadata provider) {
-        installedProviders.put(provider.getId(), provider);
-        //Check if there is a pid that requires the installed provider.
-        String pid = providerPids.get(provider.getId());
-        if (pid != null) {
-            Dictionary properties = pendingPids.get(pid);
-            try {
-                updated(pid, properties);
-            } catch (ConfigurationException e) {
-                LOGGER.error("Error while installing service for pending provider " + provider + " with pid " + pid, e);
+            if (lock.isHeldByCurrentThread()) {
+                lock.unlock();
             }
         }
-    }
-
-    @Override
-    public void providerUninstalled(ProviderMetadata provider) {
-        String pid = providerPids.get(provider.getId());
-        if (pid != null) {
-            if (activePids.containsKey(pid)) {
-                pendingPids.put(pid, activePids.remove(pid));
-            }
-            deleted(pid);
-        }
-        installedProviders.remove(provider.getId());
-    }
-
-    @Override
-    public void apiInstalled(ApiMetadata api) {
-        installedApis.put(api.getId(), api);
-        //Check if there is a pid that requires the installed provider.
-        String pid = apiPids.get(api.getId());
-        if (pid != null) {
-            Dictionary properties = activePids.get(pid);
-            try {
-                updated(pid, properties);
-            } catch (ConfigurationException e) {
-                LOGGER.error("Error while installing service for pending api " + api + " with pid " + pid, e);
-            }
-        }
-    }
-
-    @Override
-    public void apiUninstalled(ApiMetadata api) {
-        String pid = apiPids.get(api.getId());
-        if (pid != null) {
-            if (activePids.containsKey(pid)) {
-                pendingPids.put(pid, activePids.remove(pid));
-            }
-            deleted(pid);
-        }
-        installedApis.remove(api.getId());
-    }
-
-
-    public Map<String, ProviderMetadata> getInstalledProviders() {
-        return installedProviders;
-    }
-
-    public Map<String, ApiMetadata> getInstalledApis() {
-        return installedApis;
     }
 }

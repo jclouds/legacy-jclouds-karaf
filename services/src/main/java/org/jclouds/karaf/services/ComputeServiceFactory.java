@@ -35,44 +35,23 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
-import org.osgi.service.cm.ManagedServiceFactory;
 import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Dictionary;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
 
-public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProviderOrApiListener, ComputeProviderOrApiRegistry {
+public class ComputeServiceFactory extends ServiceFactorySupport implements ComputeProviderOrApiListener, ComputeProviderOrApiRegistry {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ComputeServiceFactory.class);
 
-    public static final String PROVIDER = "provider";
-    public static final String API = "api";
-    public static final String ENDPOINT = "endpoint";
-    public static final String IDENTITY = "identity";
-    public static final String CREDENTIAL = "credential";
+
     public static final String NODE_EVENT_SUPPORT = "eventsupport";
     public static final String CREDENTIAL_STORE = "credential-store";
     public static final String DEFAULT_CREDENTIAL_STORE_TYPE = "cadmin";
     public static final String CREDENTIAL_STORE_FILTER = "(&(objectClass=org.jclouds.karaf.core.CredentialStore)(credential-store-type=%s))";
-
-
-    private final Map<String, ServiceRegistration> registrations = new ConcurrentHashMap<String, ServiceRegistration>();
-
-    private final Map<String, Dictionary> activePids = new HashMap<String, Dictionary>();
-    private final Map<String, Dictionary> pendingPids = new HashMap<String, Dictionary>();
-
-    private final Map<String, String> providerPids = new HashMap<String, String>();
-    private final Map<String, String> apiPids = new HashMap<String, String>();
-
-    private final Map<String, ProviderMetadata> installedProviders = new HashMap<String, ProviderMetadata>();
-    private final Map<String, ApiMetadata> installedApis = new HashMap<String, ApiMetadata>();
-
 
     private ServiceTracker credentialStoreTracker;
     private final BundleContext bundleContext;
@@ -102,6 +81,7 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
     public void updated(String pid, Dictionary properties) throws ConfigurationException {
         ServiceRegistration newRegistration = null;
         try {
+            lock.tryLock();
             if (properties != null) {
                 Properties props = new Properties();
                 for (Enumeration e = properties.keys(); e.hasMoreElements(); ) {
@@ -118,12 +98,17 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
 
                 if (!Strings.isNullOrEmpty(provider) && installedProviders.containsKey(provider)) {
                     providerMetadata = installedProviders.get(provider);
-
-                } if (!Strings.isNullOrEmpty(api) && installedApis.containsKey(api)) {
+                } else if (!Strings.isNullOrEmpty(api) && installedApis.containsKey(api)) {
                     apiMetadata = installedApis.get(api);
                 } else {
+                    if (!Strings.isNullOrEmpty(provider)) {
+                        providerPids.put(provider, pid);
+                    }
+                    if (!Strings.isNullOrEmpty(api)) {
+                        apiPids.put(api, pid);
+                    }
                     pendingPids.put(pid, properties);
-                    LOGGER.debug("Provider {} or Api {} is not currently installed. Service will resume once the the provider is installed.", provider, api);
+                    LOGGER.warn("Provider {} or Api {} is not currently installed. Service will resume once the the provider is installed.", provider, api);
                     return;
                 }
 
@@ -155,27 +140,29 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
                     builder = builder.endpoint(endpoint);
                 }
 
-                builder.modules(ImmutableSet.<Module>of(new Log4JLoggingModule(), new SshjSshClientModule()));
+                builder = builder.modules(ImmutableSet.<Module>of(new Log4JLoggingModule(), new SshjSshClientModule()));
 
                 if (credentialStore != null) {
-                    builder.modules(ImmutableSet.<Module>of(credentialStore));
+                    builder = builder.modules(ImmutableSet.<Module>of(credentialStore));
                 }
 
-                builder.credentials(identity, credential).overrides(props);
+                builder = builder.credentials(identity, credential).overrides(props);
 
                 ComputeServiceContext context = builder.build(ComputeServiceContext.class);
 
-                ComputeService client = null;
+                ComputeService service = null;
 
                 if (enableEventSupport) {
-                    client = new ComputeServiceEventProxy(bundleContext, context.getComputeService());
+                    service = new ComputeServiceEventProxy(bundleContext, context.getComputeService());
                 } else {
-                    client = context.getComputeService();
+                    service = context.getComputeService();
                 }
 
                 newRegistration = bundleContext.registerService(
-                        ComputeService.class.getName(), client, properties);
+                        ComputeService.class.getName(), service, properties);
 
+                System.out.println("Registration: " + newRegistration.toString());
+                System.out.println("Nodes: " + service.toString());
                 //If all goes well remove the pending pid.
                 if (pendingPids.containsKey(pid)) {
                     activePids.put(pid, pendingPids.remove(pid));
@@ -190,75 +177,9 @@ public class ComputeServiceFactory implements ManagedServiceFactory, ComputeProv
             if (oldRegistration != null) {
                 oldRegistration.unregister();
             }
-        }
-    }
-
-    public void deleted(String pid) {
-        ServiceRegistration oldRegistration = registrations.remove(pid);
-        if (oldRegistration != null) {
-            oldRegistration.unregister();
-        }
-    }
-
-    @Override
-    public void providerInstalled(ProviderMetadata provider) {
-        installedProviders.put(provider.getId(), provider);
-        //Check if there is a pid that requires the installed provider.
-        String pid = providerPids.get(provider.getId());
-        if (pid != null) {
-            Dictionary properties = pendingPids.get(pid);
-            try {
-                updated(pid, properties);
-            } catch (ConfigurationException e) {
-                LOGGER.error("Error while installing service for pending provider " + provider + " with pid " + pid, e);
+            if (lock.isHeldByCurrentThread()) {
+                lock.unlock();
             }
         }
-    }
-
-    @Override
-    public void providerUninstalled(ProviderMetadata provider) {
-        String pid = providerPids.get(provider.getId());
-        if (pid != null) {
-            if (activePids.containsKey(pid)) {
-                pendingPids.put(pid, activePids.remove(pid));
-            }
-            deleted(pid);
-        }
-        installedProviders.remove(provider.getId());
-    }
-
-    @Override
-    public void apiInstalled(ApiMetadata api) {
-        installedApis.put(api.getId(), api);
-        //Check if there is a pid that requires the installed provider.
-        String pid = apiPids.get(api.getId());
-        if (pid != null) {
-            Dictionary properties = pendingPids.get(pid);
-            try {
-                updated(pid, properties);
-            } catch (ConfigurationException e) {
-                LOGGER.error("Error while installing service for pending api " + api + " with pid " + pid, e);
-            }
-        }
-    }
-
-    @Override
-    public void apiUninstalled(ApiMetadata api) {
-        String pid = apiPids.get(api.getId());
-        if (pid != null) {
-            if (activePids.containsKey(pid)) {
-                pendingPids.put(pid, activePids.remove(pid));
-            }
-            deleted(pid);
-        }
-        installedApis.remove(api.getId());
-    }
-
-    public Map<String, ProviderMetadata> getInstalledProviders() {
-        return installedProviders;
-    }
-
-    public Map<String, ApiMetadata> getInstalledApis() {
-        return installedApis;
     }
 }

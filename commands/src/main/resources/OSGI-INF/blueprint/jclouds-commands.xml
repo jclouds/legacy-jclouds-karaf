@@ -145,14 +145,14 @@
                 <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
         </command>
-        <command name="jclouds/compute-provider-list">
+        <command name="jclouds/compute-service-list">
             <action class="org.jclouds.karaf.commands.compute.ComputeListCommand">
                 <property name="computeServices" ref="computeServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
                 <property name="computeProviderOrApiRegistry" ref="computeProviderRegistry"/>
             </action>
         </command>
-        <command name="jclouds/blobstore-provider-list">
+        <command name="jclouds/blobstore-service-list">
             <action class="org.jclouds.karaf.commands.blobstore.BlobStoreListCommand">
                 <property name="blobStoreServices" ref="blobStoreServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
