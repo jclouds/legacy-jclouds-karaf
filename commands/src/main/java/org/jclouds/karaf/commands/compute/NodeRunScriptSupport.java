@@ -39,6 +39,8 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeState;
 import org.jclouds.domain.LoginCredentials;
 
+import org.jclouds.karaf.utils.EnvHelper;
+
 import com.google.common.base.Predicate;
 
 /**
@@ -48,6 +50,9 @@ public abstract class NodeRunScriptSupport extends ComputeCommandSupport {
 
     @Option(name = "-u", aliases = "--user", description = "The user that will run the script.", required = false, multiValued = false)
     private String user;
+
+    @Option(name = "-p", aliases = "--passwprd", description = "Optional password for the user to run the script.", required = false, multiValued = false)
+    private String password;
 
     @Option(name = "-s", aliases = "--script-url", description = "The url script of the script to run.", required = false, multiValued = false)
     private String scriptUrl;
@@ -75,9 +80,22 @@ public abstract class NodeRunScriptSupport extends ComputeCommandSupport {
             printNodeInfo(nodeMetaDataSet, nodeMetaDataSet.size() == 1, System.out);
 
             LoginCredentials credentials = nodeMetadata.getCredentials();
+            
+            user = EnvHelper.getUser(user);
+            password = EnvHelper.getPassword(password);
 
             if (user != null) {
-                credentials = credentials.toBuilder().user(user).build();
+                LoginCredentials.Builder loginBuilder;
+                if (credentials == null) {
+                    loginBuilder = LoginCredentials.builder();
+                } else {
+                    loginBuilder = credentials.toBuilder();
+                }
+                if (password != null) {
+                    credentials = loginBuilder.user(user).password(password).build();
+                } else {
+                    credentials = loginBuilder.user(user).build();
+                }
             }
 
             Map<? extends NodeMetadata, ExecResponse> responseMap = service.runScriptOnNodesMatching(getNodeFilter(), getScript(), overrideLoginCredentials(credentials).runAsRoot(false));
