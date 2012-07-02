@@ -287,7 +287,7 @@ public abstract class ComputeCommandSupport extends AbstractAction {
         }
         ComputeService computeService = null;
         String providerValue = EnvHelper.getComputeProvider(provider);
-        String apiValue = EnvHelper.getComputeProvider(api);
+        String apiValue = EnvHelper.getComputeApi(api);
         String identityValue = EnvHelper.getComputeIdentity(identity);
         String credentialValue = EnvHelper.getComputeCredential(credential);
         String endpointValue = EnvHelper.getComputeEndpoint(endpoint);
