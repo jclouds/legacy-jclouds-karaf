@@ -82,7 +82,7 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
     }
 
     protected List<BlobStore> getBlobStoreServices() {
-        if (provider == null) {
+        if (provider == null && api == null) {
             return services;
         } else {
             return Collections.singletonList(getBlobStore());
@@ -90,12 +90,15 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
     }
 
     protected BlobStore getBlobStore() {
+        if (services != null && services.size() == 1) {
+            return services.get(0);
+        }
         BlobStore blobStore = null;
-        String providerValue = EnvHelper.getProvider(provider);
-        String apiValue = EnvHelper.getApi(api);
-        String identityValue = EnvHelper.getIdentity(identity);
-        String credentialValue = EnvHelper.getCredential(credential);
-        String endpointValue = EnvHelper.getEndpoint(endpoint);
+        String providerValue = EnvHelper.getBlobStoreProvider(provider);
+        String apiValue = EnvHelper.getBlobStoreApi(api);
+        String identityValue = EnvHelper.getBlobStoreIdentity(identity);
+        String credentialValue = EnvHelper.getBlobStoreCredential(credential);
+        String endpointValue = EnvHelper.getBlobStoreEndpoint(endpoint);
 
         boolean canCreateService = (!Strings.isNullOrEmpty(providerValue) || !Strings.isNullOrEmpty(providerValue))
                 && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);

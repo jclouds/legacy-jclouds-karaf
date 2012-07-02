@@ -282,12 +282,15 @@ public abstract class ComputeCommandSupport extends AbstractAction {
     }
 
     protected ComputeService getComputeService() {
+        if (computeServices != null && computeServices.size() == 1) {
+            return computeServices.get(0);
+        }
         ComputeService computeService = null;
-        String providerValue = EnvHelper.getProvider(provider);
-        String apiValue = EnvHelper.getProvider(api);
-        String identityValue = EnvHelper.getIdentity(identity);
-        String credentialValue = EnvHelper.getCredential(credential);
-        String endpointValue = EnvHelper.getEndpoint(endpoint);
+        String providerValue = EnvHelper.getComputeProvider(provider);
+        String apiValue = EnvHelper.getComputeProvider(api);
+        String identityValue = EnvHelper.getComputeIdentity(identity);
+        String credentialValue = EnvHelper.getComputeCredential(credential);
+        String endpointValue = EnvHelper.getComputeEndpoint(endpoint);
         boolean canCreateService = (!Strings.isNullOrEmpty(providerValue) || !Strings.isNullOrEmpty(providerValue))
                 && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);
 
