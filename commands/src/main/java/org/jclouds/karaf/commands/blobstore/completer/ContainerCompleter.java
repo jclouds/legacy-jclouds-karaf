@@ -29,11 +29,11 @@ public class ContainerCompleter extends BlobStoreCompleterSupport {
 
     @Override
     public void updateOnAdded(BlobStore blobStore) {
-        cache.putAll(blobStore.getContext().getProviderSpecificContext().getId(), listContainers(blobStore));
+        cache.putAll(blobStore.getContext().unwrap().getId(), listContainers(blobStore));
     }
 
     @Override
     public void updateOnRemoved(BlobStore blobStore) {
-        cache.removeAll(blobStore.getContext().getProviderSpecificContext().getId());
+        cache.removeAll(blobStore.getContext().unwrap().getId());
     }
 }

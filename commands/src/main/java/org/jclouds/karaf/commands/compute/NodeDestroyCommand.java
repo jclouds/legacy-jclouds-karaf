@@ -41,9 +41,9 @@ public class NodeDestroyCommand extends ComputeCommandSupport {
 
         for (String id : ids) {
             service.destroyNode(id);
-            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(service.getContext().getProviderSpecificContext().getId(), id);
-            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(service.getContext().getProviderSpecificContext().getId(), id);
-            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(service.getContext().getProviderSpecificContext().getId(), id);
+            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(service.getContext().unwrap().getId(), id);
+            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(service.getContext().unwrap().getId(), id);
+            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(service.getContext().unwrap().getId(), id);
         }
         return null;
     }

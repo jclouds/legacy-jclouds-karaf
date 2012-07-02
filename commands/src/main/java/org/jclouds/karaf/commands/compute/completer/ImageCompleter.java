@@ -37,7 +37,7 @@ public class ImageCompleter extends ComputeCompleterSupport implements Completer
             Set<? extends Image> images = computeService.listImages();
             if (images != null) {
                 for (Image image : images) {
-                    cache.put(computeService.getContext().getProviderSpecificContext().getId(),image.getId());
+                    cache.put(computeService.getContext().unwrap().getId(),image.getId());
                 }
             }
         }

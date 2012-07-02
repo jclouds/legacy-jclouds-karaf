@@ -104,7 +104,7 @@ public abstract class ComputeCommandSupport extends AbstractAction {
         for (String api : apis.keySet()) {
             boolean registered = false;
             for (ComputeService computeService : computeServices) {
-                if (computeService.getContext().getProviderSpecificContext().getId().equals(api)) {
+                if (computeService.getContext().unwrap().getId().equals(api)) {
                     registered = true;
                     break;
                 }
@@ -161,7 +161,7 @@ public abstract class ComputeCommandSupport extends AbstractAction {
         for (Location loc : computeService.listAssignableLocations()) {
             for (Location p = loc; p != null; p = p.getParent()) {
                 all.add(p);
-                cacheProvider.getProviderCacheForType(Constants.LOCATION_CACHE).put(computeService.getContext().getProviderSpecificContext().getId(), p.getId());
+                cacheProvider.getProviderCacheForType(Constants.LOCATION_CACHE).put(computeService.getContext().unwrap().getId(), p.getId());
             }
         }
         return all;
@@ -297,7 +297,6 @@ public abstract class ComputeCommandSupport extends AbstractAction {
         String providerOrApiValue = !Strings.isNullOrEmpty(providerValue) ? providerValue : apiValue;
 
         try {
-
             computeService = ComputeHelper.getComputeService(providerOrApiValue, computeServices);
         } catch (Throwable t) {
             if (!canCreateService) {

@@ -33,7 +33,7 @@ public class BlobStoreHelper {
         if (provider != null) {
             BlobStore service = null;
             for (BlobStore svc : services) {
-                if (provider.equals(svc.getContext().getProviderSpecificContext().getId())) {
+                if (provider.equals(svc.getContext().unwrap().getId())) {
                     service = svc;
                     break;
                 }
@@ -51,7 +51,7 @@ public class BlobStoreHelper {
                     if (sb.length() > 0) {
                         sb.append(", ");
                     }
-                    sb.append(svc.getContext().getProviderSpecificContext().getId());
+                    sb.append(svc.getContext().unwrap().getId());
                 }
                 throw new IllegalArgumentException("Multiple providers are present, please select one using the --provider argument in the following values: " + sb.toString());
             }

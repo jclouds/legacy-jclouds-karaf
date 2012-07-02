@@ -298,7 +298,7 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
         for (String provider : providers.keySet()) {
             boolean registered = false;
             for (BlobStore blobStore : blobStores) {
-                if (blobStore.getContext().getProviderSpecificContext().getId().equals(provider)) {
+                if (blobStore.getContext().unwrap().getId().equals(provider)) {
                     registered = true;
                     break;
                 }
@@ -312,7 +312,7 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
         for (String provider : apis.keySet()) {
             boolean registered = false;
             for (BlobStore blobStore : blobStores) {
-                if (blobStore.getContext().getProviderSpecificContext().getId().equals(provider)) {
+                if (blobStore.getContext().unwrap().getId().equals(provider)) {
                     registered = true;
                     break;
                 }

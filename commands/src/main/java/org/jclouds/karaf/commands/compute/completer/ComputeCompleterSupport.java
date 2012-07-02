@@ -49,7 +49,7 @@ public abstract class ComputeCompleterSupport implements Completer, Cacheable<Co
 
     @Override
     public void updateOnRemoved(ComputeService computeService) {
-        cache.removeAll(computeService.getContext().getProviderSpecificContext().getId());
+        cache.removeAll(computeService.getContext().unwrap().getId());
     }
 
     public Multimap<String,String> getCache() {

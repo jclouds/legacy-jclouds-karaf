@@ -145,9 +145,9 @@ public class NodeCreateCommand extends ComputeCommandSupport {
         }
 
         for (NodeMetadata node : metadatas) {
-            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).put(service.getContext().getProviderSpecificContext().getId(), node.getId());
-            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).put(service.getContext().getProviderSpecificContext().getId(), node.getId());
-            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).put(service.getContext().getProviderSpecificContext().getId(), node.getId());
+            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).put(service.getContext().unwrap().getId(), node.getId());
+            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).put(service.getContext().unwrap().getId(), node.getId());
+            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).put(service.getContext().unwrap().getId(), node.getId());
         }
 
         return null;

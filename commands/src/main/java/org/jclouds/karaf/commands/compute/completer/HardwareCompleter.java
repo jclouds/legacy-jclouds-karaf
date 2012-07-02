@@ -37,7 +37,7 @@ public class HardwareCompleter extends ComputeCompleterSupport {
             Set<? extends Hardware> hardwares = computeService.listHardwareProfiles();
             if (hardwares != null) {
                 for (Hardware hardware : hardwares) {
-                    cache.put(computeService.getContext().getProviderSpecificContext().getId(), hardware.getId());
+                    cache.put(computeService.getContext().unwrap().getId(), hardware.getId());
                 }
             }
         }

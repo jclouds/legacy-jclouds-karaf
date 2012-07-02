@@ -29,7 +29,7 @@ public class ProviderInfoCommand extends ComputeCommandSupport {
     @Override
     protected Object doExecute() throws Exception {
         for (ComputeService service : getComputeServices()) {
-            String txt = "Instances on " + service.getContext().getProviderSpecificContext().getId();
+            String txt = "Instances on " + service.getContext().unwrap().getId();
             System.out.println(txt);
             for (int i = 0; i < txt.length(); i++) {
                 System.out.print('=');

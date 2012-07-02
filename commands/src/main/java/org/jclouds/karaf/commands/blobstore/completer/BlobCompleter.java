@@ -29,7 +29,7 @@ public class BlobCompleter extends BlobStoreCompleterSupport {
     @Override
     public void updateOnAdded(BlobStore blobStore) {
         for (String container : listContainers(blobStore)) {
-            cache.putAll(blobStore.getContext().getProviderSpecificContext().getId(), listBlobs(blobStore,container));
+            cache.putAll(blobStore.getContext().unwrap().getId(), listBlobs(blobStore,container));
         }
     }
 }

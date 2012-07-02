@@ -80,7 +80,7 @@ public abstract class BlobStoreCompleterSupport implements Completer, Cacheable<
 
     @Override
     public void updateOnRemoved(BlobStore blobStore) {
-        cache.removeAll(blobStore.getContext().getProviderSpecificContext().getId());
+        cache.removeAll(blobStore.getContext().unwrap().getId());
     }
 
 

@@ -36,7 +36,7 @@ public class LocationCompleter extends ComputeCompleterSupport {
             Set<? extends Location> locations = computeService.listAssignableLocations();
             if (locations != null) {
                 for (Location location : locations) {
-                    cache.put(computeService.getContext().getProviderSpecificContext().getId(),location.getId());
+                    cache.put(computeService.getContext().unwrap().getId(),location.getId());
                 }
             }
         }

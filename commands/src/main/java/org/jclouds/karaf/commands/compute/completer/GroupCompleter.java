@@ -40,7 +40,7 @@ public class GroupCompleter extends ComputeCompleterSupport implements Completer
                 for (ComputeMetadata compute : computeMetadatas) {
                     NodeMetadata node = (NodeMetadata) compute;
                     if (apply(node)) {
-                        cache.put(computeService.getContext().getProviderSpecificContext().getId(), node.getGroup());
+                        cache.put(computeService.getContext().unwrap().getId(), node.getGroup());
                     }
                 }
             }
