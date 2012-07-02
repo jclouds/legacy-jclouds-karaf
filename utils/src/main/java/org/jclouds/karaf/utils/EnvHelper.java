@@ -33,6 +33,8 @@ public class EnvHelper {
     public static final String JCLOUDS_BLOBSTORE_CREDENTIAL = "JCLOUDS_BLOBSTORE_CREDENTIAL";
     public static final String JCLOUDS_BLOBSTORE_ENDPOINT = "JCLOUDS_BLOBSTORE_ENDPOINT";
 
+    public static final String JCLOUDS_USER = "JCLOUDS_USER";
+    public static final String JCLOUDS_PASSWORD = "JCLOUDS_PASSWORD";
 
     private EnvHelper() {
         //Utility Class
@@ -173,6 +175,34 @@ public class EnvHelper {
             return endpoint;
         } else {
             return System.getenv(JCLOUDS_BLOBSTORE_ENDPOINT);
+        }
+    }
+
+    /**
+     * Returns the user value and falls back to env if the specified value is null.
+     *
+     * @param user
+     * @return
+     */
+    public static String getUser(String user) {
+        if (user != null) {
+            return user;
+        } else {
+            return System.getenv(JCLOUDS_USER);
+        }
+    }
+
+    /**
+     * Returns the password value and falls back to env if the specified value is null.
+     *
+     * @param password
+     * @return
+     */
+    public static String getPassword(String password) {
+        if (password != null) {
+            return password;
+        } else {
+            return System.getenv(JCLOUDS_PASSWORD);
         }
     }
 
