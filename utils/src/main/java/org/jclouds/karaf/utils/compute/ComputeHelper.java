@@ -24,17 +24,23 @@ import org.jclouds.compute.ComputeService;
 
 public class ComputeHelper {
 
-    public static ComputeService getComputeService(String provider, List<ComputeService> services) {
-        if (provider != null) {
+    /**
+     * Chooses a {@link ComputeService} that matches the specified provider or api.
+     * @param providerOrApi
+     * @param services
+     * @return
+     */
+    public static ComputeService getComputeService(String providerOrApi, List<ComputeService> services) {
+        if (providerOrApi != null) {
             ComputeService service = null;
             for (ComputeService svc : services) {
-                if (provider.equals(svc.getContext().unwrap().getId())) {
+                if (providerOrApi.equals(svc.getContext().unwrap().getId())) {
                     service = svc;
                     break;
                 }
             }
             if (service == null) {
-                throw new IllegalArgumentException("Provider " + provider + " not found");
+                throw new IllegalArgumentException("No Provider or Api named " + providerOrApi + " found.");
             }
             return service;
         } else {
@@ -49,7 +55,7 @@ public class ComputeHelper {
                     }
                     sb.append(svc.getContext().unwrap().getId());
                 }
-                throw new IllegalArgumentException("Multiple providers are present, please select one using the --provider argument in the following values: " + sb.toString());
+                throw new IllegalArgumentException("Multiple providers/apis are present, please select one using the --provider/--api argument in the following values: " + sb.toString());
             } else {
                 return services.get(0);
             }

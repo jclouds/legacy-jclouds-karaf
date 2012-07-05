@@ -29,17 +29,23 @@ import com.google.inject.Module;
 
 public class BlobStoreHelper {
 
-    public static BlobStore getBlobStore(String provider, List<BlobStore> services) {
-        if (provider != null) {
+    /**
+     * Chooses a {@link BlobStore} that matches the specified provider or api.
+     * @param providerOrApi
+     * @param services
+     * @return
+     */
+    public static BlobStore getBlobStore(String providerOrApi, List<BlobStore> services) {
+        if (providerOrApi != null) {
             BlobStore service = null;
             for (BlobStore svc : services) {
-                if (provider.equals(svc.getContext().unwrap().getId())) {
+                if (providerOrApi.equals(svc.getContext().unwrap().getId())) {
                     service = svc;
                     break;
                 }
             }
             if (service == null) {
-                throw new IllegalArgumentException("Provider " + provider + " not found");
+                throw new IllegalArgumentException("No Provider Or Api named " + providerOrApi + " found");
             }
             return service;
         } else {
@@ -53,7 +59,7 @@ public class BlobStoreHelper {
                     }
                     sb.append(svc.getContext().unwrap().getId());
                 }
-                throw new IllegalArgumentException("Multiple providers are present, please select one using the --provider argument in the following values: " + sb.toString());
+                throw new IllegalArgumentException("Multiple providers/apis are present, please select one using the --provider / --api argument in the following values: " + sb.toString());
             }
             else {
                 return services.get(0);
