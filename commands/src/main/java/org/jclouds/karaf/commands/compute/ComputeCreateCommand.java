@@ -57,10 +57,39 @@ public class ComputeCreateCommand extends ComputeCommandSupport {
 
         Map<String, String> props = parseOptions(options);
         registerComputeService(configAdmin, provider, api, identity, credential, props);
-        if (!noWait) {
+        if (noWait) {
+            return null;
+        } else if (!isProviderOrApiInstalled(provider, api)) {
+            System.out.println("Provider / api currently not installed. Service will be created once it does get installed.");
+            return null;
+        } else {
+            System.out.println("Waiting for compute service.");
             waitForComputeService(bundleContext, provider, api);
         }
         return null;
+    }
+
+    /**
+     * Returns true if provider or api is currently installed.
+     * @param provider
+     * @param api
+     * @return
+     */
+    private boolean isProviderOrApiInstalled(String provider, String api) {
+        boolean providerOrApiFound = false;
+        try {
+            Providers.withId(provider);
+            providerOrApiFound = true;
+        } catch (Exception ex) {
+            //ignore
+        }
+        try {
+            Apis.withId(api);
+            providerOrApiFound = true;
+        } catch (Exception ex) {
+            //ignore
+        }
+        return providerOrApiFound;
     }
 
     /**
