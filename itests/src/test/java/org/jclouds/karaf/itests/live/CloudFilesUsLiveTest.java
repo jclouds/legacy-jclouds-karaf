@@ -57,6 +57,7 @@ public class CloudFilesUsLiveTest extends JcloudsLiveTestSupport {
 
         if (isBlobStoreLiveConfigured()) {
             installAndCheckFeature("jclouds-commands");
+            Thread.sleep(DEFAULT_TIMEOUT);
         }  else {
             System.err.println("Aborting test.");
             System.err.flush();

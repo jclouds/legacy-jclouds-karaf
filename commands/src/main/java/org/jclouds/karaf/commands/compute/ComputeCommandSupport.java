@@ -261,11 +261,11 @@ public abstract class ComputeCommandSupport extends AbstractAction {
     }
 
 
-    public ConfigurationAdmin getConfigurationAdmin() {
+    public ConfigurationAdmin getConfigAdmin() {
         return configurationAdmin;
     }
 
-    public void setConfigurationAdmin(ConfigurationAdmin configurationAdmin) {
+    public void setConfigAdmin(ConfigurationAdmin configurationAdmin) {
         this.configurationAdmin = configurationAdmin;
     }
 

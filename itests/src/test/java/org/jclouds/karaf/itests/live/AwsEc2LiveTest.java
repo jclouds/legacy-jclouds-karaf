@@ -53,6 +53,7 @@ public class AwsEc2LiveTest extends JcloudsLiveTestSupport {
 
         if (isComputeLiveConfigured()) {
             installAndCheckFeature("jclouds-commands");
+            Thread.sleep(DEFAULT_TIMEOUT);
         }  else {
             System.err.println("Aborting test.");
             System.err.flush();
@@ -71,7 +72,6 @@ public class AwsEc2LiveTest extends JcloudsLiveTestSupport {
         if (isComputeLiveConfigured()) {
             createManagedComputeService("aws-ec2", false);
             ComputeService computeService = getOsgiService(ComputeService.class,1000000L);
-            Thread.sleep(DEFAULT_TIMEOUT);
 
             System.err.println(executeCommand("jclouds:image-list"));
             System.err.println(executeCommand("jclouds:node-create --imageId " + image + " --locationId " + location + " " + group));

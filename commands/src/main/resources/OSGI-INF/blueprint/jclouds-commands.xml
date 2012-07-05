@@ -152,11 +152,23 @@
                 <property name="computeProviderOrApiRegistry" ref="computeProviderRegistry"/>
             </action>
         </command>
+        <command name="jclouds/compute-service-create">
+            <action class="org.jclouds.karaf.commands.compute.ComputeCreateCommand">
+                <property name="bundleContext" ref="blueprintBundleContext"/>
+                <property name="configAdmin" ref="configAdmin"/>
+            </action>
+        </command>
         <command name="jclouds/blobstore-service-list">
             <action class="org.jclouds.karaf.commands.blobstore.BlobStoreListCommand">
                 <property name="blobStoreServices" ref="blobStoreServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
                 <property name="blobStoreProviderOrApiRegistry" ref="blobStoreProviderRegistry"/>
+            </action>
+        </command>
+        <command name="jclouds/blobstore-service-create">
+            <action class="org.jclouds.karaf.commands.blobstore.BlobStoreCreateCommand">
+                <property name="bundleContext" ref="blueprintBundleContext"/>
+                <property name="configAdmin" ref="configAdmin"/>
             </action>
         </command>
         <command name="jclouds/node-list">
@@ -429,6 +441,8 @@
 
     <reference-list id="computeServices" interface="org.jclouds.compute.ComputeService" availability="optional"/>
     <reference-list id="blobStoreServices" interface="org.jclouds.blobstore.BlobStore" availability="optional"/>
+
+    <reference id="configAdmin" interface="org.osgi.service.cm.ConfigurationAdmin" availability="optional"/>
 
     <reference id="blobStoreProviderRegistry" interface="org.jclouds.karaf.core.BlobStoreProviderOrApiRegistry"
                availability="optional"/>

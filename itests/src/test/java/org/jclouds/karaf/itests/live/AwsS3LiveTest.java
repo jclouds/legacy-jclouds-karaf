@@ -57,6 +57,7 @@ public class AwsS3LiveTest extends JcloudsLiveTestSupport {
 
         if (isBlobStoreLiveConfigured()) {
             installAndCheckFeature("jclouds-commands");
+            Thread.sleep(DEFAULT_TIMEOUT);
         }  else {
             System.err.println("Aborting test.");
             System.err.flush();

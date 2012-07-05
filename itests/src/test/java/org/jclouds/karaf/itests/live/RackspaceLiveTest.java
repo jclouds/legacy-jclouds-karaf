@@ -54,6 +54,7 @@ public class RackspaceLiveTest extends JcloudsLiveTestSupport {
 
         if (isComputeLiveConfigured()) {
             installAndCheckFeature("jclouds-commands");
+            Thread.sleep(DEFAULT_TIMEOUT);
         } else {
             System.err.println("Aborting test.");
             System.err.flush();
