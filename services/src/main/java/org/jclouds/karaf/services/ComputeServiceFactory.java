@@ -161,8 +161,6 @@ public class ComputeServiceFactory extends ServiceFactorySupport implements Comp
                 newRegistration = bundleContext.registerService(
                         ComputeService.class.getName(), service, properties);
 
-                System.out.println("Registration: " + newRegistration.toString());
-                System.out.println("Nodes: " + service.toString());
                 //If all goes well remove the pending pid.
                 if (pendingPids.containsKey(pid)) {
                     activePids.put(pid, pendingPids.remove(pid));
