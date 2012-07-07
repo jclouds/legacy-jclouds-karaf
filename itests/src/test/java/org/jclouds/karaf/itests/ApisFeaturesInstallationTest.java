@@ -64,5 +64,10 @@ public class ApisFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
     public void testCloudStackFeature() throws Exception {
         installAndCheckFeature("jclouds-api-cloudstack");
     }
+
+    @Test
+    public void testRackspaceCloudIdentityFeature() throws Exception {
+        installAndCheckFeature("jclouds-api-rackspace-cloudidentity");
+    }
     
 }
