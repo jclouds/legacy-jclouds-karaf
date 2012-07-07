@@ -1,46 +1,44 @@
 /*
- * Copyright (C) 2011, the original authors
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright (C) 2011, the original authors                                       
+ *                                                                                
+ * ====================================================================           
+ * Licensed under the Apache License, Version 2.0 (the "License");                
+ * you may not use this file except in compliance with the License.               
+ * You may obtain a copy of the License at                                        
+ *                                                                                
+ * http://www.apache.org/licenses/LICENSE-2.0                                     
+ *                                                                                
+ * Unless required by applicable law or agreed to in writing, software            
+ * distributed under the License is distributed on an "AS IS" BASIS,              
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.       
+ * See the License for the specific language governing permissions and            
+ * limitations under the License.                                                 
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.compute;
+package org.jclouds.karaf.commands.blobstore;
 
-import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.apis.Apis;
-import org.jclouds.compute.ComputeService;
+import org.jclouds.blobstore.BlobStore;
 import org.jclouds.providers.Providers;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 
-import java.io.IOException;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-@Command(scope = "jclouds", name = "compute-service-create", description = "Creates a compute service")
-public class ComputeCreateCommand extends ComputeServiceCommand {
+public class BlobStoreDestroyCommand extends BlobStoreServiceCommand {
+
 
     @Option(name = "--add-option", multiValued = true, description = "Adds a key value pair to the configuration.")
     protected String[] options;
 
-    @Option(name = "--no-wait", multiValued = true, description = "Don't wait for compute service registration.")
+    @Option(name = "--no-wait", multiValued = true, description = "Don't wait for blob store service registration.")
     protected boolean noWait;
 
     private BundleContext bundleContext;
@@ -53,21 +51,22 @@ public class ComputeCreateCommand extends ComputeServiceCommand {
         }
 
         Map<String, String> props = parseOptions(options);
-        registerComputeService(configAdmin, provider, api, identity, credential, props);
+        registerBlobStore(configAdmin, provider, api, identity, credential, props);
         if (noWait) {
             return null;
         } else if (!isProviderOrApiInstalled(provider, api)) {
             System.out.println("Provider / api currently not installed. Service will be created once it does get installed.");
             return null;
         } else {
-            System.out.println("Waiting for compute service.");
-            waitForComputeService(bundleContext, provider, api);
+            System.out.println("Waiting for blobstore  service.");
+            waitForBlobStore(bundleContext, provider, api);
         }
         return null;
     }
 
     /**
      * Returns true if provider or api is currently installed.
+     *
      * @param provider
      * @param api
      * @return
@@ -90,7 +89,7 @@ public class ComputeCreateCommand extends ComputeServiceCommand {
     }
 
     /**
-     * Creates a {@link Map} from the specified key / value options specified.
+     * Creates a {@link java.util.Map} from the specified key / value options specified.
      *
      * @param options
      * @return
@@ -110,7 +109,7 @@ public class ComputeCreateCommand extends ComputeServiceCommand {
     }
 
     /**
-     * Registers a {@link ComputeService}
+     * Registers a {@link org.jclouds.blobstore.BlobStore}
      *
      * @param configurationAdmin
      * @param provider
@@ -120,12 +119,12 @@ public class ComputeCreateCommand extends ComputeServiceCommand {
      * @param props
      * @throws Exception
      */
-    private void registerComputeService(final ConfigurationAdmin configurationAdmin, final String provider, final String api, final String identity, final String credential, final Map<String, String> props) throws Exception {
+    private void registerBlobStore(final ConfigurationAdmin configurationAdmin, final String provider, final String api, final String identity, final String credential, final Map<String, String> props) throws Exception {
         Runnable registrationTask = new Runnable() {
             @Override
             public void run() {
                 try {
-                    Configuration configuration = findOrCreateFactoryConfiguration(configurationAdmin, "org.jclouds.compute", provider, api);
+                    Configuration configuration = findOrCreateFactoryConfiguration(configurationAdmin, "org.jclouds.blobstore", provider, api);
                     if (configuration != null) {
                         Dictionary dictionary = configuration.getProperties();
                         if (dictionary == null) {
@@ -156,33 +155,33 @@ public class ComputeCreateCommand extends ComputeServiceCommand {
     }
 
     /**
-     * Waits for the {@link ComputeService} registration.
+     * Waits for the {@link org.jclouds.blobstore.BlobStore} registration.
      *
      * @param bundleContext
      * @param provider
      * @param api
      * @return
      */
-    public synchronized ComputeService waitForComputeService(BundleContext bundleContext, String provider, String api) {
-        ComputeService computeService = null;
+    public synchronized BlobStore waitForBlobStore(BundleContext bundleContext, String provider, String api) {
+        BlobStore blobStore = null;
         try {
             for (int r = 0; r < 6; r++) {
                 ServiceReference[] references = null;
                 if (provider != null) {
-                    references = bundleContext.getAllServiceReferences(ComputeService.class.getName(), "(provider=" + provider + ")");
+                    references = bundleContext.getAllServiceReferences(BlobStore.class.getName(), "(provider=" + provider + ")");
                 } else if (api != null) {
-                    references = bundleContext.getAllServiceReferences(ComputeService.class.getName(), "(api=" + api + ")");
+                    references = bundleContext.getAllServiceReferences(BlobStore.class.getName(), "(api=" + api + ")");
                 }
                 if (references != null && references.length > 0) {
-                    computeService = (ComputeService) bundleContext.getService(references[0]);
-                    return computeService;
+                    blobStore = (BlobStore) bundleContext.getService(references[0]);
+                    return blobStore;
                 }
                 Thread.sleep(10000L);
             }
         } catch (Exception e) {
             //noop
         }
-        return computeService;
+        return blobStore;
     }
 
     public BundleContext getBundleContext() {

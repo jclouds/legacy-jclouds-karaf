@@ -18,6 +18,7 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
+import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.apis.Apis;
 import org.jclouds.blobstore.BlobStore;
@@ -27,16 +28,13 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 
-import java.io.IOException;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class BlobStoreCreateCommand extends BlobStoreCommandSupport {
-
-
-    private static final String FACTORY_FILTER = "(service.factoryPid=%s)";
+@Command(scope = "jclouds", name = "blobstore-service-create",description = "Creates a BlobStore service.")
+public class BlobStoreCreateCommand extends BlobStoreServiceCommand {
 
     @Option(name = "--add-option", multiValued = true, description = "Adds a key value pair to the configuration.")
     protected String[] options;
@@ -45,7 +43,6 @@ public class BlobStoreCreateCommand extends BlobStoreCommandSupport {
     protected boolean noWait;
 
     private BundleContext bundleContext;
-    private ConfigurationAdmin configAdmin;
 
     @Override
     protected Object doExecute() throws Exception {
@@ -159,39 +156,6 @@ public class BlobStoreCreateCommand extends BlobStoreCommandSupport {
     }
 
     /**
-     * Finds a {@link Configuration} if exists, or creates a new one.
-     *
-     * @param configurationAdmin
-     * @param factoryPid
-     * @param provider
-     * @param api
-     * @return
-     * @throws java.io.IOException
-     */
-    private Configuration findOrCreateFactoryConfiguration(ConfigurationAdmin configurationAdmin, String factoryPid, String provider, String api) throws IOException {
-        Configuration configuration = null;
-        if (configurationAdmin != null) {
-            try {
-                Configuration[] configurations = configurationAdmin.listConfigurations(String.format(FACTORY_FILTER, factoryPid));
-                if (configurations != null) {
-                    for (Configuration conf : configurations) {
-                        Dictionary dictionary = conf.getProperties();
-                        if (dictionary != null && provider != null && provider.equals(dictionary.get("provider"))) {
-                            return conf;
-                        } else if (dictionary != null && api != null && api.equals(dictionary.get("api"))) {
-                            return conf;
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                //noop
-            }
-            configuration = configurationAdmin.createFactoryConfiguration(factoryPid, null);
-        }
-        return configuration;
-    }
-
-    /**
      * Waits for the {@link org.jclouds.blobstore.BlobStore} registration.
      *
      * @param bundleContext
@@ -227,13 +191,5 @@ public class BlobStoreCreateCommand extends BlobStoreCommandSupport {
 
     public void setBundleContext(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
-    }
-
-    public ConfigurationAdmin getConfigAdmin() {
-        return configAdmin;
-    }
-
-    public void setConfigAdmin(ConfigurationAdmin configAdmin) {
-        this.configAdmin = configAdmin;
     }
 }

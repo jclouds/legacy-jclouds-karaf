@@ -158,6 +158,12 @@
                 <property name="configAdmin" ref="configAdmin"/>
             </action>
         </command>
+        <command name="jclouds/compute-service-destroy">
+            <action class="org.jclouds.karaf.commands.compute.ComputeDestroyCommand">
+                <property name="configAdmin" ref="configAdmin"/>
+            </action>
+        </command>
+
         <command name="jclouds/blobstore-service-list">
             <action class="org.jclouds.karaf.commands.blobstore.BlobStoreListCommand">
                 <property name="blobStoreServices" ref="blobStoreServices"/>
@@ -167,6 +173,12 @@
         </command>
         <command name="jclouds/blobstore-service-create">
             <action class="org.jclouds.karaf.commands.blobstore.BlobStoreCreateCommand">
+                <property name="bundleContext" ref="blueprintBundleContext"/>
+                <property name="configAdmin" ref="configAdmin"/>
+            </action>
+        </command>
+        <command name="jclouds/blobstore-service-destroy">
+            <action class="org.jclouds.karaf.commands.blobstore.BlobStoreDestroyCommand">
                 <property name="bundleContext" ref="blueprintBundleContext"/>
                 <property name="configAdmin" ref="configAdmin"/>
             </action>
