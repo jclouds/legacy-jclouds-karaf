@@ -297,6 +297,14 @@
         <bundle>mvn:org.jclouds.provider/cloudservers-us/${jclouds.version}</bundle>
     </feature>
 
+    <feature name='jclouds-rackspace-cloudservers-us' description='Rackspace Cloudservers US' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds-compute</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <feature version='${project.version}'>jclouds-api-openstack-nova</feature>
+        <feature version='${project.version}'>jclouds-api-rackspace-cloudidentity</feature>
+        <bundle>mvn:org.jclouds.provider/rackspace-cloudservers-us/${jclouds.version}</bundle>
+    </feature>
+
     <feature name='jclouds-cloudsigma-zrh' description='CloudSigma ZRH' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-compute</feature>
