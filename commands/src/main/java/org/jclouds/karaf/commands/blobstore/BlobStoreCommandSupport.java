@@ -20,6 +20,7 @@ package org.jclouds.karaf.commands.blobstore;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
 import org.apache.felix.gogo.commands.Option;
+import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.console.AbstractAction;
 import org.jclouds.ContextBuilder;
 import org.jclouds.apis.ApiMetadata;
@@ -32,6 +33,7 @@ import org.jclouds.karaf.cache.CacheProvider;
 import org.jclouds.karaf.utils.EnvHelper;
 import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
 import org.jclouds.providers.ProviderMetadata;
+import org.jclouds.rest.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,6 +79,18 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
     @Option(name = "--endpoint", description = "The endpoint to use for a blob store.")
     protected String endpoint;
 
+
+    @Override
+    public Object execute(CommandSession session) throws Exception {
+        try {
+            this.session = session;
+            return doExecute();
+        } catch (AuthorizationException ex) {
+            System.err.println("Authorization error. Please make sure you provided valid identity and credential.");
+            return null;
+        }
+    }
+
     public void setBlobStoreServices(List<BlobStore> services) {
         this.services = services;
     }
@@ -85,7 +99,11 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
         if (provider == null && api == null) {
             return services;
         } else {
-            return Collections.singletonList(getBlobStore());
+            try {
+                return Collections.singletonList(getBlobStore());
+            } catch (Throwable t) {
+                return Collections.emptyList();
+            }
         }
     }
 
@@ -109,16 +127,31 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
             blobStore = BlobStoreHelper.getBlobStore(providerOrApiValue, services);
         } catch (Throwable t) {
             if (!canCreateService) {
-                throw new RuntimeException(t.getMessage());
+                StringBuilder sb = new StringBuilder();
+                sb.append("Insufficient information to create blobstore service:").append("\n");
+                if (providerOrApiValue == null) {
+                    sb.append("Missing provider or api. Please specify either using the --provider / --api options, or the JCLOUDS_BLOBSTORE_PROVIDER / JCLOUDS_BLOBSTORE_API environmental variables.").append("\n");
+                }
+                if (identityValue == null) {
+                    sb.append("Missing identity. Please specify either using the --identity option, or the JCLOUDS_BLOBSTORE_IDENTITY environmental variable.").append("\n");
+                }
+                if (credentialValue == null) {
+                    sb.append("Missing credential. Please specify either using the --credential option, or the JCLOUDS_BLOBSTORE_CREDENTIAL environmental variable.").append("\n");
+                }
+                throw new RuntimeException(sb.toString());
             }
         }
         if (blobStore == null && canCreateService) {
-            ContextBuilder builder = ContextBuilder.newBuilder(providerOrApiValue).credentials(identityValue, credentialValue);
-            if (!Strings.isNullOrEmpty(endpointValue)) {
-                builder = builder.endpoint(endpoint);
+            try {
+                ContextBuilder builder = ContextBuilder.newBuilder(providerOrApiValue).credentials(identityValue, credentialValue);
+                if (!Strings.isNullOrEmpty(endpointValue)) {
+                    builder = builder.endpoint(endpoint);
+                }
+                BlobStoreContext context = builder.build(BlobStoreContext.class);
+                blobStore = context.getBlobStore();
+            } catch (Exception ex) {
+                throw new RuntimeException("Failed to create service:" + ex.getMessage());
             }
-            BlobStoreContext context = builder.build(BlobStoreContext.class);
-            blobStore = context.getBlobStore();
         }
         return blobStore;
     }
@@ -174,7 +207,7 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
      */
     public InputStream getBlobInputStream(BlobStore blobStore, String containerName, String blobName) throws Exception {
         if (blobStore.blobExists(containerName, blobName)) {
-            return getBlobStore().getBlob(containerName, blobName).getPayload().getInput();
+            return blobStore.getBlob(containerName, blobName).getPayload().getInput();
         } else {
             throw new Exception("Blob " + blobName + " does not exist in conatiner " + containerName + ".");
         }

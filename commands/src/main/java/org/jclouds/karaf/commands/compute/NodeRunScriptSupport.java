@@ -67,9 +67,11 @@ public abstract class NodeRunScriptSupport extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        ComputeService service = getComputeService();
-        if (service == null) {
-            System.out.println("Failed to find or create a compute service.");
+        ComputeService service = null;
+        try {
+            service = getComputeService();
+        } catch (Throwable t) {
+            System.err.println(t.getMessage());
             return null;
         }
         Set<? extends NodeMetadata> nodeMetaDataSet = service.listNodesDetailsMatching(getComputeFilter());

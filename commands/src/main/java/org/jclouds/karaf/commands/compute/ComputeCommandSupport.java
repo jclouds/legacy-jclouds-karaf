@@ -21,6 +21,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 import org.apache.felix.gogo.commands.Option;
+import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.console.AbstractAction;
 import org.jclouds.ContextBuilder;
 import org.jclouds.apis.ApiMetadata;
@@ -38,6 +39,7 @@ import org.jclouds.karaf.cache.BasicCacheProvider;
 import org.jclouds.karaf.utils.EnvHelper;
 import org.jclouds.karaf.utils.compute.ComputeHelper;
 import org.jclouds.providers.ProviderMetadata;
+import org.jclouds.rest.AuthorizationException;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.osgi.service.cm.ConfigurationAdmin;
 
@@ -84,6 +86,17 @@ public abstract class ComputeCommandSupport extends AbstractAction {
     @Option(name = "--endpoint", description = "The endpoint to use for a compute service.")
     protected String endpoint;
 
+
+    @Override
+    public Object execute(CommandSession session) throws Exception {
+        try {
+            this.session = session;
+            return doExecute();
+        } catch (AuthorizationException ex) {
+            System.err.println("Authorization error. Please make sure you provided valid identity and credential.");
+            return null;
+        }
+    }
 
     protected void printComputeProviders(Map<String, ProviderMetadata> providers, List<ComputeService> computeServices, String indent, PrintStream out) {
         out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
@@ -277,7 +290,12 @@ public abstract class ComputeCommandSupport extends AbstractAction {
         if (provider == null && api == null) {
             return computeServices;
         } else {
-            return Collections.singletonList(getComputeService());
+            try {
+                ComputeService service = getComputeService();
+                return Collections.singletonList(service);
+            } catch (Throwable t) {
+                return Collections.emptyList();
+            }
         }
     }
 
@@ -300,16 +318,31 @@ public abstract class ComputeCommandSupport extends AbstractAction {
             computeService = ComputeHelper.getComputeService(providerOrApiValue, computeServices);
         } catch (Throwable t) {
             if (!canCreateService) {
-                throw new RuntimeException(t.getMessage());
+                StringBuilder sb = new StringBuilder();
+                sb.append("Insufficient information to create compute service:").append("\n");
+                if (providerOrApiValue == null) {
+                    sb.append("Missing provider or api. Please specify either using the --provider / --api options, or the JCLOUDS_COMPUTE_PROVIDER / JCLOUDS_COMPUTE_API environmental variables.").append("\n");
+                }
+                if (identityValue == null) {
+                    sb.append("Missing identity. Please specify either using the --identity option, or the JCLOUDS_COMPUTE_IDENTITY environmental variable.").append("\n");
+                }
+                if (credentialValue == null) {
+                    sb.append("Missing credential. Please specify either using the --credential option, or the JCLOUDS_COMPUTE_CREDENTIAL environmental variable.").append("\n");
+                }
+                throw new RuntimeException(sb.toString());
             }
         }
 
         if (computeService == null && canCreateService) {
-            ContextBuilder builder = ContextBuilder.newBuilder(providerOrApiValue).credentials(identityValue,credentialValue).modules(ImmutableSet.<Module>of(new SshjSshClientModule()));
-            if (!Strings.isNullOrEmpty(endpointValue)) {
-                builder = builder.endpoint(endpointValue);
+            try {
+                ContextBuilder builder = ContextBuilder.newBuilder(providerOrApiValue).credentials(identityValue, credentialValue).modules(ImmutableSet.<Module>of(new SshjSshClientModule()));
+                if (!Strings.isNullOrEmpty(endpointValue)) {
+                    builder = builder.endpoint(endpointValue);
+                }
+                computeService = builder.build(ComputeServiceContext.class).getComputeService();
+            } catch (Exception ex) {
+                throw new RuntimeException("Failed to create service:" + ex.getMessage());
             }
-            computeService = builder.build(ComputeServiceContext.class).getComputeService();
         }
         return computeService;
     }

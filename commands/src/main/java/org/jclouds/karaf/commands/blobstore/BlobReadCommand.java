@@ -51,9 +51,11 @@ public class BlobReadCommand extends BlobStoreCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        BlobStore blobStore = getBlobStore();
-        if (blobStore == null) {
-            System.out.println("Failed to find or create a blob store.");
+        BlobStore blobStore = null;
+        try {
+            blobStore = getBlobStore();
+        } catch (Throwable t) {
+            System.err.println(t.getMessage());
             return null;
         }
 

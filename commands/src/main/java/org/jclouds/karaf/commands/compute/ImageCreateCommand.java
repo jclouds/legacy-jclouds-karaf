@@ -37,14 +37,16 @@ public class ImageCreateCommand extends ComputeCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
-        ComputeService service = getComputeService();
-        if (service == null) {
-            System.out.println("Failed to find or create a compute service.");
+        ComputeService service = null;
+        try {
+            service = getComputeService();
+        } catch (Throwable t) {
+            System.err.println(t.getMessage());
             return null;
         }
 
         if (!service.getImageExtension().isPresent()) {
-            System.out.print("Provider " + getComputeService().getContext().unwrap().getProviderMetadata().getId() + " does not currently provide image creation support.");
+            System.out.print("Provider " + service.getContext().unwrap().getProviderMetadata().getId() + " does not currently provide image creation support.");
             return null;
         }
         ImageExtension imageExtension = service.getImageExtension().get();

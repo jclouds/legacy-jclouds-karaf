@@ -23,6 +23,7 @@ import java.net.URL;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
+import org.jclouds.blobstore.BlobStore;
 
 /**
  * @author: iocanel
@@ -44,6 +45,14 @@ public class BlobWriteCommand extends BlobStoreCommandSupport {
 
     @Override
     protected Object doExecute() throws Exception {
+        BlobStore blobStore = null;
+        try {
+            blobStore = getBlobStore();
+        } catch (Throwable t) {
+            System.err.println(t.getMessage());
+            return null;
+        }
+
         URL url = null;
         try {
             url = new URL(payload);
@@ -52,12 +61,12 @@ public class BlobWriteCommand extends BlobStoreCommandSupport {
         }
         if (url == null || storeUrl) {
             write(containerName, blobName, payload);
-            cacheProvider.getProviderCacheForType("container").put(getBlobStore().getContext().unwrap().getId(),containerName);
-            cacheProvider.getProviderCacheForType("blob").put(getBlobStore().getContext().unwrap().getId(),blobName);
+            cacheProvider.getProviderCacheForType("container").put(blobStore.getContext().unwrap().getId(),containerName);
+            cacheProvider.getProviderCacheForType("blob").put(blobStore.getContext().unwrap().getId(),blobName);
         } else {
             write(containerName, blobName, url.openStream());
-            cacheProvider.getProviderCacheForType("container").put(getBlobStore().getContext().unwrap().getId(),containerName);
-            cacheProvider.getProviderCacheForType("blob").put(getBlobStore().getContext().unwrap().getId(),blobName);
+            cacheProvider.getProviderCacheForType("container").put(blobStore.getContext().unwrap().getId(),containerName);
+            cacheProvider.getProviderCacheForType("blob").put(blobStore.getContext().unwrap().getId(),blobName);
         }
         return null;
     }
