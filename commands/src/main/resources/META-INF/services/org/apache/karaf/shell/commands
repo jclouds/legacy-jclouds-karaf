@@ -4,6 +4,7 @@ org.jclouds.karaf.commands.compute.LocationListCommand
 org.jclouds.karaf.commands.compute.NodeListCommand
 org.jclouds.karaf.commands.compute.NodeCreateCommand
 org.jclouds.karaf.commands.compute.NodeDestroyCommand
+org.jclouds.karaf.commands.compute.NodeDestroyAllCommand
 org.jclouds.karaf.commands.compute.NodeInfoCommand
 org.jclouds.karaf.commands.compute.NodeSuspendCommand
 org.jclouds.karaf.commands.compute.NodeResumeCommand
