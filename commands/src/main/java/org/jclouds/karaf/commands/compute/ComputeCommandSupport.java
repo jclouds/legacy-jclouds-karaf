@@ -244,7 +244,7 @@ public abstract class ComputeCommandSupport extends AbstractAction {
             for (NodeMetadata node : nodes) {
                 out.println();
                 out.println(String.format(NODE_DETAILS_FORMAT, "Operating System:", getOperatingSystemDetails(node)));
-                out.println(String.format(NODE_DETAILS_FORMAT, "Configured User:", node.getCredentials().getUser()));
+                out.println(String.format(NODE_DETAILS_FORMAT, "Configured User:", node.getCredentials() != null ? node.getCredentials().getUser() : "n/a"));
                 out.println(String.format(NODE_DETAILS_FORMAT, "Public Address:", getPublicAddresses(node)));
                 out.println(String.format(NODE_DETAILS_FORMAT, "Private Address:", getPrivateAddresses(node)));
                 out.println(String.format(NODE_DETAILS_FORMAT, "Image Id:", node.getImageId()));
