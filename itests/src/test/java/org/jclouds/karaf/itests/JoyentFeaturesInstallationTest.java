@@ -42,7 +42,7 @@ public class JoyentFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
 
     @Test
     public void testJoyentSdcApi() throws Exception {
-        installAndCheckFeature("jclouds-api-joyent-sdc");
+        installAndCheckFeature("jclouds-cloudapi");
     }
     
     @Test
