@@ -52,6 +52,13 @@
             <artifactId>utils</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.jclouds.karaf</groupId>
+            <artifactId>services</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.jclouds</groupId>
             <artifactId>jclouds-core</artifactId>
@@ -127,7 +134,7 @@
                             org.apache.karaf.shell.console.completer;version="[2.2,4)",
                             *
                         </Import-Package>
-                        <Private-Package>org.jclouds.karaf.utils*</Private-Package>
+                        <Private-Package>org.jclouds.karaf.utils*, org.jclouds.karaf.services.modules</Private-Package>
                     </instructions>
                 </configuration>
             </plugin>

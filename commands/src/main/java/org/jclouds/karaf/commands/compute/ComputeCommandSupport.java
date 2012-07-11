@@ -36,8 +36,12 @@ import org.jclouds.compute.domain.Processor;
 import org.jclouds.domain.Location;
 import org.jclouds.karaf.cache.CacheProvider;
 import org.jclouds.karaf.cache.BasicCacheProvider;
+import org.jclouds.karaf.services.modules.PropertiesCredentialStore;
 import org.jclouds.karaf.utils.EnvHelper;
 import org.jclouds.karaf.utils.compute.ComputeHelper;
+import org.jclouds.logging.config.NullLoggingModule;
+import org.jclouds.logging.log4j.config.Log4JLoggingModule;
+import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.sshj.config.SshjSshClientModule;
@@ -335,7 +339,8 @@ public abstract class ComputeCommandSupport extends AbstractAction {
 
         if (computeService == null && canCreateService) {
             try {
-                ContextBuilder builder = ContextBuilder.newBuilder(providerOrApiValue).credentials(identityValue, credentialValue).modules(ImmutableSet.<Module>of(new SshjSshClientModule()));
+                //This may run in or inside OSGi, so we choose explicitly set a credential store which should be compatible with both.
+                ContextBuilder builder = ContextBuilder.newBuilder(providerOrApiValue).credentials(identityValue, credentialValue).modules(ImmutableSet.<Module>of(new SshjSshClientModule(), new Log4JLoggingModule(), new PropertiesCredentialStore()));
                 if (!Strings.isNullOrEmpty(endpointValue)) {
                     builder = builder.endpoint(endpointValue);
                 }

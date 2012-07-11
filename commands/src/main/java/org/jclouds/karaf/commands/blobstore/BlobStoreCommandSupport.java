@@ -18,7 +18,9 @@
 package org.jclouds.karaf.commands.blobstore;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteStreams;
+import com.google.inject.Module;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.console.AbstractAction;
@@ -32,6 +34,8 @@ import org.jclouds.karaf.cache.BasicCacheProvider;
 import org.jclouds.karaf.cache.CacheProvider;
 import org.jclouds.karaf.utils.EnvHelper;
 import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
+import org.jclouds.logging.log4j.config.Log4JLoggingModule;
+import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.AuthorizationException;
 import org.slf4j.Logger;
@@ -143,7 +147,7 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
         }
         if (blobStore == null && canCreateService) {
             try {
-                ContextBuilder builder = ContextBuilder.newBuilder(providerOrApiValue).credentials(identityValue, credentialValue);
+                ContextBuilder builder = ContextBuilder.newBuilder(providerOrApiValue).credentials(identityValue, credentialValue).modules(ImmutableSet.<Module>of(new Log4JLoggingModule()));
                 if (!Strings.isNullOrEmpty(endpointValue)) {
                     builder = builder.endpoint(endpoint);
                 }
