@@ -51,7 +51,7 @@ public abstract class NodeRunScriptSupport extends ComputeCommandSupport {
     @Option(name = "-u", aliases = "--user", description = "The user that will run the script.", required = false, multiValued = false)
     private String user;
 
-    @Option(name = "-p", aliases = "--passwprd", description = "Optional password for the user to run the script.", required = false, multiValued = false)
+    @Option(name = "-p", aliases = "--password", description = "Optional password for the user to run the script.", required = false, multiValued = false)
     private String password;
 
     @Option(name = "-s", aliases = "--script-url", description = "The url script of the script to run.", required = false, multiValued = false)
