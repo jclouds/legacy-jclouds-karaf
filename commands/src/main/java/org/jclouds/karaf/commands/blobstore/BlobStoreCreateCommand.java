@@ -22,6 +22,7 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.apis.Apis;
 import org.jclouds.blobstore.BlobStore;
+import org.jclouds.karaf.utils.EnvHelper;
 import org.jclouds.providers.Providers;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -134,20 +135,26 @@ public class BlobStoreCreateCommand extends BlobStoreServiceCommand {
                             dictionary = new Properties();
                         }
 
-                        if (provider != null) {
-                            dictionary.put("provider", provider);
+                        String providerValue = EnvHelper.getComputeProvider(provider);
+                        String apiValue = EnvHelper.getComputeApi(api);
+                        String identityValue = EnvHelper.getComputeIdentity(identity);
+                        String credentialValue = EnvHelper.getComputeCredential(credential);
+                        String endpointValue = EnvHelper.getComputeEndpoint(endpoint);
+
+                        if (providerValue != null) {
+                            dictionary.put("provider", providerValue);
                         }
-                        if (api != null) {
-                            dictionary.put("api", api);
+                        if (apiValue != null) {
+                            dictionary.put("api", apiValue);
                         }
-                        if (endpoint != null) {
-                            dictionary.put("endpoint", endpoint);
+                        if (endpointValue != null) {
+                            dictionary.put("endpoint", endpointValue);
                         }
-                        if (credential != null) {
-                            dictionary.put("credential", credential);
+                        if (credentialValue != null) {
+                            dictionary.put("credential", credentialValue);
                         }
-                        if (identity != null) {
-                            dictionary.put("identity", identity);
+                        if (identityValue != null) {
+                            dictionary.put("identity", identityValue);
                         }
                         for (Map.Entry<String, String> entry : props.entrySet()) {
                             String key = entry.getKey();
