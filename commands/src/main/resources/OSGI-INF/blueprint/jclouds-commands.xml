@@ -191,6 +191,7 @@
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
                 <entry key="--api" value-ref="computeApiCompleter"/>
+                <entry key="--group" value-ref="groupCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/hardware-list">

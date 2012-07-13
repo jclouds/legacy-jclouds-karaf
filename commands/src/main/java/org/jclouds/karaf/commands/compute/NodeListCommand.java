@@ -17,17 +17,27 @@
  */
 package org.jclouds.karaf.commands.compute;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
+import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.apache.felix.gogo.commands.Option;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeState;
+
+import javax.annotation.Nullable;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 @Command(scope = "jclouds", name = "node-list", description = "Displays the list of nodes.")
 public class NodeListCommand extends ComputeCommandSupport {
+
+    @Option(name = "-g", aliases = "--group",  multiValued = false, required = false, description = "Node group")
+    private String group;
 
     @Override
     protected Object doExecute() throws Exception {
@@ -38,7 +48,18 @@ public class NodeListCommand extends ComputeCommandSupport {
             System.err.println(t.getMessage());
             return null;
         }
-        printNodes(service.listNodes(), "", System.out);
+
+        Set<? extends NodeMetadata> nodes = service.listNodesDetailsMatching(new Predicate<ComputeMetadata>() {
+            @Override
+            public boolean apply(@Nullable ComputeMetadata input) {
+                NodeMetadata node = (NodeMetadata) input;
+                if (!Strings.isNullOrEmpty(group) && !group.equals(node.getGroup())) {
+                    return false;
+                }
+                return true;
+            }
+        });
+        printNodes(nodes, "", System.out);
 
         for (ComputeMetadata node : service.listNodes()) {
 
