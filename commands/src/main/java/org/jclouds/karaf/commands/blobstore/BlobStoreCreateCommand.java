@@ -52,7 +52,7 @@ public class BlobStoreCreateCommand extends BlobStoreServiceCommand {
         }
 
         Map<String, String> props = parseOptions(options);
-        registerBlobStore(configAdmin, provider, api, identity, credential, props);
+        registerBlobStore(configAdmin, provider, api, identity, credential, endpoint, props);
         if (noWait) {
             return null;
         } else if (!isProviderOrApiInstalled(provider, api)) {
@@ -112,15 +112,17 @@ public class BlobStoreCreateCommand extends BlobStoreServiceCommand {
     /**
      * Registers a {@link org.jclouds.blobstore.BlobStore}
      *
+     *
      * @param configurationAdmin
      * @param provider
      * @param api
      * @param identity
      * @param credential
+     * @param endpoint
      * @param props
      * @throws Exception
      */
-    private void registerBlobStore(final ConfigurationAdmin configurationAdmin, final String provider, final String api, final String identity, final String credential, final Map<String, String> props) throws Exception {
+    private void registerBlobStore(final ConfigurationAdmin configurationAdmin, final String provider, final String api, final String identity, final String credential, final String endpoint, final Map<String, String> props) throws Exception {
         Runnable registrationTask = new Runnable() {
             @Override
             public void run() {
@@ -138,8 +140,15 @@ public class BlobStoreCreateCommand extends BlobStoreServiceCommand {
                         if (api != null) {
                             dictionary.put("api", api);
                         }
-                        dictionary.put("credential", credential);
-                        dictionary.put("identity", identity);
+                        if (endpoint != null) {
+                            dictionary.put("endpoint", endpoint);
+                        }
+                        if (credential != null) {
+                            dictionary.put("credential", credential);
+                        }
+                        if (identity != null) {
+                            dictionary.put("identity", identity);
+                        }
                         for (Map.Entry<String, String> entry : props.entrySet()) {
                             String key = entry.getKey();
                             String value = entry.getValue();
