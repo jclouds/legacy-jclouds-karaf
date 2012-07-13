@@ -140,12 +140,19 @@ public class PropertiesCredentialStore extends CredentialStore {
         }
 
         public Credentials put(String s, Credentials credentials) {
-            String identityKey = s + "/identity";
-            String credentialKey = s + "/credential";
-            properties.put(identityKey, credentials.identity);
-            properties.put(credentialKey, credentials.credential);
-            save();
-            return credentialsMap.put(s, credentials);
+            if (credentials != null) {
+                String identityKey = s + "/identity";
+                String credentialKey = s + "/credential";
+                if (credentials.identity != null) {
+                    properties.put(identityKey, credentials.identity);
+                }
+                if (credentials.credential != null) {
+                    properties.put(credentialKey, credentials.credential);
+                }
+                save();
+                return credentialsMap.put(s, credentials);
+            }
+            return credentials;
         }
 
         public Credentials remove(Object o) {

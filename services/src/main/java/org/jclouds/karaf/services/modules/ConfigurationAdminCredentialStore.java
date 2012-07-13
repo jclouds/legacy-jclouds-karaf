@@ -122,20 +122,28 @@ public class ConfigurationAdminCredentialStore extends CredentialStore {
         }
 
         public Credentials put(String s, Credentials credentials) {
-            try {
-                Dictionary dictionary = configuration.getProperties();
-                if (dictionary == null) {
-                }
-                String identityKey = s + "/identity";
-                String credentialKey = s + "/credential";
-                dictionary.put(identityKey, credentials.identity);
-                dictionary.put(credentialKey, credentials.credential);
+            if (credentials != null) {
+                try {
+                    Dictionary dictionary = configuration.getProperties();
+                    if (dictionary == null) {
+                    }
+                    String identityKey = s + "/identity";
+                    String credentialKey = s + "/credential";
 
-                configuration.update(dictionary);
-            } catch (IOException e) {
-                LOGGER.warn("Failed to store jclouds credentials to configuration admin.",e);
+                    if (credentials.identity != null) {
+                        dictionary.put(identityKey, credentials.identity);
+                    }
+                    if (credentials.credential != null) {
+                        dictionary.put(credentialKey, credentials.credential);
+                    }
+
+                    configuration.update(dictionary);
+                } catch (IOException e) {
+                    LOGGER.warn("Failed to store jclouds credentials to configuration admin.", e);
+                }
+                return credentialsMap.put(s, credentials);
             }
-            return credentialsMap.put(s, credentials);
+            return credentials;
         }
 
         public Credentials remove(Object o) {
