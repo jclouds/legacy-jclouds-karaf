@@ -1,3 +1,4 @@
+org.jclouds.karaf.commands.compute.ImageCreateCommand
 org.jclouds.karaf.commands.compute.ImageListCommand
 org.jclouds.karaf.commands.compute.HardwareListCommand
 org.jclouds.karaf.commands.compute.LocationListCommand
