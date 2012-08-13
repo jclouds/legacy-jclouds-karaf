@@ -1,0 +1,13 @@
+This command can be used in order to create, configure and register a reusable blobstore service.
+Even though that each command can create its own blobstore service, creating a reusable one has the benefit of making command execution faster and simpler (no need to provide provider/api idenetity credentials and options for each command).
+You can configure the service by using the options supported by the command or by having the service details configured as environmental variables.
+The list of supported variables:
+
+JCLOUDS_BLOBSTORE_PROVIDER
+JCLOUDS_BLOBSTORE_API
+JCLOUDS_BLOBSTORE_IDENTITY
+JCLOUDS_BLOBSTORE_CREDENTIAL
+JCLOUDS_BLOBSTORE_ENDPOINT
+
+Please note that for provider or api, you can have a single registered service, using this command to configure a service for a provider or api that is already registered, will result in replace the existing service.
+You can list the blobstore services that are already registered, with the jclouds:blobstore-service-list command and you can destroy a blobstore service with the jclouds:blobstore-service-destroy command.

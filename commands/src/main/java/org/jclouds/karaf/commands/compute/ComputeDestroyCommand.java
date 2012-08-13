@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-@Command(scope = "jclouds", name = "compute-service-destroy", description = "Destroys a compute service")
+@Command(scope = "jclouds", name = "compute-service-destroy", description = "Destroys a compute service", detailedDescription = "classpath:compute-service-destroy.txt")
 public class ComputeDestroyCommand extends ComputeServiceCommand {
 
     private BundleContext bundleContext;

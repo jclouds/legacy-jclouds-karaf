@@ -1,0 +1,1 @@
+This command can be used in order to list the registered compute services and the compute providers and apis that are available for registration.

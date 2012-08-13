@@ -1,0 +1,2 @@
+This command can be used in order to destroy a compute service that has been created with the jclouds:compute-service-create command.
+

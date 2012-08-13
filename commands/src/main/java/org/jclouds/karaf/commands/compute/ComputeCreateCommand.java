@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-@Command(scope = "jclouds", name = "compute-service-create", description = "Creates a compute service")
+@Command(scope = "jclouds", name = "compute-service-create", description = "Creates a compute service", detailedDescription = "classpath:compute-service-create.txt")
 public class ComputeCreateCommand extends ComputeServiceCommand {
 
     @Option(name = "--add-option", multiValued = true, description = "Adds a key value pair to the configuration.")

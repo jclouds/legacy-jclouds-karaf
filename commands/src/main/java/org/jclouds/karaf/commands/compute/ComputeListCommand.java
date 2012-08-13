@@ -21,7 +21,7 @@ package org.jclouds.karaf.commands.compute;
 import org.apache.felix.gogo.commands.Command;
 import org.jclouds.karaf.core.ComputeProviderOrApiRegistry;
 
-@Command(scope = "jclouds", name = "compute-service-list", description = "Lists the Compute APIs and Providers")
+@Command(scope = "jclouds", name = "compute-service-list", description = "Lists the Compute APIs and Providers", detailedDescription = "classpath:compute-service-list.txt")
 public class ComputeListCommand extends ComputeCommandSupport {
 
     private ComputeProviderOrApiRegistry computeProviderOrApiRegistry;

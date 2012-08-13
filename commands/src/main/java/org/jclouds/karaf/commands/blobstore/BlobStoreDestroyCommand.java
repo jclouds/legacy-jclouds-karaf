@@ -18,6 +18,7 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
+import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.apis.Apis;
 import org.jclouds.blobstore.BlobStore;
@@ -32,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+@Command(scope = "jclouds", name = "blobstore-service-destroy", description = "Destroys a BlobStore service.", detailedDescription = "classpath:blobstore-service-destroy.txt")
 public class BlobStoreDestroyCommand extends BlobStoreServiceCommand {
 
 

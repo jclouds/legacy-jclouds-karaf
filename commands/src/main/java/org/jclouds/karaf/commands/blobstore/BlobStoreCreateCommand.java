@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-@Command(scope = "jclouds", name = "blobstore-service-create",description = "Creates a BlobStore service.")
+@Command(scope = "jclouds", name = "blobstore-service-create",description = "Creates a BlobStore service.", detailedDescription = "classpath:blobstore-service-create.txt")
 public class BlobStoreCreateCommand extends BlobStoreServiceCommand {
 
     @Option(name = "--add-option", multiValued = true, description = "Adds a key value pair to the configuration.")

@@ -1,0 +1,1 @@
+This command can be used in order to list the registered blobstore services and the blobstore providers and apis that are available for registration.
