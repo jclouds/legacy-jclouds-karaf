@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2011, the original authors
  *
  * ====================================================================
@@ -34,14 +34,12 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.domain.Processor;
 import org.jclouds.domain.Location;
-import org.jclouds.karaf.cache.CacheProvider;
 import org.jclouds.karaf.cache.BasicCacheProvider;
+import org.jclouds.karaf.cache.CacheProvider;
 import org.jclouds.karaf.services.modules.PropertiesCredentialStore;
 import org.jclouds.karaf.utils.EnvHelper;
 import org.jclouds.karaf.utils.compute.ComputeHelper;
-import org.jclouds.logging.config.NullLoggingModule;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
-import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.sshj.config.SshjSshClientModule;
@@ -60,8 +58,7 @@ import java.util.Set;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-public abstract class ComputeCommandSupport extends AbstractAction {
-
+public abstract class ComputeCommandBase extends AbstractAction {
 
     public static final String NODEFORMAT = "%s%-30s %-32s %-20s %-12s %-12s";
     private static final String NODE_DETAILS_FORMAT = "%20s %-60s";
@@ -72,24 +69,9 @@ public abstract class ComputeCommandSupport extends AbstractAction {
 
 
     private ConfigurationAdmin configurationAdmin;
-    private List<ComputeService> computeServices = new ArrayList<ComputeService>();
     protected CacheProvider cacheProvider = new BasicCacheProvider();
 
-    @Option(name = "--provider", description = "The provider or use.")
-    protected String provider;
-
-    @Option(name = "--api", description = "The api or use.")
-    protected String api;
-
-    @Option(name = "--identity", description = "The identity to use for creating a compute service.")
-    protected String identity;
-
-    @Option(name = "--credential", description = "The credential to use for a compute service.")
-    protected String credential;
-
-    @Option(name = "--endpoint", description = "The endpoint to use for a compute service.")
-    protected String endpoint;
-
+    private List<ComputeService> computeServices = new ArrayList<ComputeService>();
 
     @Override
     public Object execute(CommandSession session) throws Exception {
@@ -185,7 +167,7 @@ public abstract class ComputeCommandSupport extends AbstractAction {
     }
 
     /**
-     * Returns a String that displays the {@link OperatingSystem} details.
+     * Returns a String that displays the {@link org.jclouds.compute.domain.OperatingSystem} details.
      *
      * @param node
      * @return
@@ -286,77 +268,19 @@ public abstract class ComputeCommandSupport extends AbstractAction {
         this.configurationAdmin = configurationAdmin;
     }
 
-    public void setComputeServices(List<ComputeService> computeServices) {
-        this.computeServices = computeServices;
-    }
-
-    protected List<ComputeService> getComputeServices() {
-        if (provider == null && api == null) {
-            return computeServices;
-        } else {
-            try {
-                ComputeService service = getComputeService();
-                return Collections.singletonList(service);
-            } catch (Throwable t) {
-                return Collections.emptyList();
-            }
-        }
-    }
-
-    protected ComputeService getComputeService() {
-        if (computeServices != null && computeServices.size() == 1) {
-            return computeServices.get(0);
-        }
-        ComputeService computeService = null;
-        String providerValue = EnvHelper.getComputeProvider(provider);
-        String apiValue = EnvHelper.getComputeApi(api);
-        String identityValue = EnvHelper.getComputeIdentity(identity);
-        String credentialValue = EnvHelper.getComputeCredential(credential);
-        String endpointValue = EnvHelper.getComputeEndpoint(endpoint);
-        boolean canCreateService = (!Strings.isNullOrEmpty(providerValue) || !Strings.isNullOrEmpty(apiValue))
-                && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);
-
-        String providerOrApiValue = !Strings.isNullOrEmpty(providerValue) ? providerValue : apiValue;
-
-        try {
-            computeService = ComputeHelper.getComputeService(providerOrApiValue, computeServices);
-        } catch (Throwable t) {
-            if (!canCreateService) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("Insufficient information to create compute service:").append("\n");
-                if (providerOrApiValue == null) {
-                    sb.append("Missing provider or api. Please specify either using the --provider / --api options, or the JCLOUDS_COMPUTE_PROVIDER / JCLOUDS_COMPUTE_API environmental variables.").append("\n");
-                }
-                if (identityValue == null) {
-                    sb.append("Missing identity. Please specify either using the --identity option, or the JCLOUDS_COMPUTE_IDENTITY environmental variable.").append("\n");
-                }
-                if (credentialValue == null) {
-                    sb.append("Missing credential. Please specify either using the --credential option, or the JCLOUDS_COMPUTE_CREDENTIAL environmental variable.").append("\n");
-                }
-                throw new RuntimeException(sb.toString());
-            }
-        }
-
-        if (computeService == null && canCreateService) {
-            try {
-                //This may run in or inside OSGi, so we choose explicitly set a credential store which should be compatible with both.
-                ContextBuilder builder = ContextBuilder.newBuilder(providerOrApiValue).credentials(identityValue, credentialValue).modules(ImmutableSet.<Module>of(new SshjSshClientModule(), new Log4JLoggingModule(), new PropertiesCredentialStore()));
-                if (!Strings.isNullOrEmpty(endpointValue)) {
-                    builder = builder.endpoint(endpointValue);
-                }
-                computeService = builder.build(ComputeServiceContext.class).getComputeService();
-            } catch (Exception ex) {
-                throw new RuntimeException("Failed to create service:" + ex.getMessage());
-            }
-        }
-        return computeService;
-    }
-
     public CacheProvider getCacheProvider() {
         return cacheProvider;
     }
 
     public void setCacheProvider(CacheProvider cacheProvider) {
         this.cacheProvider = cacheProvider;
+    }
+
+    public List<ComputeService> getComputeServices() {
+        return computeServices;
+    }
+
+    public void setComputeServices(List<ComputeService> computeServices) {
+        this.computeServices = computeServices;
     }
 }

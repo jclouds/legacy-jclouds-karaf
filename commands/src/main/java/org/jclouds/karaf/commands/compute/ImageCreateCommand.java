@@ -26,7 +26,7 @@ import org.jclouds.compute.domain.ImageTemplate;
 import org.jclouds.compute.extensions.ImageExtension;
 
 @Command(scope = "jclouds", name = "image-create", description = "Create an image from an existing node.")
-public class ImageCreateCommand extends ComputeCommandSupport {
+public class ImageCreateCommand extends ComputeCommandWithOptions {
 
     @Argument(name = "id", index = 0, description = "The id of the node to use as a template.", required = true, multiValued = false)
     private String id;

@@ -21,17 +21,13 @@ import com.google.common.collect.Sets;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.jclouds.compute.ComputeService;
-import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.domain.NodeState;
-
-import java.util.List;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 @Command(scope = "jclouds", name = "node-info", description = "Displays detailed information about a node.")
-public class NodeInfoCommand extends ComputeCommandSupport {
+public class NodeInfoCommand extends ComputeCommandWithOptions {
 
     @Argument(name = "id", description = "The id of the node.", required = true, multiValued = false)
     private String id;

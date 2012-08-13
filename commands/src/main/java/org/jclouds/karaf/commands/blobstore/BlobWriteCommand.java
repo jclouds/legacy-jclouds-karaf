@@ -29,7 +29,7 @@ import org.jclouds.blobstore.BlobStore;
  * @author: iocanel
  */
 @Command(scope = "jclouds", name = "blobstore-write", description = "Writes data to the blobstore")
-public class BlobWriteCommand extends BlobStoreCommandSupport {
+public class BlobWriteCommand extends BlobStoreCommandWithOptions {
 
     @Argument(index = 0, name = "containerName", description = "The name of the container", required = true, multiValued = false)
     String containerName;
@@ -60,13 +60,13 @@ public class BlobWriteCommand extends BlobStoreCommandSupport {
             //Ignore
         }
         if (url == null || storeUrl) {
-            write(containerName, blobName, payload);
-            cacheProvider.getProviderCacheForType("container").put(blobStore.getContext().unwrap().getId(),containerName);
-            cacheProvider.getProviderCacheForType("blob").put(blobStore.getContext().unwrap().getId(),blobName);
+            write(getBlobStore(), containerName, blobName, payload);
+            cacheProvider.getProviderCacheForType("container").put(blobStore.getContext().unwrap().getId(), containerName);
+            cacheProvider.getProviderCacheForType("blob").put(blobStore.getContext().unwrap().getId(), blobName);
         } else {
-            write(containerName, blobName, url.openStream());
-            cacheProvider.getProviderCacheForType("container").put(blobStore.getContext().unwrap().getId(),containerName);
-            cacheProvider.getProviderCacheForType("blob").put(blobStore.getContext().unwrap().getId(),blobName);
+            write(getBlobStore(), containerName, blobName, url.openStream());
+            cacheProvider.getProviderCacheForType("container").put(blobStore.getContext().unwrap().getId(), containerName);
+            cacheProvider.getProviderCacheForType("blob").put(blobStore.getContext().unwrap().getId(), blobName);
         }
         return null;
     }

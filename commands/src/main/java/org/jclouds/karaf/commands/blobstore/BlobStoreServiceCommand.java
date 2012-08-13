@@ -24,7 +24,7 @@ import org.osgi.service.cm.ConfigurationAdmin;
 import java.io.IOException;
 import java.util.Dictionary;
 
-public abstract class BlobStoreServiceCommand extends BlobStoreCommandSupport {
+public abstract class BlobStoreServiceCommand extends BlobStoreCommandWithOptions {
 
 
     protected static final String FACTORY_FILTER = "(service.factoryPid=%s)";

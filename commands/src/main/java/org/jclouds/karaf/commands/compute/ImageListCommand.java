@@ -24,7 +24,7 @@ import org.jclouds.compute.ComputeService;
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 @Command(scope = "jclouds", name = "image-list", description = "Lists the available images.")
-public class ImageListCommand extends ComputeCommandSupport {
+public class ImageListCommand extends ComputeCommandWithOptions {
 
     @Override
     protected Object doExecute() throws Exception {

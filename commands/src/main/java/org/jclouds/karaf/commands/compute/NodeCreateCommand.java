@@ -36,7 +36,7 @@ import org.jclouds.scriptbuilder.statements.login.AdminAccess;
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 @Command(scope = "jclouds", name = "node-create", description = "Creates a node.")
-public class NodeCreateCommand extends ComputeCommandSupport {
+public class NodeCreateCommand extends ComputeCommandWithOptions {
     @Option(name = "--adminAccess")
     private boolean adminAccess;
    

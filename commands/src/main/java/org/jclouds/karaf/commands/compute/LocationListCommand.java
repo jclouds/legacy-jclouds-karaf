@@ -24,7 +24,7 @@ import org.jclouds.compute.ComputeService;
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 @Command(scope = "jclouds", name = "location-list", description = "Lists the available locations.")
-public class LocationListCommand extends ComputeCommandSupport {
+public class LocationListCommand extends ComputeCommandWithOptions {
 
     @Override
     protected Object doExecute() throws Exception {

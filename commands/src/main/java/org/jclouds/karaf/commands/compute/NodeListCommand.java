@@ -19,7 +19,6 @@ package org.jclouds.karaf.commands.compute;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
-import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.compute.ComputeService;
@@ -34,7 +33,7 @@ import java.util.Set;
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 @Command(scope = "jclouds", name = "node-list", description = "Displays the list of nodes.")
-public class NodeListCommand extends ComputeCommandSupport {
+public class NodeListCommand extends ComputeCommandWithOptions {
 
     @Option(name = "-g", aliases = "--group",  multiValued = false, required = false, description = "Node group")
     private String group;

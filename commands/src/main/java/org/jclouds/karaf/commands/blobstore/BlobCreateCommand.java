@@ -23,13 +23,12 @@ import java.util.List;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.jclouds.blobstore.BlobStore;
-import org.jclouds.compute.ComputeService;
 
 /**
  * @author: iocanel
  */
 @Command(scope = "jclouds", name = "blobstore-create", description = "Creates a container")
-public class BlobCreateCommand extends BlobStoreCommandSupport {
+public class BlobCreateCommand extends BlobStoreCommandWithOptions {
 
     @Argument(index = 0, name = "containerNames", description = "The name of the container", required = true, multiValued = true)
     List<String> containerNames;

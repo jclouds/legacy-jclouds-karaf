@@ -24,7 +24,7 @@ import org.jclouds.compute.ComputeService;
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 @Command(scope = "jclouds", name = "provider-info")
-public class ProviderInfoCommand extends ComputeCommandSupport {
+public class ProviderInfoCommand extends ComputeCommandWithOptions {
 
     @Override
     protected Object doExecute() throws Exception {

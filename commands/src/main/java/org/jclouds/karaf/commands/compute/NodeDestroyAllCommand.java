@@ -31,7 +31,7 @@ import com.google.common.base.Predicate;
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 @Command(scope = "jclouds", name = "node-destroy-all", description = "Destroys all nodes.")
-public class NodeDestroyAllCommand extends ComputeCommandSupport {
+public class NodeDestroyAllCommand extends ComputeCommandWithOptions {
 
     @Override
     protected Object doExecute() throws Exception {

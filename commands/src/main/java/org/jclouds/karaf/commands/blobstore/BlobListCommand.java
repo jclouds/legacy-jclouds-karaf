@@ -28,7 +28,7 @@ import org.jclouds.blobstore.options.ListContainerOptions;
  * @author: iocanel
  */
 @Command(scope = "jclouds", name = "blobstore-list", description = "Lists all containers")
-public class BlobListCommand extends BlobStoreCommandSupport {
+public class BlobListCommand extends BlobStoreCommandWithOptions {
 
     private static final String LISTFORMAT = "%-40s %-40s";
 

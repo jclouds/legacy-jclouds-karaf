@@ -25,7 +25,7 @@ import org.jclouds.compute.ComputeService;
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 @Command(scope = "jclouds", name = "node-suspend", description = "Suspsends a node.")
-public class NodeSuspendCommand extends ComputeCommandSupport {
+public class NodeSuspendCommand extends ComputeCommandWithOptions {
 
     @Argument(name = "id", description = "The id of the node.", required = true, multiValued = false)
     private String id;

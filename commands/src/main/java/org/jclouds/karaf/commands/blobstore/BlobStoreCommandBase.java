@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2011, the original authors
  *
  * ====================================================================
@@ -35,7 +35,6 @@ import org.jclouds.karaf.cache.CacheProvider;
 import org.jclouds.karaf.utils.EnvHelper;
 import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
-import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.AuthorizationException;
 import org.slf4j.Logger;
@@ -57,31 +56,14 @@ import java.util.Map;
 /**
  * @author iocanel
  */
-public abstract class BlobStoreCommandSupport extends AbstractAction {
+public abstract class BlobStoreCommandBase extends AbstractAction {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BlobStoreCommandSupport.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BlobStoreCommandBase.class);
 
     public static final String PROVIDERFORMAT = "%-24s %-12s %-12s";
 
     private List<BlobStore> services = new ArrayList<BlobStore>();
-
-
     protected CacheProvider cacheProvider = new BasicCacheProvider();
-
-    @Option(name = "--provider", description = "The provider to use.")
-    protected String provider;
-
-    @Option(name = "--api", description = "The api to use.")
-    protected String api;
-
-    @Option(name = "--identity", description = "The identity to use for creating a blob store.")
-    protected String identity;
-
-    @Option(name = "--credential", description = "The credential to use for a blob store.")
-    protected String credential;
-
-    @Option(name = "--endpoint", description = "The endpoint to use for a blob store.")
-    protected String endpoint;
 
 
     @Override
@@ -100,78 +82,21 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
     }
 
     protected List<BlobStore> getBlobStoreServices() {
-        if (provider == null && api == null) {
-            return services;
-        } else {
-            try {
-                return Collections.singletonList(getBlobStore());
-            } catch (Throwable t) {
-                return Collections.emptyList();
-            }
-        }
-    }
-
-    protected BlobStore getBlobStore() {
-        if (services != null && services.size() == 1) {
-            return services.get(0);
-        }
-        BlobStore blobStore = null;
-        String providerValue = EnvHelper.getBlobStoreProvider(provider);
-        String apiValue = EnvHelper.getBlobStoreApi(api);
-        String identityValue = EnvHelper.getBlobStoreIdentity(identity);
-        String credentialValue = EnvHelper.getBlobStoreCredential(credential);
-        String endpointValue = EnvHelper.getBlobStoreEndpoint(endpoint);
-
-        boolean canCreateService = (!Strings.isNullOrEmpty(providerValue) || !Strings.isNullOrEmpty(apiValue))
-                && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);
-
-        String providerOrApiValue = !Strings.isNullOrEmpty(providerValue) ? providerValue : apiValue;
-
-        try {
-            blobStore = BlobStoreHelper.getBlobStore(providerOrApiValue, services);
-        } catch (Throwable t) {
-            if (!canCreateService) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("Insufficient information to create blobstore service:").append("\n");
-                if (providerOrApiValue == null) {
-                    sb.append("Missing provider or api. Please specify either using the --provider / --api options, or the JCLOUDS_BLOBSTORE_PROVIDER / JCLOUDS_BLOBSTORE_API environmental variables.").append("\n");
-                }
-                if (identityValue == null) {
-                    sb.append("Missing identity. Please specify either using the --identity option, or the JCLOUDS_BLOBSTORE_IDENTITY environmental variable.").append("\n");
-                }
-                if (credentialValue == null) {
-                    sb.append("Missing credential. Please specify either using the --credential option, or the JCLOUDS_BLOBSTORE_CREDENTIAL environmental variable.").append("\n");
-                }
-                throw new RuntimeException(sb.toString());
-            }
-        }
-        if (blobStore == null && canCreateService) {
-            try {
-                ContextBuilder builder = ContextBuilder.newBuilder(providerOrApiValue).credentials(identityValue, credentialValue).modules(ImmutableSet.<Module>of(new Log4JLoggingModule()));
-                if (!Strings.isNullOrEmpty(endpointValue)) {
-                    builder = builder.endpoint(endpoint);
-                }
-                BlobStoreContext context = builder.build(BlobStoreContext.class);
-                blobStore = context.getBlobStore();
-            } catch (Exception ex) {
-                throw new RuntimeException("Failed to create service:" + ex.getMessage());
-            }
-        }
-        return blobStore;
+        return services;
     }
 
     /**
      * Reads an Object from the blob store.
      *
+     * @param blobStore
      * @param containerName
      * @param blobName
      * @return
      */
-    public Object read(String containerName, String blobName) {
+    public Object read(BlobStore blobStore, String containerName, String blobName) {
         Object result = null;
         ObjectInputStream ois = null;
 
-        BlobStore blobStore = getBlobStore();
         blobStore.createContainerInLocation(null, containerName);
 
         InputStream is = blobStore.getBlob(containerName, blobName).getPayload().getInput();
@@ -203,7 +128,7 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
 
 
     /**
-     * Returns an InputStream to a {@link Blob}.
+     * Returns an InputStream to a {@link org.jclouds.blobstore.domain.Blob}.
      *
      * @param containerName
      * @param blobName
@@ -218,28 +143,28 @@ public abstract class BlobStoreCommandSupport extends AbstractAction {
     }
 
     /**
-     * Writes to the {@link Blob} by serializing an Object.
+     * Writes to the {@link org.jclouds.blobstore.domain.Blob} by serializing an Object.
      *
+     * @param blobStore
      * @param containerName
      * @param blobName
      * @param object
      */
-    public void write(String containerName, String blobName, Object object) {
-        BlobStore blobStore = getBlobStore();
+    public void write(BlobStore blobStore, String containerName, String blobName, Object object) {
         Blob blob = blobStore.blobBuilder(blobName).build();
         blob.setPayload(toBytes(object));
         blobStore.putBlob(containerName, blob);
     }
 
     /**
-     * Writes to the {@link Blob} using an InputStream.
+     * Writes to the {@link org.jclouds.blobstore.domain.Blob} using an InputStream.
      *
+     * @param blobStore
      * @param bucket
      * @param blobName
      * @param is
      */
-    public void write(String bucket, String blobName, InputStream is) {
-        BlobStore blobStore = getBlobStore();
+    public void write(BlobStore blobStore, String bucket, String blobName, InputStream is) {
         try {
             if (blobName.contains("/")) {
                 String directory = BlobStoreUtils.parseDirectoryFromPath(blobName);

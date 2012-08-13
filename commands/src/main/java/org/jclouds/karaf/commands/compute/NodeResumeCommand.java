@@ -25,7 +25,7 @@ import org.jclouds.compute.ComputeService;
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 @Command(scope = "jclouds", name = "node-resume", description = "Resumes a node.")
-public class NodeResumeCommand extends ComputeCommandSupport {
+public class NodeResumeCommand extends ComputeCommandWithOptions {
 
     @Argument(name = "id", description = "The id of the node.", required = true, multiValued = false)
     private String id;

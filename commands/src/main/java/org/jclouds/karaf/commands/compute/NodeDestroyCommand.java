@@ -27,7 +27,7 @@ import java.util.List;
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 @Command(scope = "jclouds", name = "node-destroy", description = "Destroys the specified nodes.")
-public class NodeDestroyCommand extends ComputeCommandSupport {
+public class NodeDestroyCommand extends ComputeCommandWithOptions {
 
     @Argument(name = "id", description = "The ids of the nodes to destroy.", required = true, multiValued = true)
     private List<String> ids;

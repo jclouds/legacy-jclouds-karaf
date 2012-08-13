@@ -24,7 +24,7 @@ import org.osgi.service.cm.ConfigurationAdmin;
 import java.io.IOException;
 import java.util.Dictionary;
 
-public abstract class ComputeServiceCommand extends ComputeCommandSupport {
+public abstract class ComputeServiceCommand extends ComputeCommandWithOptions {
 
     protected static final String FACTORY_FILTER = "(service.factoryPid=%s)";
 

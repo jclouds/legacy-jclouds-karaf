@@ -179,7 +179,6 @@
         </command>
         <command name="jclouds/blobstore-service-destroy">
             <action class="org.jclouds.karaf.commands.blobstore.BlobStoreDestroyCommand">
-                <property name="bundleContext" ref="blueprintBundleContext"/>
                 <property name="configAdmin" ref="configAdmin"/>
             </action>
         </command>

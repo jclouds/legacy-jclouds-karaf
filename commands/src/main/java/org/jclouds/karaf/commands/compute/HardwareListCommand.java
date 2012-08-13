@@ -24,7 +24,7 @@ import org.jclouds.compute.ComputeService;
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 @Command(scope = "jclouds", name = "hardware-list", description = "Lists the available hardware for the provider.")
-public class HardwareListCommand extends ComputeCommandSupport {
+public class HardwareListCommand extends ComputeCommandWithOptions {
 
     @Override
     protected Object doExecute() throws Exception {

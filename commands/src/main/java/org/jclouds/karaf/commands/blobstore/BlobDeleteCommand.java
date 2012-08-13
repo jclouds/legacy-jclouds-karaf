@@ -30,7 +30,7 @@ import org.jclouds.blobstore.BlobStore;
  * @author: iocanel
  */
 @Command(scope = "jclouds", name = "blobstore-delete", description = "Deletes a container")
-public class BlobDeleteCommand extends BlobStoreCommandSupport {
+public class BlobDeleteCommand extends BlobStoreCommandWithOptions {
 
     @Argument(index = 0, name = "containerNames", description = "The name of the container", required = true, multiValued = true)
     List<String> containerNames = new LinkedList<String>();

@@ -34,7 +34,7 @@ import com.google.common.base.Predicate;
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 @Command(scope = "jclouds", name = "group-destroy", description = "Destroys a group of nodes.")
-public class GroupDestroyCommand extends ComputeCommandSupport {
+public class GroupDestroyCommand extends ComputeCommandWithOptions {
 
     @Argument(index = 0, name = "group", description = "The groups of nodes to destroy.", required = true, multiValued = true)
     private List<String> groups;

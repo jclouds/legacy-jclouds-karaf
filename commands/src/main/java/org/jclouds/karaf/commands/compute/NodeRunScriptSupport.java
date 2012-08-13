@@ -46,7 +46,7 @@ import com.google.common.base.Predicate;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-public abstract class NodeRunScriptSupport extends ComputeCommandSupport {
+public abstract class NodeRunScriptSupport extends ComputeCommandWithOptions {
 
     @Option(name = "-u", aliases = "--user", description = "The user that will run the script.", required = false, multiValued = false)
     private String user;

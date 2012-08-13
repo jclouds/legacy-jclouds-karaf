@@ -35,7 +35,7 @@ import org.jclouds.blobstore.BlobStore;
  * @author: iocanel
  */
 @Command(scope = "jclouds", name = "blobstore-read", description = "Reads data from the blobstore")
-public class BlobReadCommand extends BlobStoreCommandSupport {
+public class BlobReadCommand extends BlobStoreCommandWithOptions {
 
     @Argument(index = 0, name = "containerName", description = "The name of the container", required = true, multiValued = false)
     String containerName;
