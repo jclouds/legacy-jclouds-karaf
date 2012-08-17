@@ -25,8 +25,8 @@ import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeState;
+import org.jclouds.javax.annotation.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Set;
 
 /**

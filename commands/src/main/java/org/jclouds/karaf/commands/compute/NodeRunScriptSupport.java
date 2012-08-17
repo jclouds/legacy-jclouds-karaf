@@ -29,8 +29,6 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Nullable;
-
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ComputeMetadata;
@@ -38,6 +36,7 @@ import org.jclouds.compute.domain.ExecResponse;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeState;
 import org.jclouds.domain.LoginCredentials;
+import org.jclouds.javax.annotation.Nullable;
 
 import org.jclouds.karaf.utils.EnvHelper;
 
