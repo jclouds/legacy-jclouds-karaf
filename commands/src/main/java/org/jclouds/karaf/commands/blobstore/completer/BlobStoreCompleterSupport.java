@@ -34,69 +34,65 @@ import com.google.common.collect.Multimap;
 
 public abstract class BlobStoreCompleterSupport implements Completer, Cacheable<BlobStore> {
 
-    protected final StringsCompleter delegate = new StringsCompleter();
-    protected Multimap<String,String> cache;
-    protected CacheProvider cacheProvider;
+   protected final StringsCompleter delegate = new StringsCompleter();
+   protected Multimap<String, String> cache;
+   protected CacheProvider cacheProvider;
 
+   @Override
+   public int complete(String buffer, int cursor, List<String> candidates) {
+      delegate.getStrings().clear();
+      for (String item : cache.values()) {
+         if (buffer == null || item.startsWith(buffer)) {
+            delegate.getStrings().add(item);
+         }
+      }
+      return delegate.complete(buffer, cursor, candidates);
+   }
 
-    @Override
-    public int complete(String buffer, int cursor, List<String> candidates) {
-        delegate.getStrings().clear();
-        for (String item : cache.values()) {
-            if (buffer == null || item.startsWith(buffer)) {
-                delegate.getStrings().add(item);
+   protected Set<String> listContainers(BlobStore blobStore) {
+      Set<String> containers = new LinkedHashSet<String>();
+      if (blobStore != null) {
+         PageSet<? extends StorageMetadata> storageMetadatas = blobStore.list();
+         if (storageMetadatas != null && !storageMetadatas.isEmpty()) {
+            for (StorageMetadata metadata : storageMetadatas) {
+               containers.add(metadata.getName());
             }
-        }
-        return delegate.complete(buffer, cursor, candidates);
-    }
+         }
+      }
+      return containers;
+   }
 
-
-     protected Set<String> listContainers(BlobStore blobStore) {
-        Set<String> containers = new LinkedHashSet<String>();
-        if (blobStore != null) {
-            PageSet<? extends StorageMetadata> storageMetadatas = blobStore.list();
-            if (storageMetadatas != null && !storageMetadatas.isEmpty()) {
-                for (StorageMetadata metadata : storageMetadatas) {
-                    containers.add(metadata.getName());
-                }
+   protected Set<String> listBlobs(BlobStore blobStore, String container) {
+      Set<String> blobs = new LinkedHashSet<String>();
+      if (blobStore != null && blobStore.containerExists(container)) {
+         PageSet<? extends StorageMetadata> storageMetadatas = blobStore.list(container);
+         if (storageMetadatas != null && !storageMetadatas.isEmpty()) {
+            for (StorageMetadata metadata : storageMetadatas) {
+               blobs.add(metadata.getName());
             }
-        }
-        return containers;
-    }
+         }
+      }
+      return blobs;
+   }
 
+   @Override
+   public void updateOnRemoved(BlobStore blobStore) {
+      cache.removeAll(blobStore.getContext().unwrap().getId());
+   }
 
-     protected Set<String> listBlobs(BlobStore blobStore, String container) {
-        Set<String> blobs = new LinkedHashSet<String>();
-        if (blobStore != null && blobStore.containerExists(container)) {
-            PageSet<? extends StorageMetadata> storageMetadatas = blobStore.list(container);
-            if (storageMetadatas != null && !storageMetadatas.isEmpty()) {
-                for (StorageMetadata metadata : storageMetadatas) {
-                    blobs.add(metadata.getName());
-                }
-            }
-        }
-        return blobs;
-    }
+   public Multimap<String, String> getCache() {
+      return cache;
+   }
 
-    @Override
-    public void updateOnRemoved(BlobStore blobStore) {
-        cache.removeAll(blobStore.getContext().unwrap().getId());
-    }
+   public void setCache(Multimap<String, String> cache) {
+      this.cache = cache;
+   }
 
+   public CacheProvider getCacheProvider() {
+      return cacheProvider;
+   }
 
-    public Multimap<String,String> getCache() {
-        return cache;
-    }
-
-    public void setCache(Multimap<String,String> cache) {
-        this.cache = cache;
-    }
-
-    public CacheProvider getCacheProvider() {
-        return cacheProvider;
-    }
-
-    public void setCacheProvider(CacheProvider cacheProvider) {
-        this.cacheProvider = cacheProvider;
-    }
+   public void setCacheProvider(CacheProvider cacheProvider) {
+      this.cacheProvider = cacheProvider;
+   }
 }

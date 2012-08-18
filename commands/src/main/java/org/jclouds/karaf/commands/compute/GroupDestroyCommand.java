@@ -35,40 +35,42 @@ import com.google.common.base.Predicate;
 @Command(scope = "jclouds", name = "group-destroy", description = "Destroys a group of nodes.")
 public class GroupDestroyCommand extends ComputeCommandWithOptions {
 
-    @Argument(index = 0, name = "group", description = "The groups of nodes to destroy.", required = true, multiValued = true)
-    private List<String> groups;
+   @Argument(index = 0, name = "group", description = "The groups of nodes to destroy.", required = true, multiValued = true)
+   private List<String> groups;
 
-    @Override
-    protected Object doExecute() throws Exception {
-        ComputeService service = getComputeService();
-        if (service == null) {
-            System.out.println("Failed to find or create a compute service.");
-            return null;
-        }
-        Set<NodeMetadata> aggregatedMetadata = new LinkedHashSet<NodeMetadata>();
+   @Override
+   protected Object doExecute() throws Exception {
+      ComputeService service = getComputeService();
+      if (service == null) {
+         System.out.println("Failed to find or create a compute service.");
+         return null;
+      }
+      Set<NodeMetadata> aggregatedMetadata = new LinkedHashSet<NodeMetadata>();
 
-        for (final String group : groups) {
-            Set<? extends NodeMetadata> nodeMetadatas = service.destroyNodesMatching(new Predicate<NodeMetadata>() {
-                @Override
-                public boolean apply(@Nullable NodeMetadata input) {
-                    return input.getGroup().contains(group);
-                }
-            });
-
-            for (NodeMetadata node : nodeMetadatas) {
-                cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(service.getContext().unwrap().getId(), node.getId());
-                cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(service.getContext().unwrap().getId(), node.getId());
-                cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(service.getContext().unwrap().getId(), node.getId());
-                aggregatedMetadata.add(node);
+      for (final String group : groups) {
+         Set<? extends NodeMetadata> nodeMetadatas = service.destroyNodesMatching(new Predicate<NodeMetadata>() {
+            @Override
+            public boolean apply(@Nullable NodeMetadata input) {
+               return input.getGroup().contains(group);
             }
-        }
+         });
 
-        if (!aggregatedMetadata.isEmpty()) {
-            System.out.println("Destroyed nodes:");
-            printNodes(aggregatedMetadata, "", System.out);
-        }
+         for (NodeMetadata node : nodeMetadatas) {
+            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(
+                     service.getContext().unwrap().getId(), node.getId());
+            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(
+                     service.getContext().unwrap().getId(), node.getId());
+            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(
+                     service.getContext().unwrap().getId(), node.getId());
+            aggregatedMetadata.add(node);
+         }
+      }
 
+      if (!aggregatedMetadata.isEmpty()) {
+         System.out.println("Destroyed nodes:");
+         printNodes(aggregatedMetadata, "", System.out);
+      }
 
-        return null;
-    }
+      return null;
+   }
 }

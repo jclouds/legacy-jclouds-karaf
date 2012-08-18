@@ -24,42 +24,44 @@ import org.jclouds.karaf.core.ComputeProviderOrApiRegistry;
 @Command(scope = "jclouds", name = "compute-service-list", description = "Lists the Compute APIs and Providers", detailedDescription = "classpath:compute-service-list.txt")
 public class ComputeListCommand extends ComputeCommandBase {
 
-    private ComputeProviderOrApiRegistry computeProviderOrApiRegistry;
+   private ComputeProviderOrApiRegistry computeProviderOrApiRegistry;
 
-    @Override
-    protected Object doExecute() throws Exception {
-        try {
-            if (computeProviderOrApiRegistry.getInstalledApis() != null && !computeProviderOrApiRegistry.getInstalledApis().isEmpty()) {
-                System.out.println("Compute APIs:");
-                System.out.println("-------------");
-                printComputeApis(computeProviderOrApiRegistry.getInstalledApis(), getComputeServices(), "", System.out);
-            } else {
-                System.out.println("No compute APIs found.");
-            }
+   @Override
+   protected Object doExecute() throws Exception {
+      try {
+         if (computeProviderOrApiRegistry.getInstalledApis() != null
+                  && !computeProviderOrApiRegistry.getInstalledApis().isEmpty()) {
+            System.out.println("Compute APIs:");
+            System.out.println("-------------");
+            printComputeApis(computeProviderOrApiRegistry.getInstalledApis(), getComputeServices(), "", System.out);
+         } else {
+            System.out.println("No compute APIs found.");
+         }
 
-            System.out.println();
-            System.out.println();
+         System.out.println();
+         System.out.println();
 
-            System.out.println("Compute Providers:");
-            System.out.println("------------------");
-            if (computeProviderOrApiRegistry.getInstalledProviders() != null && !computeProviderOrApiRegistry.getInstalledProviders().isEmpty()) {
-                printComputeProviders(computeProviderOrApiRegistry.getInstalledProviders(), getComputeServices(), "", System.out);
-            } else {
-                System.out.println("No compute providers found.");
-            }
+         System.out.println("Compute Providers:");
+         System.out.println("------------------");
+         if (computeProviderOrApiRegistry.getInstalledProviders() != null
+                  && !computeProviderOrApiRegistry.getInstalledProviders().isEmpty()) {
+            printComputeProviders(computeProviderOrApiRegistry.getInstalledProviders(), getComputeServices(), "",
+                     System.out);
+         } else {
+            System.out.println("No compute providers found.");
+         }
 
+      } catch (Exception ex) {
+         // noope
+      }
+      return null;
+   }
 
-        } catch (Exception ex) {
-            //noope
-        }
-        return null;
-    }
+   public ComputeProviderOrApiRegistry getComputeProviderOrApiRegistry() {
+      return computeProviderOrApiRegistry;
+   }
 
-    public ComputeProviderOrApiRegistry getComputeProviderOrApiRegistry() {
-        return computeProviderOrApiRegistry;
-    }
-
-    public void setComputeProviderOrApiRegistry(ComputeProviderOrApiRegistry computeProviderOrApiRegistry) {
-        this.computeProviderOrApiRegistry = computeProviderOrApiRegistry;
-    }
+   public void setComputeProviderOrApiRegistry(ComputeProviderOrApiRegistry computeProviderOrApiRegistry) {
+      this.computeProviderOrApiRegistry = computeProviderOrApiRegistry;
+   }
 }

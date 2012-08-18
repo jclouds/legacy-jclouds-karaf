@@ -18,40 +18,40 @@
 
 package org.jclouds.karaf.commands.compute.completer;
 
+import java.util.List;
+
 import org.apache.karaf.shell.console.Completer;
 import org.apache.karaf.shell.console.completer.StringsCompleter;
 import org.jclouds.apis.Apis;
 import org.jclouds.compute.ComputeService;
 
-import java.util.List;
-
 public class ComputeApiCompleter implements Completer {
 
-    private final StringsCompleter delegate = new StringsCompleter();
-    private List<? extends ComputeService> computeServices;
+   private final StringsCompleter delegate = new StringsCompleter();
+   private List<? extends ComputeService> computeServices;
 
-    @Override
-    public int complete(String buffer, int cursor, List<String> candidates) {
-        try {
-                if (computeServices != null) {
-                for (ComputeService computeService : computeServices) {
-                    String id = computeService.getContext().unwrap().getId();
-                    if (Apis.withId(id) != null) {
-                        delegate.getStrings().add(computeService.getContext().unwrap().getId());
-                    }
-                }
+   @Override
+   public int complete(String buffer, int cursor, List<String> candidates) {
+      try {
+         if (computeServices != null) {
+            for (ComputeService computeService : computeServices) {
+               String id = computeService.getContext().unwrap().getId();
+               if (Apis.withId(id) != null) {
+                  delegate.getStrings().add(computeService.getContext().unwrap().getId());
+               }
             }
-        } catch (Exception ex) {
-            //noop
-        }
-        return delegate.complete(buffer,cursor,candidates);
-    }
+         }
+      } catch (Exception ex) {
+         // noop
+      }
+      return delegate.complete(buffer, cursor, candidates);
+   }
 
-    public List<? extends ComputeService> getComputeServices() {
-        return computeServices;
-    }
+   public List<? extends ComputeService> getComputeServices() {
+      return computeServices;
+   }
 
-    public void setComputeServices(List<? extends ComputeService> computeServices) {
-        this.computeServices = computeServices;
-    }
+   public void setComputeServices(List<? extends ComputeService> computeServices) {
+      this.computeServices = computeServices;
+   }
 }

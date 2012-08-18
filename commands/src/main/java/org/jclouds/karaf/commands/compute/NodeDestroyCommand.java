@@ -17,11 +17,11 @@
  */
 package org.jclouds.karaf.commands.compute;
 
+import java.util.List;
+
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.jclouds.compute.ComputeService;
-
-import java.util.List;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
@@ -29,25 +29,28 @@ import java.util.List;
 @Command(scope = "jclouds", name = "node-destroy", description = "Destroys the specified nodes.")
 public class NodeDestroyCommand extends ComputeCommandWithOptions {
 
-    @Argument(name = "id", description = "The ids of the nodes to destroy.", required = true, multiValued = true)
-    private List<String> ids;
+   @Argument(name = "id", description = "The ids of the nodes to destroy.", required = true, multiValued = true)
+   private List<String> ids;
 
-    @Override
-    protected Object doExecute() throws Exception {
-        ComputeService service = null;
-        try {
-            service = getComputeService();
-        } catch (Throwable t) {
-            System.err.println(t.getMessage());
-            return null;
-        }
+   @Override
+   protected Object doExecute() throws Exception {
+      ComputeService service = null;
+      try {
+         service = getComputeService();
+      } catch (Throwable t) {
+         System.err.println(t.getMessage());
+         return null;
+      }
 
-        for (String id : ids) {
-            service.destroyNode(id);
-            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(service.getContext().unwrap().getId(), id);
-            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(service.getContext().unwrap().getId(), id);
-            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(service.getContext().unwrap().getId(), id);
-        }
-        return null;
-    }
+      for (String id : ids) {
+         service.destroyNode(id);
+         cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(
+                  service.getContext().unwrap().getId(), id);
+         cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(
+                  service.getContext().unwrap().getId(), id);
+         cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(
+                  service.getContext().unwrap().getId(), id);
+      }
+      return null;
+   }
 }

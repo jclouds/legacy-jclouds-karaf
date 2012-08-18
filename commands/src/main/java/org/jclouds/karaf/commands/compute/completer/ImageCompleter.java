@@ -27,19 +27,19 @@ import org.jclouds.karaf.commands.compute.Constants;
 
 public class ImageCompleter extends ComputeCompleterSupport implements Completer {
 
-    public void init() {
-        cache = cacheProvider.getProviderCacheForType(Constants.IMAGE_CACHE);
-    }
+   public void init() {
+      cache = cacheProvider.getProviderCacheForType(Constants.IMAGE_CACHE);
+   }
 
-    @Override
-    public void updateOnAdded(ComputeService computeService) {
-        if (computeService != null) {
-            Set<? extends Image> images = computeService.listImages();
-            if (images != null) {
-                for (Image image : images) {
-                    cache.put(computeService.getContext().unwrap().getId(),image.getId());
-                }
+   @Override
+   public void updateOnAdded(ComputeService computeService) {
+      if (computeService != null) {
+         Set<? extends Image> images = computeService.listImages();
+         if (images != null) {
+            for (Image image : images) {
+               cache.put(computeService.getContext().unwrap().getId(), image.getId());
             }
-        }
-    }
+         }
+      }
+   }
 }

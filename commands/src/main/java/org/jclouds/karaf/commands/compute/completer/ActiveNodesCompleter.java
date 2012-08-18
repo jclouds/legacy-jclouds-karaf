@@ -19,17 +19,16 @@
 package org.jclouds.karaf.commands.compute.completer;
 
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.domain.NodeState;
 import org.jclouds.karaf.commands.compute.Constants;
 
-public class ActiveNodesCompleter extends NodesCompleter  {
+public class ActiveNodesCompleter extends NodesCompleter {
 
-    public void init() {
-        cache = cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE);
-    }
+   public void init() {
+      cache = cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE);
+   }
 
-    @Override
-    public boolean apply(NodeMetadata node) {
-        return node.getState().equals(NodeState.RUNNING);
-    }
+   @Override
+   public boolean apply(NodeMetadata node) {
+      return node.getStatus().equals(NodeMetadata.Status.RUNNING);
+   }
 }

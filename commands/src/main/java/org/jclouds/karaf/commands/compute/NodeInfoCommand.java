@@ -17,11 +17,12 @@
  */
 package org.jclouds.karaf.commands.compute;
 
-import com.google.common.collect.Sets;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.NodeMetadata;
+
+import com.google.common.collect.Sets;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
@@ -29,21 +30,21 @@ import org.jclouds.compute.domain.NodeMetadata;
 @Command(scope = "jclouds", name = "node-info", description = "Displays detailed information about a node.")
 public class NodeInfoCommand extends ComputeCommandWithOptions {
 
-    @Argument(name = "id", description = "The id of the node.", required = true, multiValued = false)
-    private String id;
+   @Argument(name = "id", description = "The id of the node.", required = true, multiValued = false)
+   private String id;
 
-    @Override
-    protected Object doExecute() throws Exception {
-        ComputeService service = null;
-        try {
-            service = getComputeService();
-        } catch (Throwable t) {
-            System.err.println(t.getMessage());
-            return null;
-        }
+   @Override
+   protected Object doExecute() throws Exception {
+      ComputeService service = null;
+      try {
+         service = getComputeService();
+      } catch (Throwable t) {
+         System.err.println(t.getMessage());
+         return null;
+      }
 
-        NodeMetadata node = service.getNodeMetadata(id);
-        printNodeInfo(Sets.newHashSet(node), true, System.out);
-        return null;
-    }
+      NodeMetadata node = service.getNodeMetadata(id);
+      printNodeInfo(Sets.newHashSet(node), true, System.out);
+      return null;
+   }
 }

@@ -30,21 +30,21 @@ import org.jclouds.blobstore.BlobStore;
 @Command(scope = "jclouds", name = "blobstore-create", description = "Creates a container")
 public class BlobCreateCommand extends BlobStoreCommandWithOptions {
 
-    @Argument(index = 0, name = "containerNames", description = "The name of the container", required = true, multiValued = true)
-    List<String> containerNames;
+   @Argument(index = 0, name = "containerNames", description = "The name of the container", required = true, multiValued = true)
+   List<String> containerNames;
 
-    @Override
-    protected Object doExecute() throws Exception {
-        BlobStore blobStore = null;
-        try {
-            blobStore = getBlobStore();
-        } catch (Throwable t) {
-            System.err.println(t.getMessage());
-            return null;
-        }
-        for (String container : containerNames) {
-            blobStore.createContainerInLocation(null, container);
-        }
-        return null;
-    }
+   @Override
+   protected Object doExecute() throws Exception {
+      BlobStore blobStore = null;
+      try {
+         blobStore = getBlobStore();
+      } catch (Throwable t) {
+         System.err.println(t.getMessage());
+         return null;
+      }
+      for (String container : containerNames) {
+         blobStore.createContainerInLocation(null, container);
+      }
+      return null;
+   }
 }

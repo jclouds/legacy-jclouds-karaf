@@ -26,17 +26,17 @@ import org.jclouds.compute.ComputeService;
 @Command(scope = "jclouds", name = "location-list", description = "Lists the available locations.")
 public class LocationListCommand extends ComputeCommandWithOptions {
 
-    @Override
-    protected Object doExecute() throws Exception {
-        ComputeService service = null;
-        try {
-            service = getComputeService();
-        } catch (Throwable t) {
-            System.err.println(t.getMessage());
-            return null;
-        }
-        printLocations(service, "", System.out);
-        return null;
-    }
+   @Override
+   protected Object doExecute() throws Exception {
+      ComputeService service = null;
+      try {
+         service = getComputeService();
+      } catch (Throwable t) {
+         System.err.println(t.getMessage());
+         return null;
+      }
+      printLocations(service, "", System.out);
+      return null;
+   }
 
 }

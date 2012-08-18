@@ -27,19 +27,19 @@ import org.jclouds.compute.ComputeService;
 @Command(scope = "jclouds", name = "node-resume", description = "Resumes a node.")
 public class NodeResumeCommand extends ComputeCommandWithOptions {
 
-    @Argument(name = "id", description = "The id of the node.", required = true, multiValued = false)
-    private String id;
+   @Argument(name = "id", description = "The id of the node.", required = true, multiValued = false)
+   private String id;
 
-    @Override
-    protected Object doExecute() throws Exception {
-        ComputeService service = null;
-        try {
-            service = getComputeService();
-        } catch (Throwable t) {
-            System.err.println(t.getMessage());
-            return null;
-        }
-        service.resumeNode(id);
-        return null;
-    }
+   @Override
+   protected Object doExecute() throws Exception {
+      ComputeService service = null;
+      try {
+         service = getComputeService();
+      } catch (Throwable t) {
+         System.err.println(t.getMessage());
+         return null;
+      }
+      service.resumeNode(id);
+      return null;
+   }
 }

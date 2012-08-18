@@ -26,17 +26,17 @@ import org.jclouds.compute.ComputeService;
 @Command(scope = "jclouds", name = "hardware-list", description = "Lists the available hardware for the provider.")
 public class HardwareListCommand extends ComputeCommandWithOptions {
 
-    @Override
-    protected Object doExecute() throws Exception {
-        ComputeService service = null;
-        try {
-            service = getComputeService();
-        } catch (Throwable t) {
-            System.err.println(t.getMessage());
-            return null;
-        }
-        printHardwares(service.listHardwareProfiles(), "", System.out);
-        return null;
-    }
+   @Override
+   protected Object doExecute() throws Exception {
+      ComputeService service = null;
+      try {
+         service = getComputeService();
+      } catch (Throwable t) {
+         System.err.println(t.getMessage());
+         return null;
+      }
+      printHardwares(service.listHardwareProfiles(), "", System.out);
+      return null;
+   }
 
 }

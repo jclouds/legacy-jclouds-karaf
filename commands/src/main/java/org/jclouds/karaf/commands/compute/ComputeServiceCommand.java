@@ -18,56 +18,58 @@
 
 package org.jclouds.karaf.commands.compute;
 
-import org.osgi.service.cm.Configuration;
-import org.osgi.service.cm.ConfigurationAdmin;
-
 import java.io.IOException;
 import java.util.Dictionary;
 
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
+
 public abstract class ComputeServiceCommand extends ComputeCommandWithOptions {
 
-    protected static final String FACTORY_FILTER = "(service.factoryPid=%s)";
+   protected static final String FACTORY_FILTER = "(service.factoryPid=%s)";
 
-    protected ConfigurationAdmin configAdmin;
+   protected ConfigurationAdmin configAdmin;
 
-    /**
-     * Finds a {@link org.osgi.service.cm.Configuration} if exists, or creates a new one.
-     *
-     * @param configurationAdmin
-     * @param factoryPid
-     * @param provider
-     * @param api
-     * @return
-     * @throws java.io.IOException
-     */
-    protected Configuration findOrCreateFactoryConfiguration(ConfigurationAdmin configurationAdmin, String factoryPid, String provider, String api) throws IOException {
-        Configuration configuration = null;
-        if (configurationAdmin != null) {
-            try {
-                Configuration[] configurations = configurationAdmin.listConfigurations(String.format(FACTORY_FILTER, factoryPid));
-                if (configurations != null) {
-                    for (Configuration conf : configurations) {
-                        Dictionary dictionary = conf.getProperties();
-                        if (dictionary != null && provider != null && provider.equals(dictionary.get("provider"))) {
-                            return conf;
-                        } else if (dictionary != null && api != null && api.equals(dictionary.get("api"))) {
-                            return conf;
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                //noop
+   /**
+    * Finds a {@link org.osgi.service.cm.Configuration} if exists, or creates a new one.
+    * 
+    * @param configurationAdmin
+    * @param factoryPid
+    * @param provider
+    * @param api
+    * @return
+    * @throws java.io.IOException
+    */
+   protected Configuration findOrCreateFactoryConfiguration(ConfigurationAdmin configurationAdmin, String factoryPid,
+            String provider, String api) throws IOException {
+      Configuration configuration = null;
+      if (configurationAdmin != null) {
+         try {
+            Configuration[] configurations = configurationAdmin.listConfigurations(String.format(FACTORY_FILTER,
+                     factoryPid));
+            if (configurations != null) {
+               for (Configuration conf : configurations) {
+                  Dictionary<?, ?> dictionary = conf.getProperties();
+                  if (dictionary != null && provider != null && provider.equals(dictionary.get("provider"))) {
+                     return conf;
+                  } else if (dictionary != null && api != null && api.equals(dictionary.get("api"))) {
+                     return conf;
+                  }
+               }
             }
-            configuration = configurationAdmin.createFactoryConfiguration(factoryPid, null);
-        }
-        return configuration;
-    }
+         } catch (Exception e) {
+            // noop
+         }
+         configuration = configurationAdmin.createFactoryConfiguration(factoryPid, null);
+      }
+      return configuration;
+   }
 
-    public ConfigurationAdmin getConfigAdmin() {
-        return configAdmin;
-    }
+   public ConfigurationAdmin getConfigAdmin() {
+      return configAdmin;
+   }
 
-    public void setConfigAdmin(ConfigurationAdmin configAdmin) {
-        this.configAdmin = configAdmin;
-    }
+   public void setConfigAdmin(ConfigurationAdmin configAdmin) {
+      this.configAdmin = configAdmin;
+   }
 }

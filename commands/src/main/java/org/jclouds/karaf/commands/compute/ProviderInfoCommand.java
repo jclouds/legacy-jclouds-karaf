@@ -26,33 +26,33 @@ import org.jclouds.compute.ComputeService;
 @Command(scope = "jclouds", name = "provider-info")
 public class ProviderInfoCommand extends ComputeCommandWithOptions {
 
-    @Override
-    protected Object doExecute() throws Exception {
-        for (ComputeService service : getComputeServices()) {
-            String txt = "Instances on " + service.getContext().unwrap().getId();
-            System.out.println(txt);
-            for (int i = 0; i < txt.length(); i++) {
-                System.out.print('=');
-            }
-            System.out.println();
+   @Override
+   protected Object doExecute() throws Exception {
+      for (ComputeService service : getComputeServices()) {
+         String txt = "Instances on " + service.getContext().unwrap().getId();
+         System.out.println(txt);
+         for (int i = 0; i < txt.length(); i++) {
+            System.out.print('=');
+         }
+         System.out.println();
 
-            System.out.println("  Locations");
-            System.out.println("  ---------");
-            printLocations(service, "    ", System.out);
+         System.out.println("  Locations");
+         System.out.println("  ---------");
+         printLocations(service, "    ", System.out);
 
-            System.out.println("  Images");
-            System.out.println("  ------");
-            printImages(service.listImages(), "    ", System.out);
+         System.out.println("  Images");
+         System.out.println("  ------");
+         printImages(service.listImages(), "    ", System.out);
 
-            System.out.println("  Hardware");
-            System.out.println("  --------");
-            printHardwares(service.listHardwareProfiles(), "    ", System.out);
+         System.out.println("  Hardware");
+         System.out.println("  --------");
+         printHardwares(service.listHardwareProfiles(), "    ", System.out);
 
-            System.out.println("  Nodes");
-            System.out.println("  -----");
-            printNodes(service.listNodes(), "    ", System.out);
-        }
-        return null;
-    }
+         System.out.println("  Nodes");
+         System.out.println("  -----");
+         printNodes(service.listNodes(), "    ", System.out);
+      }
+      return null;
+   }
 
 }

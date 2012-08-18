@@ -32,35 +32,36 @@ import org.jclouds.blobstore.BlobStore;
 @Command(scope = "jclouds", name = "blobstore-delete", description = "Deletes a container")
 public class BlobDeleteCommand extends BlobStoreCommandWithOptions {
 
-    @Argument(index = 0, name = "containerNames", description = "The name of the container", required = true, multiValued = true)
-    List<String> containerNames = new LinkedList<String>();
+   @Argument(index = 0, name = "containerNames", description = "The name of the container", required = true, multiValued = true)
+   List<String> containerNames = new LinkedList<String>();
 
-    @Option(name = "-b", aliases = "--blob", multiValued = true)
-    List<String> blobNames = new LinkedList<String>();
+   @Option(name = "-b", aliases = "--blob", multiValued = true)
+   List<String> blobNames = new LinkedList<String>();
 
-
-    @Override
-    protected Object doExecute() throws Exception {
-        BlobStore blobStore = null;
-        try {
-            blobStore = getBlobStore();
-        } catch (Throwable t) {
-            System.err.println(t.getMessage());
-            return null;
-        }
-        for (String container : containerNames) {
-            if (!blobNames.isEmpty()) {
-                for (String blobName : blobNames) {
-                    if (getBlobStore().blobExists(container, blobName)) {
-                        getBlobStore().removeBlob(container, blobName);
-                        cacheProvider.getProviderCacheForType("blob").remove(blobStore.getContext().unwrap().getId(),blobName);
-                    }
-                }
-            } else {
-                getBlobStore().deleteContainer(container);
-                cacheProvider.getProviderCacheForType("container").remove(blobStore.getContext().unwrap().getId(),container);
+   @Override
+   protected Object doExecute() throws Exception {
+      BlobStore blobStore = null;
+      try {
+         blobStore = getBlobStore();
+      } catch (Throwable t) {
+         System.err.println(t.getMessage());
+         return null;
+      }
+      for (String container : containerNames) {
+         if (!blobNames.isEmpty()) {
+            for (String blobName : blobNames) {
+               if (getBlobStore().blobExists(container, blobName)) {
+                  getBlobStore().removeBlob(container, blobName);
+                  cacheProvider.getProviderCacheForType("blob").remove(blobStore.getContext().unwrap().getId(),
+                           blobName);
+               }
             }
-        }
-        return null;
-    }
+         } else {
+            getBlobStore().deleteContainer(container);
+            cacheProvider.getProviderCacheForType("container").remove(blobStore.getContext().unwrap().getId(),
+                     container);
+         }
+      }
+      return null;
+   }
 }

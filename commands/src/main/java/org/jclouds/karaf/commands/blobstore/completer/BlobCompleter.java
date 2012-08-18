@@ -22,14 +22,14 @@ import org.jclouds.blobstore.BlobStore;
 
 public class BlobCompleter extends BlobStoreCompleterSupport {
 
-    public void init() {
-        cache = cacheProvider.getProviderCacheForType("blob");
-    }
+   public void init() {
+      cache = cacheProvider.getProviderCacheForType("blob");
+   }
 
-    @Override
-    public void updateOnAdded(BlobStore blobStore) {
-        for (String container : listContainers(blobStore)) {
-            cache.putAll(blobStore.getContext().unwrap().getId(), listBlobs(blobStore,container));
-        }
-    }
+   @Override
+   public void updateOnAdded(BlobStore blobStore) {
+      for (String container : listContainers(blobStore)) {
+         cache.putAll(blobStore.getContext().unwrap().getId(), listBlobs(blobStore, container));
+      }
+   }
 }

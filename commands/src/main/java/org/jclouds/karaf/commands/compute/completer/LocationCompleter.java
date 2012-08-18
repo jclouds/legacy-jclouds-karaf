@@ -26,19 +26,19 @@ import org.jclouds.karaf.commands.compute.Constants;
 
 public class LocationCompleter extends ComputeCompleterSupport {
 
-    public void init() {
-        cache = cacheProvider.getProviderCacheForType(Constants.LOCATION_CACHE);
-    }
+   public void init() {
+      cache = cacheProvider.getProviderCacheForType(Constants.LOCATION_CACHE);
+   }
 
-    @Override
-    public void updateOnAdded(ComputeService computeService) {
-        if (computeService != null) {
-            Set<? extends Location> locations = computeService.listAssignableLocations();
-            if (locations != null) {
-                for (Location location : locations) {
-                    cache.put(computeService.getContext().unwrap().getId(),location.getId());
-                }
+   @Override
+   public void updateOnAdded(ComputeService computeService) {
+      if (computeService != null) {
+         Set<? extends Location> locations = computeService.listAssignableLocations();
+         if (locations != null) {
+            for (Location location : locations) {
+               cache.put(computeService.getContext().unwrap().getId(), location.getId());
             }
-        }
-    }
+         }
+      }
+   }
 }

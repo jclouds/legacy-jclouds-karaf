@@ -37,123 +37,124 @@ import org.jclouds.scriptbuilder.statements.login.AdminAccess;
  */
 @Command(scope = "jclouds", name = "node-create", description = "Creates a node.")
 public class NodeCreateCommand extends ComputeCommandWithOptions {
-    @Option(name = "--adminAccess")
-    private boolean adminAccess;
-   
-    @Option(name = "--smallest")
-    private boolean smallest;
+   @Option(name = "--adminAccess")
+   private boolean adminAccess;
 
-    @Option(name = "--fastest")
-    private boolean fastest;
+   @Option(name = "--smallest")
+   private boolean smallest;
 
-    @Option(name = "--biggest")
-    private boolean biggest;
+   @Option(name = "--fastest")
+   private boolean fastest;
 
-    @Option(name = "--hardwareId")
-    private String hardwareId;
+   @Option(name = "--biggest")
+   private boolean biggest;
 
-    @Option(name = "--ec2-security-groups", multiValued = true)
-    private List<String> ec2SecurityGroups;
+   @Option(name = "--hardwareId")
+   private String hardwareId;
 
-    @Option(name = "--ec2-key-pair")
-    private String ec2KeyPair;
+   @Option(name = "--ec2-security-groups", multiValued = true)
+   private List<String> ec2SecurityGroups;
 
-    @Option(name = "--ec2-no-key-pair")
-    private String ec2NoKeyPair;
+   @Option(name = "--ec2-key-pair")
+   private String ec2KeyPair;
 
-    @Option(name = "--os-family", multiValued = false, required = false, description = "OS Family")
-    private String osFamily;
+   @Option(name = "--ec2-no-key-pair")
+   private String ec2NoKeyPair;
 
-    @Option(name = "--os-version", multiValued = false, required = false, description = "OS Version")
-    private String osVersion;
+   @Option(name = "--os-family", multiValued = false, required = false, description = "OS Family")
+   private String osFamily;
 
-    @Option(name = "--imageId",  multiValued = false, required = false, description = "Image")
-    private String imageId;
+   @Option(name = "--os-version", multiValued = false, required = false, description = "OS Version")
+   private String osVersion;
 
-    @Option(name = "--locationId",  multiValued = false, required = false, description = "Location")
-    private String locationId;
+   @Option(name = "--imageId", multiValued = false, required = false, description = "Image")
+   private String imageId;
 
-    @Argument(name = "group", index = 0, multiValued = false, required = true, description = "Node group")
-    private String group;
+   @Option(name = "--locationId", multiValued = false, required = false, description = "Location")
+   private String locationId;
 
-    @Argument(name = "number", index = 1, multiValued = false, required = false, description = "Number of nodes to create")
-    private Integer number  = 1;
+   @Argument(name = "group", index = 0, multiValued = false, required = true, description = "Node group")
+   private String group;
 
+   @Argument(name = "number", index = 1, multiValued = false, required = false, description = "Number of nodes to create")
+   private Integer number = 1;
 
+   @Override
+   protected Object doExecute() throws Exception {
+      ComputeService service = null;
+      try {
+         service = getComputeService();
+      } catch (Throwable t) {
+         System.err.println(t.getMessage());
+         return null;
+      }
 
-    @Override
-    protected Object doExecute() throws Exception {
-        ComputeService service = null;
-        try {
-            service = getComputeService();
-        } catch (Throwable t) {
-            System.err.println(t.getMessage());
-            return null;
-        }
+      TemplateBuilder builder = service.templateBuilder();
+      builder.any();
+      if (smallest) {
+         builder.smallest();
+      }
+      if (fastest) {
+         builder.fastest();
+      }
+      if (biggest) {
+         builder.biggest();
+      }
+      if (locationId != null) {
+         builder.locationId(locationId);
+      }
+      if (imageId != null) {
+         builder.imageId(imageId);
+      }
+      if (hardwareId != null) {
+         builder.hardwareId(hardwareId);
+      }
 
-        TemplateBuilder builder = service.templateBuilder();
-        builder.any();
-        if (smallest) {
-            builder.smallest();
-        }
-        if (fastest) {
-            builder.fastest();
-        }
-        if (biggest) {
-            builder.biggest();
-        }
-        if (locationId != null) {
-            builder.locationId(locationId);
-        }
-        if (imageId != null) {
-            builder.imageId(imageId);
-        }
-        if (hardwareId != null) {
-            builder.hardwareId(hardwareId);
-        }
+      if (osFamily != null) {
+         builder.osFamily(OsFamily.fromValue(osFamily));
+      }
 
-        if (osFamily != null) {
-            builder.osFamily(OsFamily.fromValue(osFamily));
-        }
+      if (osVersion != null) {
+         builder.osVersionMatches(osVersion);
+      }
 
-        if (osVersion != null) {
-            builder.osVersionMatches(osVersion);
-        }
+      TemplateOptions options = service.templateOptions();
+      if (adminAccess) {
+         options.runScript(AdminAccess.standard());
+      }
+      if (ec2SecurityGroups != null) {
+         options.as(EC2TemplateOptions.class).securityGroups(ec2SecurityGroups);
+      }
+      if (ec2KeyPair != null) {
+         options.as(EC2TemplateOptions.class).keyPair(ec2KeyPair);
+      }
+      if (ec2NoKeyPair != null) {
+         options.as(EC2TemplateOptions.class).noKeyPair();
+      }
 
-        TemplateOptions options = service.templateOptions();
-        if (adminAccess) {
-            options.runScript(AdminAccess.standard());
-        }
-        if (ec2SecurityGroups != null) {
-            options.as(EC2TemplateOptions.class).securityGroups(ec2SecurityGroups);
-        }
-        if (ec2KeyPair != null) {
-            options.as(EC2TemplateOptions.class).keyPair(ec2KeyPair);
-        }
-        if (ec2NoKeyPair != null) {
-            options.as(EC2TemplateOptions.class).noKeyPair();
-        }
+      Set<? extends NodeMetadata> metadatas = null;
 
-        Set<? extends NodeMetadata> metadatas = null;
+      try {
+         metadatas = service.createNodesInGroup(group, number, builder.options(options).build());
+      } catch (RunNodesException ex) {
+         System.out.println("Failed to create nodes:" + ex.getMessage());
+      }
 
-        try {
-            metadatas = service.createNodesInGroup(group, number, builder.options(options).build());
-        } catch (RunNodesException ex) {
-            System.out.println("Failed to create nodes:" + ex.getMessage());
-        }
+      if (metadatas != null && !metadatas.isEmpty()) {
+         System.out.println("Created nodes:");
+         printNodes(metadatas, "", System.out);
+      }
 
-        if (metadatas != null && !metadatas.isEmpty()) {
-            System.out.println("Created nodes:");
-            printNodes(metadatas, "", System.out);
-        }
+      for (NodeMetadata node : metadatas) {
+         cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).put(service.getContext().unwrap().getId(),
+                  node.getId());
+         cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).put(
+                  service.getContext().unwrap().getId(), node.getId());
+         cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).put(
+                  service.getContext().unwrap().getId(), node.getId());
+      }
 
-        for (NodeMetadata node : metadatas) {
-            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).put(service.getContext().unwrap().getId(), node.getId());
-            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).put(service.getContext().unwrap().getId(), node.getId());
-            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).put(service.getContext().unwrap().getId(), node.getId());
-        }
-
-        return null;
-    }
+      return null;
+   }
 
 }

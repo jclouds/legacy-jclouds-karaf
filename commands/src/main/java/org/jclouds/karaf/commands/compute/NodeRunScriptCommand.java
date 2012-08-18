@@ -26,16 +26,16 @@ import org.apache.felix.gogo.commands.Command;
 @Command(scope = "jclouds", name = "node-runscript", description = "Executes a command or a script to a node.")
 public class NodeRunScriptCommand extends NodeRunScriptSupport {
 
-    @Argument(index = 0, name = "id", description = "The id of the node.", required = true, multiValued = false)
-    private String id;
+   @Argument(index = 0, name = "id", description = "The id of the node.", required = true, multiValued = false)
+   private String id;
 
-    @Override
-    public String getId() {
-        return id;
-    }
+   @Override
+   public String getId() {
+      return id;
+   }
 
-    @Override
-    public String getGroup() {
-        return null;
-    }
+   @Override
+   public String getGroup() {
+      return null;
+   }
 }

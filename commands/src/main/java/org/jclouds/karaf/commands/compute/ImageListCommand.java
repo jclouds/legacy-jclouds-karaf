@@ -26,17 +26,17 @@ import org.jclouds.compute.ComputeService;
 @Command(scope = "jclouds", name = "image-list", description = "Lists the available images.")
 public class ImageListCommand extends ComputeCommandWithOptions {
 
-    @Override
-    protected Object doExecute() throws Exception {
-        ComputeService service = null;
-        try {
-            service = getComputeService();
-        } catch (Throwable t) {
-            System.err.println(t.getMessage());
-            return null;
-        }
-        printImages(service.listImages(), "", System.out);
-        return null;
-    }
+   @Override
+   protected Object doExecute() throws Exception {
+      ComputeService service = null;
+      try {
+         service = getComputeService();
+      } catch (Throwable t) {
+         System.err.println(t.getMessage());
+         return null;
+      }
+      printImages(service.listImages(), "", System.out);
+      return null;
+   }
 
 }

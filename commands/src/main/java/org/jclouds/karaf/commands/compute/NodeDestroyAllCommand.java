@@ -32,32 +32,35 @@ import com.google.common.base.Predicate;
 @Command(scope = "jclouds", name = "node-destroy-all", description = "Destroys all nodes.")
 public class NodeDestroyAllCommand extends ComputeCommandWithOptions {
 
-    @Override
-    protected Object doExecute() throws Exception {
-        ComputeService service = null;
-        try {
-            service = getComputeService();
-        } catch (Throwable t) {
-            System.err.println(t.getMessage());
-            return null;
-        }
-        Set<? extends NodeMetadata> nodeMetadatas = service.destroyNodesMatching(new Predicate<NodeMetadata>() {
-            @Override
-            public boolean apply(@Nullable NodeMetadata input) {
-                return true;
-            }
-        });
+   @Override
+   protected Object doExecute() throws Exception {
+      ComputeService service = null;
+      try {
+         service = getComputeService();
+      } catch (Throwable t) {
+         System.err.println(t.getMessage());
+         return null;
+      }
+      Set<? extends NodeMetadata> nodeMetadatas = service.destroyNodesMatching(new Predicate<NodeMetadata>() {
+         @Override
+         public boolean apply(@Nullable NodeMetadata input) {
+            return true;
+         }
+      });
 
-        if (nodeMetadatas != null && !nodeMetadatas.isEmpty()) {
-            System.out.println("Destroyed nodes:");
-            printNodes(nodeMetadatas, "", System.out);
-        }
+      if (nodeMetadatas != null && !nodeMetadatas.isEmpty()) {
+         System.out.println("Destroyed nodes:");
+         printNodes(nodeMetadatas, "", System.out);
+      }
 
-        for (NodeMetadata node : nodeMetadatas) {
-            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(service.getContext().unwrap().getId(), node.getId());
-            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(service.getContext().unwrap().getId(), node.getId());
-            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(service.getContext().unwrap().getId(), node.getId());
-        }
-        return null;
-    }
+      for (NodeMetadata node : nodeMetadatas) {
+         cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(
+                  service.getContext().unwrap().getId(), node.getId());
+         cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(
+                  service.getContext().unwrap().getId(), node.getId());
+         cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(
+                  service.getContext().unwrap().getId(), node.getId());
+      }
+      return null;
+   }
 }

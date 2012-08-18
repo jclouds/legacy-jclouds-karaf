@@ -30,41 +30,40 @@ import com.google.common.collect.Multimap;
 
 public abstract class ComputeCompleterSupport implements Completer, Cacheable<ComputeService> {
 
+   protected final StringsCompleter delegate = new StringsCompleter();
+   protected CacheProvider cacheProvider;
+   protected Multimap<String, String> cache;
 
-    protected final StringsCompleter delegate = new StringsCompleter();
-    protected CacheProvider cacheProvider;
-    protected Multimap<String, String> cache;
+   @Override
+   public int complete(String buffer, int cursor, List<String> candidates) {
+      delegate.getStrings().clear();
+      for (String item : cache.values()) {
+         if (buffer == null || item.startsWith(buffer)) {
+            delegate.getStrings().add(item);
+         }
+      }
 
-    @Override
-    public int complete(String buffer, int cursor, List<String> candidates) {
-        delegate.getStrings().clear();
-        for (String item : cache.values()) {
-            if (buffer == null || item.startsWith(buffer)) {
-                delegate.getStrings().add(item);
-            }
-        }
+      return delegate.complete(buffer, cursor, candidates);
+   }
 
-        return delegate.complete(buffer, cursor, candidates);
-    }
+   @Override
+   public void updateOnRemoved(ComputeService computeService) {
+      cache.removeAll(computeService.getContext().unwrap().getId());
+   }
 
-    @Override
-    public void updateOnRemoved(ComputeService computeService) {
-        cache.removeAll(computeService.getContext().unwrap().getId());
-    }
+   public Multimap<String, String> getCache() {
+      return cache;
+   }
 
-    public Multimap<String,String> getCache() {
-        return cache;
-    }
+   public void setCache(Multimap<String, String> cache) {
+      this.cache = cache;
+   }
 
-    public void setCache(Multimap<String,String> cache) {
-        this.cache = cache;
-    }
+   public CacheProvider getCacheProvider() {
+      return cacheProvider;
+   }
 
-    public CacheProvider getCacheProvider() {
-        return cacheProvider;
-    }
-
-    public void setCacheProvider(CacheProvider cacheProvider) {
-        this.cacheProvider = cacheProvider;
-    }
+   public void setCacheProvider(CacheProvider cacheProvider) {
+      this.cacheProvider = cacheProvider;
+   }
 }

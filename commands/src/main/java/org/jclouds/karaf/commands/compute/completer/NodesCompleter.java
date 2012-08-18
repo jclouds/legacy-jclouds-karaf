@@ -28,26 +28,26 @@ import org.jclouds.karaf.commands.compute.Constants;
 
 public class NodesCompleter extends ComputeCompleterSupport implements Completer {
 
-    public void init() {
-        cache = cacheProvider.getProviderCacheForType(Constants.NODE_CACHE);
-    }
+   public void init() {
+      cache = cacheProvider.getProviderCacheForType(Constants.NODE_CACHE);
+   }
 
-    @Override
-    public void updateOnAdded(ComputeService computeService) {
-        if (computeService != null) {
-            Set<? extends ComputeMetadata> computeMetadatas = computeService.listNodes();
-            if (computeMetadatas != null) {
-                for (ComputeMetadata compute : computeMetadatas) {
-                    NodeMetadata node = (NodeMetadata) compute;
-                    if (apply(node)) {
-                        cache.put(computeService.getContext().unwrap().getId(),node.getId());
-                    }
-                }
+   @Override
+   public void updateOnAdded(ComputeService computeService) {
+      if (computeService != null) {
+         Set<? extends ComputeMetadata> computeMetadatas = computeService.listNodes();
+         if (computeMetadatas != null) {
+            for (ComputeMetadata compute : computeMetadatas) {
+               NodeMetadata node = (NodeMetadata) compute;
+               if (apply(node)) {
+                  cache.put(computeService.getContext().unwrap().getId(), node.getId());
+               }
             }
-        }
-    }
+         }
+      }
+   }
 
-    public boolean apply(NodeMetadata node) {
-        return true;
-    }
+   public boolean apply(NodeMetadata node) {
+      return true;
+   }
 }

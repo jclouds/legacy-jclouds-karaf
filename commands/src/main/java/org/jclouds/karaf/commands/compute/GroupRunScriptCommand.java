@@ -26,16 +26,16 @@ import org.apache.felix.gogo.commands.Command;
 @Command(scope = "jclouds", name = "group-runscript", description = "Executes a command or script to a group of nodes.")
 public class GroupRunScriptCommand extends NodeRunScriptSupport {
 
-    @Argument(index = 0, name = "group", description = "The group of nodes.", required = true, multiValued = false)
-    private String group;
+   @Argument(index = 0, name = "group", description = "The group of nodes.", required = true, multiValued = false)
+   private String group;
 
-    @Override
-    public String getId() {
-        return null;
-    }
+   @Override
+   public String getId() {
+      return null;
+   }
 
-    @Override
-    public String getGroup() {
-        return group;
-    }
+   @Override
+   public String getGroup() {
+      return group;
+   }
 }

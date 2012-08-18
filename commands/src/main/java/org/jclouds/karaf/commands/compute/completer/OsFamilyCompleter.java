@@ -18,22 +18,22 @@
 
 package org.jclouds.karaf.commands.compute.completer;
 
+import java.util.List;
+
 import org.apache.karaf.shell.console.Completer;
 import org.apache.karaf.shell.console.completer.StringsCompleter;
 import org.jclouds.compute.domain.OsFamily;
 
-import java.util.Collections;
-import java.util.List;
-
 public class OsFamilyCompleter implements Completer {
 
-    StringsCompleter delegate = new StringsCompleter();
-    @Override
-    public int complete(String buffer, int cursor, List<String> candidates) {
-        delegate.getStrings().clear();
-        for (OsFamily osFamily : OsFamily.values()) {
-            delegate.getStrings().add(osFamily.name());
-        }
-        return delegate.complete(buffer,cursor,candidates);
-    }
+   StringsCompleter delegate = new StringsCompleter();
+
+   @Override
+   public int complete(String buffer, int cursor, List<String> candidates) {
+      delegate.getStrings().clear();
+      for (OsFamily osFamily : OsFamily.values()) {
+         delegate.getStrings().add(osFamily.name());
+      }
+      return delegate.complete(buffer, cursor, candidates);
+   }
 }
