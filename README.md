@@ -1,12 +1,14 @@
-# Karaf JClouds Integration
+# Karaf jclouds Integration
 
-This project currently hosts a Karaf feature for easy installation of JClouds inside Apache Karaf.
+This project currently hosts a Karaf feature repository for easy installation of jclouds inside Apache Karaf. It also provides Managed Service Factories for creating Compute and BlobStore services. Last but not least it provides a rich command set for using jclouds from the Karaf shell.
 
 Usage Instructions
 ===================
+The instructions will make use of Amazon EC2 and S3, but can be applied to any provider or api supported by jclouds.
+
 On Karaf 2.2.5 or later:
 
-Install JClouds AWS Modules
+Install jclouds AWS Modules
 ----------------------------
 Install the feature and a provider for blobstore and compute service:
    
