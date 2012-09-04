@@ -149,14 +149,15 @@ When it comes to creating a service, you usually need to specify a provider/api,
 specify them using the command options as shown above, or pull them from your environment, if the corresponding environmental variables are found.
 Supported variables:
 
-** JCLOUDS_COMPUTE_PROVIDER **
-** JCLOUDS_COMPUTE_API **
-** JCLOUDS_COMPUTE_IDENTITY **
-** JCLOUDS_COMPUTE_CREDENTIAL **
-** JCLOUDS_COMPUTE_ENDPOINT **
-** JCLOUDS_USER **
-** JCLOUDS_PASSWORD **
+* **JCLOUDS_COMPUTE_PROVIDER** The name of the compute provider.
+* **JCLOUDS_COMPUTE_API** The name of the compute api.
+* **JCLOUDS_COMPUTE_IDENTITY** The identiy for accessing the compute provider.
+* **JCLOUDS_COMPUTE_CREDENTIAL** The credential for accessing the compute provider.
+* **JCLOUDS_COMPUTE_ENDPOINT** The endpoint (This is usally needed when using compute apis).
+* **JCLOUDS_USER ** The username of that will be used for accessing compute instances.
+* **JCLOUDS_PASSWORD ** The password that will be used for accessing compute instances.
 
+The same pattern can be used for blobstore services to. Just replace COMPUTE with BLOBSTORE.
 
 Code completion
 ---------------
