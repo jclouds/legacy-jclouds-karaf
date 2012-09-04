@@ -154,8 +154,8 @@ Supported variables:
 * **JCLOUDS_COMPUTE_IDENTITY** The identiy for accessing the compute provider.
 * **JCLOUDS_COMPUTE_CREDENTIAL** The credential for accessing the compute provider.
 * **JCLOUDS_COMPUTE_ENDPOINT** The endpoint (This is usally needed when using compute apis).
-* **JCLOUDS_USER ** The username of that will be used for accessing compute instances.
-* **JCLOUDS_PASSWORD ** The password that will be used for accessing compute instances.
+* **JCLOUDS_USER** The username of that will be used for accessing compute instances.
+* **JCLOUDS_PASSWORD** The password that will be used for accessing compute instances.
 
 The same pattern can be used for blobstore services to. Just replace COMPUTE with BLOBSTORE.
 
