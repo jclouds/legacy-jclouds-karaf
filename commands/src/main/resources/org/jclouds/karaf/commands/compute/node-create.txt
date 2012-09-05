@@ -1,0 +1,2 @@
+This command can be used in order to create one or more compute instances. You can specify the type of hardware, the location where the instance will be created and the image.
+The command allows you to specify the exact values for image, hardware etc but also allows you to specify predicates that will be used for finding the best fitting operating system and hardware.

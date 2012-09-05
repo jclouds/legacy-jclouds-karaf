@@ -35,21 +35,21 @@ import org.jclouds.scriptbuilder.statements.login.AdminAccess;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-@Command(scope = "jclouds", name = "node-create", description = "Creates a node.")
+@Command(scope = "jclouds", name = "node-create", description = "Creates a node.", detailedDescription = "classpath:node-create.txt")
 public class NodeCreateCommand extends ComputeCommandWithOptions {
-   @Option(name = "--adminAccess")
+   @Option(name = "--adminAccess", description = "Sets up a user account with passwordless sudo access and copies ssh keys.")
    private boolean adminAccess;
 
-   @Option(name = "--smallest")
+   @Option(name = "--smallest", description = "Uses the smallest possible hardware.")
    private boolean smallest;
 
-   @Option(name = "--fastest")
+   @Option(name = "--fastest", description = "Uses the fastest possible hardware.")
    private boolean fastest;
 
-   @Option(name = "--biggest")
+   @Option(name = "--biggest", description = "Uses the biggest possible hardware." )
    private boolean biggest;
 
-   @Option(name = "--hardwareId")
+   @Option(name = "--hardwareId", description = "Uses the hardware id specified. You can see the available values with jclouds:hardware-list.")
    private String hardwareId;
 
    @Option(name = "--ec2-security-groups", multiValued = true)
@@ -61,22 +61,22 @@ public class NodeCreateCommand extends ComputeCommandWithOptions {
    @Option(name = "--ec2-no-key-pair")
    private String ec2NoKeyPair;
 
-   @Option(name = "--os-family", multiValued = false, required = false, description = "OS Family")
+   @Option(name = "--os-family", multiValued = false, required = false, description = "OS Family predicate. When using this option the command will try to find an operating system of the family provided.")
    private String osFamily;
 
-   @Option(name = "--os-version", multiValued = false, required = false, description = "OS Version")
+   @Option(name = "--os-version", multiValued = false, required = false, description = "OS Version predicate. When using this option the command will try to find an operating system version matching the one provided.")
    private String osVersion;
 
-   @Option(name = "--imageId", multiValued = false, required = false, description = "Image")
+   @Option(name = "--imageId", multiValued = false, required = false, description = "Uses the image id specified. You can see the available values with jclouds:image-list.")
    private String imageId;
 
-   @Option(name = "--locationId", multiValued = false, required = false, description = "Location")
+   @Option(name = "--locationId", multiValued = false, required = false, description = "Uses the location/region specified. You can see the available values with jclouds:location-list.")
    private String locationId;
 
-   @Argument(name = "group", index = 0, multiValued = false, required = true, description = "Node group")
+   @Argument(name = "group", index = 0, multiValued = false, required = true, description = "Node group.")
    private String group;
 
-   @Argument(name = "number", index = 1, multiValued = false, required = false, description = "Number of nodes to create")
+   @Argument(name = "number", index = 1, multiValued = false, required = false, description = "Number of nodes to create.")
    private Integer number = 1;
 
    @Override

@@ -54,7 +54,7 @@ public abstract class NodeRunScriptSupport extends ComputeCommandWithOptions {
    @Option(name = "-s", aliases = "--script-url", description = "The url script of the script to run.", required = false, multiValued = false)
    private String scriptUrl;
 
-   @Option(name = "-d", aliases = "--direct", description = "A direct command passed to the node to run. ", required = false, multiValued = false)
+   @Option(name = "-d", aliases = "--direct", description = "A direct command passed to the node to run. Example: jclouds:xxxx-runscript -d uptime xxxx. ", required = false, multiValued = false)
    private String directCommand;
 
    public abstract String getId();

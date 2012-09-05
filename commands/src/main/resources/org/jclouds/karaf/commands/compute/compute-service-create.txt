@@ -11,3 +11,15 @@ JCLOUDS_COMPUTE_ENDPOINT
 
 Please note that for provider or api, you can have a single registered service, using this command to configure a service for a provider or api that is already registered, will result in replace the existing service.
 You can list the compute services that are already registered, with the jclouds:compute-service-list command and you can destroy a compute service with the jclouds:compute-service-destroy command.
+
+    Amazon EC2
+    features:install jclouds-aws-ec2
+    features:install jclouds-commands
+    jclouds:compute-service-create --provider aws-ec2 --identiy XXXX --credential XXXX
+
+    Openstack
+    features:install jclouds-api-openstack-nova
+    features:install jclouds-commands
+    jclouds:compute-service-create --api openstack-nova --endpoint http://172.16.0.1:5000/v2.0/ --identity XXXX:XXXX --credential XXXX --option jclouds.trust-all-certs=true --option jclouds.keystone.credential-type=passwordCredentials --option jclouds.keystone.tenant-id=3fbc2a61572e4c69b80f88896a277df6 --option jclouds.openstack-nova.auto-allocate-floating-ips=true --option jclouds.openstack-nova.auto-generate-keypairs=true
+
+
