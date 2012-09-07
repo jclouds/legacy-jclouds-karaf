@@ -19,6 +19,8 @@
 package org.jclouds.karaf.cache.blobstore;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.karaf.cache.CacheManager;
@@ -27,16 +29,18 @@ import org.jclouds.karaf.cache.tasks.UpdateCachesTask;
 
 public class BlobCacheManager extends CacheManager<BlobStore> {
 
-    public void bindService(BlobStore service) {
-        services.add(service);
-        scheduledExecutorService.submit(new UpdateCachesTask(cacheables, Arrays.asList(service)));
-    }
+  public void bindService(BlobStore service) {
+    Map<String, BlobStore> map = new HashMap<String, BlobStore>();
+    map.put(service.getContext().unwrap().getId(), service);
+    services.putAll(map);
+    scheduledExecutorService.submit(new UpdateCachesTask(cacheables, map));
+  }
 
-    public void unbindService(BlobStore service) {
-        if (services != null) {
-            this.services.remove(service);
-        }
+  public void unbindService(BlobStore service) {
+    if (services != null && service != null) {
+      this.services.remove(service.getContext().unwrap().getId());
     }
+  }
 
     public void bindCachable(Cacheable<BlobStore> cacheable) {
         this.cacheables.add(cacheable);

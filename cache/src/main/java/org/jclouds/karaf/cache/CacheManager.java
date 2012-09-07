@@ -18,8 +18,10 @@
 
 package org.jclouds.karaf.cache;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -30,7 +32,7 @@ public class CacheManager<T> implements Runnable {
 
     protected ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     protected final List<Cacheable<T>> cacheables = new LinkedList<Cacheable<T>> ();
-    protected final List<T> services = new LinkedList<T>();
+    protected final Map<String, T> services = new HashMap<String, T>();
 
     public void init() {
       scheduledExecutorService.scheduleAtFixedRate(this,0,5, TimeUnit.MINUTES);

@@ -18,23 +18,27 @@
 
 package org.jclouds.karaf.cache.compute;
 
-import java.util.Arrays;
-
 import org.jclouds.compute.ComputeService;
 import org.jclouds.karaf.cache.CacheManager;
 import org.jclouds.karaf.cache.Cacheable;
 import org.jclouds.karaf.cache.tasks.UpdateCachesTask;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 public class ComputeCacheManager extends CacheManager<ComputeService> {
 
     public void bindService(ComputeService service) {
-        services.add(service);
-        scheduledExecutorService.submit(new UpdateCachesTask(cacheables, Arrays.asList(service)));
+        Map<String, ComputeService> map = new HashMap<String, ComputeService>();
+        map.put(service.getContext().unwrap().getId(), service);
+        services.putAll(map);
+        scheduledExecutorService.submit(new UpdateCachesTask(cacheables, map));
     }
 
     public void unbindService(ComputeService service) {
-        if (services != null) {
-            this.services.remove(service);
+        if (services != null && service != null) {
+            this.services.remove(service.getContext().unwrap().getId());
         }
     }
 
