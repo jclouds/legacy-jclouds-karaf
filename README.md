@@ -159,6 +159,37 @@ Supported variables:
 
 The same pattern can be used for blobstore services to. Just replace COMPUTE with BLOBSTORE.
 
+Configuring command output
+--------------------------
+As of jclouds-karaf version 1.5.0-beta.11_1 jclouds-karaf commands support output customization. The customization features are:
+
+* **Width calculation** The commands calculate the required column width and adjust the format accordingly.
+* **Configurable columns** Can add remove columns using configuration.
+* **Groovy value retrieval** The display content is configurable using groovy expressions.
+* **Configurable column alignment** You can configure for each column left or right alignment.
+* **Configurable sorting options** Configure ordering by column using ascending or descending order.
+
+The configuration for all columns can be found inside the org.jclouds.shell pid. Each configuration key is prefixed using the command category (node, image, location, hardware etc).
+The suffix defines the configuration topic. For example hardware.headers defines the headers to be displayed by the hardware commands.
+In the following commands the hardware category will be used as example.
+
+**Defining the command headers**
+To specify the headers of a command we need to place to specify the headers configuration as a comma separated list.
+For hardware:
+</pre>
+hardware.headers=[id],[ram],[cpu],[cores]
+</pre>
+
+**Defining the display data**
+Display data are configured as a comma separated list of groovy expressions. The expressions will be evaluated on the object of interest (in our example the hardware object).
+To display the id field of the hardware object the expression to use is hardware.id. The reason for choosing groovy for retrieving the data and not a simple expression language is that groovy is powerfull and can be used for more complex expressions.
+For example the Hardware object contains a collection of Processors and each processor has a filed of cores. To display the sum of cores among processors, we can use the following expression: hardware.processors.sum{it.cores}.
+
+**Defining the sort order**
+To specify the sort column, the sortBy option can be used to point to the header of the column of interest.
+For example hardware hardware.shortby=[cpu].
+
+
 Code completion
 ---------------
 
