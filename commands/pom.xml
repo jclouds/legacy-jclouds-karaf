@@ -108,6 +108,10 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+      </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
@@ -134,7 +138,11 @@
                             org.apache.karaf.shell.console.completer;version="[2.2,4)",
                             *
                         </Import-Package>
-                        <Private-Package>org.jclouds.karaf.utils*, org.jclouds.karaf.services.modules</Private-Package>
+                        <Private-Package>
+                          org.jclouds.karaf.commands.table.internal,
+                          org.jclouds.karaf.utils*,
+                          org.jclouds.karaf.services.modules
+                        </Private-Package>
                     </instructions>
                 </configuration>
             </plugin>

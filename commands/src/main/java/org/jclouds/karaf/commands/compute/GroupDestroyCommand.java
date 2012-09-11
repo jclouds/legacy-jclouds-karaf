@@ -68,7 +68,7 @@ public class GroupDestroyCommand extends ComputeCommandWithOptions {
 
       if (!aggregatedMetadata.isEmpty()) {
          System.out.println("Destroyed nodes:");
-         printNodes(aggregatedMetadata, "", System.out);
+         printNodes(aggregatedMetadata,  System.out);
       }
 
       return null;

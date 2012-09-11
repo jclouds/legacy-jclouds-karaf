@@ -50,7 +50,7 @@ public class NodeDestroyAllCommand extends ComputeCommandWithOptions {
 
       if (nodeMetadatas != null && !nodeMetadatas.isEmpty()) {
          System.out.println("Destroyed nodes:");
-         printNodes(nodeMetadatas, "", System.out);
+         printNodes(nodeMetadatas, System.out);
       }
 
       for (NodeMetadata node : nodeMetadatas) {

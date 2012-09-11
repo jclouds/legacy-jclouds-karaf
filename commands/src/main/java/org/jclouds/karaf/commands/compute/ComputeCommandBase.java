@@ -17,8 +17,6 @@
  */
 package org.jclouds.karaf.commands.compute;
 
-import static org.jclouds.compute.util.ComputeServiceUtils.formatStatus;
-
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,6 +38,9 @@ import org.jclouds.compute.domain.Processor;
 import org.jclouds.domain.Location;
 import org.jclouds.karaf.cache.BasicCacheProvider;
 import org.jclouds.karaf.cache.CacheProvider;
+import org.jclouds.karaf.commands.table.internal.PropertyShellTableFactory;
+import org.jclouds.karaf.commands.table.ShellTable;
+import org.jclouds.karaf.commands.table.ShellTableFactory;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.AuthorizationException;
 import org.osgi.service.cm.ConfigurationAdmin;
@@ -50,16 +51,18 @@ import org.osgi.service.cm.ConfigurationAdmin;
 public abstract class ComputeCommandBase extends AbstractAction {
 
    public static final String NODEFORMAT = "%s%-30s %-32s %-20s %-12s %-12s";
-   private static final String NODE_DETAILS_FORMAT = "%20s %-60s";
+   public static final String NODE_DETAILS_FORMAT = "%20s %-60s";
    public static final String HARDWAREFORMAT = "%s%-20s %5s %7s %6s";
    public static final String IMAGEFORMAT = "%s%-30s %-32s %s";
    public static final String LOCATIONFORMAT = "%-32s %-9s %s";
    public static final String PROVIDERFORMAT = "%-24s %-12s %-12s";
 
-   private ConfigurationAdmin configurationAdmin;
-   protected CacheProvider cacheProvider = new BasicCacheProvider();
 
+   protected CacheProvider cacheProvider = new BasicCacheProvider();
    protected List<ComputeService> computeServices = new ArrayList<ComputeService>();
+   protected ShellTableFactory shellTableFactory = new PropertyShellTableFactory();
+
+  private ConfigurationAdmin configurationAdmin;
 
    @Override
    public Object execute(CommandSession session) throws Exception {
@@ -102,50 +105,42 @@ public abstract class ComputeCommandBase extends AbstractAction {
       }
    }
 
-   protected void printNodes(Set<? extends ComputeMetadata> nodes, String indent, PrintStream out) {
-      out.println(String.format(NODEFORMAT, indent, "[id]", "[location]", "[hardware]", "[group]", "[status]"));
+   protected void printNodes(Set<? extends ComputeMetadata> nodes, PrintStream out) {
+     ShellTable table = shellTableFactory.build("node");
+     table.setDisplayData(nodes);
+     table.display(out, true, true);
+
       for (ComputeMetadata metadata : nodes) {
          NodeMetadata node = (NodeMetadata) metadata;
-         out.println(String.format(NODEFORMAT, indent, node.getId(), node.getLocation().getId(), node.getHardware()
-                  .getId(), node.getGroup(), formatStatus(node)));
          cacheProvider.getProviderCacheForType(Constants.GROUP).put(node.getProviderId(), node.getGroup());
       }
    }
 
-   protected void printHardwares(Set<? extends Hardware> hardwares, String indent, PrintStream out) {
-      out.println(String.format(HARDWAREFORMAT, indent, "[id]", "[cpu]", "[cores]", "[ram]", "[disk]"));
+   protected void printHardwares(Set<? extends Hardware> hardwares, PrintStream out) {
+     ShellTable table = shellTableFactory.build("hardware");
+     table.setDisplayData(hardwares);
+     table.display(out, true, true);
+
       for (Hardware hardware : hardwares) {
-         out.println(String.format(HARDWAREFORMAT, indent, hardware.getId(), getCpuUnits(hardware),
-                  getCpuCores(hardware), getMemory(hardware)));
          cacheProvider.getProviderCacheForType(Constants.HARDWARE_CACHE)
                   .put(hardware.getProviderId(), hardware.getId());
       }
    }
 
-   protected void printImages(Set<? extends Image> images, String indent, PrintStream out) {
-      out.println(String.format(IMAGEFORMAT, indent, "[id]", "[location]", "[description]", "[status]"));
+   protected void printImages(Set<? extends Image> images, PrintStream out) {
+      ShellTable table = shellTableFactory.build("image");
+      table.setDisplayData(images);
+      table.display(out, true, true);
+
       for (Image image : images) {
-         String id = image.getId();
-         String location = image.getLocation() != null ? image.getLocation().getId() : "";
-         String description = image.getDescription();
-         out.println(String.format(IMAGEFORMAT, indent, id, location, description, formatStatus(image)));
          cacheProvider.getProviderCacheForType(Constants.IMAGE_CACHE).put(image.getProviderId(), image.getId());
       }
    }
 
-   protected void printLocations(ComputeService computeService, String indent, PrintStream out) {
-      out.println(String.format(LOCATIONFORMAT, indent + "[id]", "[scope]", "[description]"));
-      printLocations(getAllLocations(computeService), null, indent, out);
-   }
-
-   protected void printLocations(Set<? extends Location> locations, Location parent, String indent, PrintStream out) {
-      for (Location location : locations) {
-         if (location.getParent() == parent) {
-            out.println(String.format(LOCATIONFORMAT, indent + location.getId(), location.getScope(),
-                     location.getDescription()));
-            printLocations(locations, location, indent + "  ", out);
-         }
-      }
+   protected void printLocations(ComputeService computeService, PrintStream out) {
+     ShellTable table = shellTableFactory.build("location");
+     table.setDisplayData(getAllLocations(computeService));
+     table.display(out, true, true);
    }
 
    protected Set<? extends Location> getAllLocations(ComputeService computeService) {
@@ -220,7 +215,7 @@ public abstract class ComputeCommandBase extends AbstractAction {
    }
 
    protected void printNodeInfo(Set<? extends NodeMetadata> nodes, boolean details, PrintStream out) {
-      printNodes(nodes, "", out);
+      printNodes(nodes,  out);
       if (details) {
          for (NodeMetadata node : nodes) {
             out.println();
@@ -277,4 +272,12 @@ public abstract class ComputeCommandBase extends AbstractAction {
    public void setComputeServices(List<ComputeService> computeServices) {
       this.computeServices = computeServices;
    }
+
+  public ShellTableFactory getShellTableFactory() {
+    return shellTableFactory;
+  }
+
+  public void setShellTableFactory(ShellTableFactory shellTableFactory) {
+    this.shellTableFactory = shellTableFactory;
+  }
 }

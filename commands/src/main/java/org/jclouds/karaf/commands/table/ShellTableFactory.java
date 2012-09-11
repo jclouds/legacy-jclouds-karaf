@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2011, the original authors
  *
  * ====================================================================
@@ -15,28 +15,20 @@
  * limitations under the License.
  * ====================================================================
  */
-package org.jclouds.karaf.commands.compute;
 
-import org.apache.felix.gogo.commands.Command;
-import org.jclouds.compute.ComputeService;
+package org.jclouds.karaf.commands.table;
 
 /**
- * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
+ * A Factory interface for creating {@link ShellTable}.
  */
-@Command(scope = "jclouds", name = "hardware-list", description = "Lists the available hardware for the provider.")
-public class HardwareListCommand extends ComputeCommandWithOptions {
+public interface ShellTableFactory {
 
-   @Override
-   protected Object doExecute() throws Exception {
-      ComputeService service = null;
-      try {
-         service = getComputeService();
-      } catch (Throwable t) {
-         System.err.println(t.getMessage());
-         return null;
-      }
-      printHardwares(service.listHardwareProfiles(), System.out);
-      return null;
-   }
+  String HEADERS_KEY = "headers";
+  String ALIGN_KEY = "alignments";
+  String EXPRESSIONS_KEY = "expressions";
+  String SHORTBY_KEY = "shortby";
+  String ASCENDING_KEY = "ascending";
+
+  ShellTable build(String type);
 
 }

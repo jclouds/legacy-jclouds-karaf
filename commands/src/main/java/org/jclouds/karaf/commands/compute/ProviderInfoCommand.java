@@ -38,19 +38,19 @@ public class ProviderInfoCommand extends ComputeCommandWithOptions {
 
          System.out.println("  Locations");
          System.out.println("  ---------");
-         printLocations(service, "    ", System.out);
+         printLocations(service,  System.out);
 
          System.out.println("  Images");
          System.out.println("  ------");
-         printImages(service.listImages(), "    ", System.out);
+         printImages(service.listImages(),  System.out);
 
          System.out.println("  Hardware");
          System.out.println("  --------");
-         printHardwares(service.listHardwareProfiles(), "    ", System.out);
+         printHardwares(service.listHardwareProfiles(),  System.out);
 
          System.out.println("  Nodes");
          System.out.println("  -----");
-         printNodes(service.listNodes(), "    ", System.out);
+         printNodes(service.listNodes(), System.out);
       }
       return null;
    }

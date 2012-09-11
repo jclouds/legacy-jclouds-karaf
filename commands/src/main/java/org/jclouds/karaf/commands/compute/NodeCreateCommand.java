@@ -142,7 +142,7 @@ public class NodeCreateCommand extends ComputeCommandWithOptions {
 
       if (metadatas != null && !metadatas.isEmpty()) {
          System.out.println("Created nodes:");
-         printNodes(metadatas, "", System.out);
+         printNodes(metadatas, System.out);
       }
 
       for (NodeMetadata node : metadatas) {

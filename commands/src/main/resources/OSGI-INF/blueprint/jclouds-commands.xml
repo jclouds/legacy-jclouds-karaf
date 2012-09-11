@@ -17,7 +17,8 @@
     ====================================================================
 
 -->
-<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0">
 
 
     <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.1.0">
@@ -197,6 +198,7 @@
             <action class="org.jclouds.karaf.commands.compute.HardwareListCommand">
                 <property name="computeServices" ref="computeServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
+                <property name="shellTableFactory" ref="shellTableFactory"/>
             </action>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
@@ -207,6 +209,7 @@
             <action class="org.jclouds.karaf.commands.compute.LocationListCommand">
                 <property name="computeServices" ref="computeServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
+                <property name="shellTableFactory" ref="shellTableFactory"/>
             </action>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
@@ -217,6 +220,7 @@
             <action class="org.jclouds.karaf.commands.compute.ImageListCommand">
                 <property name="computeServices" ref="computeServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
+                <property name="shellTableFactory" ref="shellTableFactory"/>
             </action>
             <optional-completers>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
@@ -367,6 +371,14 @@
     </bean>
 
     <bean id="osFamilyCompleter" class="org.jclouds.karaf.commands.compute.completer.OsFamilyCompleter"/>
+
+  <bean id="shellTableFactory" class="org.jclouds.karaf.commands.table.internal.ManagedShellTableFactory"/>
+
+  <service ref="shellTableFactory" interface="org.osgi.service.cm.ManagedService">
+    <service-properties>
+      <entry key="service.pid" value="org.jclouds.shell"/>
+    </service-properties>
+  </service>
 
     <service ref="computeProviderCompleter" auto-export="interfaces">
         <service-properties>

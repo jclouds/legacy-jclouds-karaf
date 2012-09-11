@@ -19,6 +19,11 @@ package org.jclouds.karaf.commands.compute;
 
 import org.apache.felix.gogo.commands.Command;
 import org.jclouds.compute.ComputeService;
+import org.jclouds.compute.domain.Image;
+import org.jclouds.karaf.commands.table.ShellTable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
@@ -35,7 +40,7 @@ public class ImageListCommand extends ComputeCommandWithOptions {
          System.err.println(t.getMessage());
          return null;
       }
-      printImages(service.listImages(), "", System.out);
+     printImages(service.listImages(), System.out);
       return null;
    }
 

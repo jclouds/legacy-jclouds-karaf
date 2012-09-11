@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2011, the original authors
  *
  * ====================================================================
@@ -15,28 +15,34 @@
  * limitations under the License.
  * ====================================================================
  */
-package org.jclouds.karaf.commands.compute;
 
-import org.apache.felix.gogo.commands.Command;
-import org.jclouds.compute.ComputeService;
+package org.jclouds.karaf.commands.table.internal;
+
+import groovy.lang.Binding;
+import groovy.lang.GroovyShell;
+import org.jclouds.karaf.commands.table.BasicShellTable;
 
 /**
- * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
+ * A shell table implementation that works with groovy expressions.
  */
-@Command(scope = "jclouds", name = "hardware-list", description = "Lists the available hardware for the provider.")
-public class HardwareListCommand extends ComputeCommandWithOptions {
+public class GroovyShellTable extends BasicShellTable {
 
-   @Override
-   protected Object doExecute() throws Exception {
-      ComputeService service = null;
-      try {
-         service = getComputeService();
-      } catch (Throwable t) {
-         System.err.println(t.getMessage());
-         return null;
-      }
-      printHardwares(service.listHardwareProfiles(), System.out);
-      return null;
-   }
-
+  /**
+   * Evaluates a Groovy expression.
+   * @param obj
+   * @param expression
+   * @return
+   */
+  public String evaluate(Object obj, String expression) {
+    String result = "";
+    Binding binding = new Binding();
+    GroovyShell shell = new GroovyShell(binding);
+    try {
+      binding.setVariable(getType(), obj);
+      result = String.valueOf(shell.evaluate(expression));
+    } catch (Exception ex) {
+      //Ignore
+    }
+    return result;
+  }
 }

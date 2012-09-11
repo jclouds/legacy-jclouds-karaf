@@ -59,6 +59,11 @@
                                     <type>cfg</type>
                                     <classifier>credentials</classifier>
                                 </artifact>
+                              <artifact>
+                                <file>target/shell.cfg</file>
+                                <type>cfg</type>
+                                <classifier>shell</classifier>
+                              </artifact>
                             </artifacts>
                         </configuration>
                     </execution>
