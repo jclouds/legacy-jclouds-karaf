@@ -189,6 +189,13 @@ For example the Hardware object contains a collection of Processors and each pro
 To specify the sort column, the sortBy option can be used to point to the header of the column of interest.
 For example hardware hardware.shortby=[cpu].
 
+Using jclouds-karaf with the OBR features of Karaf
+--------------------------------------------------
+There are cases were there are small discrepancies between the jclouds-karaf required bundles and the ones that are used in your project. Even though inside OSGi you can have multiple versions of a bundle, it often doesn't make sense for micro versions. 
+
+To avoid that you can install the obr feature of Karaf before installing jclouds-karaf. The obr feature among others provides the obr resolver, which will try to check if osgi package requirements are satisfied by existing bundles, before installing new bundles.
+
+For example, assuming that a given version of jclouds-karaf is using jersey 1.11 and in your containers version 1.13 is already installed, the obr resolver will check if the 1.13 version can satisfy your needs and if so it will skip the installation of 1.11.
 
 Code completion
 ---------------
