@@ -56,12 +56,14 @@ public class ManagedShellTableFactory extends BasicShellTableFactory implements 
    */
   @Override
   public void updated(Dictionary properties) throws ConfigurationException {
-    Enumeration keys = properties.keys();
-    getProperties().clear();
-    while (keys.hasMoreElements()) {
-      Object key = keys.nextElement();
-      Object value = properties.get(key);
-      getProperties().put(key, value);
+    if (properties != null) {
+      Enumeration keys = properties.keys();
+      getProperties().clear();
+      while (keys.hasMoreElements()) {
+        Object key = keys.nextElement();
+        Object value = properties.get(key);
+        getProperties().put(key, value);
+      }
     }
   }
 }
