@@ -404,6 +404,11 @@
                 <artifactId>jclouds-sshj</artifactId>
                 <version>${jclouds.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.jclouds.labs</groupId>
+                <artifactId>nodepool</artifactId>
+                <version>${jclouds.version}</version>
+             </dependency>
 
             <!-- Karaf Dependencies -->
             <dependency>
