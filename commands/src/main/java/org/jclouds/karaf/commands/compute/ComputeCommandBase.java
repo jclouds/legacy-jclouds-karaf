@@ -50,13 +50,8 @@ import org.osgi.service.cm.ConfigurationAdmin;
  */
 public abstract class ComputeCommandBase extends AbstractAction {
 
-   public static final String NODEFORMAT = "%s%-30s %-32s %-20s %-12s %-12s";
    public static final String NODE_DETAILS_FORMAT = "%20s %-60s";
-   public static final String HARDWAREFORMAT = "%s%-20s %5s %7s %6s";
-   public static final String IMAGEFORMAT = "%s%-30s %-32s %s";
-   public static final String LOCATIONFORMAT = "%-32s %-9s %s";
    public static final String PROVIDERFORMAT = "%-24s %-12s %-12s";
-
 
    protected CacheProvider cacheProvider = new BasicCacheProvider();
    protected List<ComputeService> computeServices = new ArrayList<ComputeService>();
