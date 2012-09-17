@@ -177,6 +177,7 @@
             </action>
             <completers>
                 <ref component-id="computeServiceIdCompleter"/>
+                <null/>
             </completers>
         </command>
 
@@ -203,6 +204,7 @@
             </action>
             <completers>
                 <ref component-id="blobStoreServiceIdCompleter"/>
+                <null/>
             </completers>
         </command>
         <command name="jclouds/node-list">
