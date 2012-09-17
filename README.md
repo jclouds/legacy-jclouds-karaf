@@ -182,9 +182,21 @@ For hardware:
 
 
 **Defining the display data**
-Display data are configured as a comma separated list of groovy expressions. The expressions will be evaluated on the object of interest (in our example the hardware object).
-To display the id field of the hardware object the expression to use is hardware.id. The reason for choosing groovy for retrieving the data and not a simple expression language is that groovy is powerfull and can be used for more complex expressions.
+Display data are configured as a comma separated list of expressions (using the scripting engine of your choice, default is groovy). The expressions will be evaluated on the object of interest (in our example the hardware object).
+To display the id field of the hardware object the expression to use is hardware.id. The reason for choosing groovy (as a default) for retrieving the data and not a simple expression language is that groovy is powerfull and can be used for more complex expressions.
 For example the Hardware object contains a collection of Processors and each processor has a filed of cores. To display the sum of cores among processors, we can use the following expression: hardware.processors.sum{it.cores}.
+
+You can change the scripting engine:
+
+    hardware.engine=groovy
+
+Please note that if you don't specify the engine, then groovy will be assumed.
+
+To specify the display data, now all you need to do is to provide the expressions:
+
+    hardware.expressions=hardware.id;hardware.ram;hardware.processors.sum{it.cores*it.speed};hardware.processors.sum{it.cores}
+
+The configuration above will display the hardware id in the first column, the hardware ram in the second column, the sum of cores X speed per processor in the third column and finally the sum of cores for all processors in the last column.
 
 **Defining the sort order**
 To specify the sort column, the sortBy option can be used to point to the header of the column of interest.

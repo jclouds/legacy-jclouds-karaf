@@ -18,28 +18,40 @@
 
 package org.jclouds.karaf.commands.table.internal;
 
-import groovy.lang.Binding;
-import groovy.lang.GroovyShell;
 import org.jclouds.karaf.commands.table.BasicShellTable;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 
 /**
  * A shell table implementation that works with groovy expressions.
  */
-public class GroovyShellTable extends BasicShellTable {
+public class ScriptEngineShellTable extends BasicShellTable {
+
+  private final String engine;
+  private final ScriptEngineManager scriptEngineFactory = new ScriptEngineManager();
+  private final ScriptEngine scriptEngine;
 
   /**
-   * Evaluates a Groovy expression.
+   * Constructor
+   * @param engine
+   */
+  public ScriptEngineShellTable(String engine) {
+    this.engine = engine;
+    this.scriptEngine = scriptEngineFactory.getEngineByName(engine);
+  }
+
+  /**
+   * Evaluates an expression.
    * @param obj
    * @param expression
    * @return
    */
   public String evaluate(Object obj, String expression) {
     String result = "";
-    Binding binding = new Binding();
-    GroovyShell shell = new GroovyShell(binding);
     try {
-      binding.setVariable(getType(), obj);
-      result = String.valueOf(shell.evaluate(expression));
+      scriptEngine.put(getType(), obj);
+      result = String.valueOf(scriptEngine.eval(expression));
     } catch (Exception ex) {
       //Ignore
     }

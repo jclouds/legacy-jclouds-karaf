@@ -18,7 +18,7 @@
 
 package org.jclouds.karaf.commands.table;
 
-import org.jclouds.karaf.commands.table.internal.GroovyShellTable;
+import org.jclouds.karaf.commands.table.internal.ScriptEngineShellTable;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -40,6 +40,7 @@ public class BasicShellTableFactory implements ShellTableFactory {
   @Override
   public ShellTable build(String type) {
       String delimiter = properties.containsKey(type + "." + DELIMITER_KEY) ? String.valueOf(properties.get(type + "." + DELIMITER_KEY)) : ";";
+      String engine = properties.containsKey(type + "." + SCRIPTING_ENGINE) ? String.valueOf(properties.get(type + "." + SCRIPTING_ENGINE)) : "groovy";
       String headersValue = String.valueOf(properties.get(type + "." + HEADERS_KEY));
       String expressionsValue = String.valueOf(properties.get(type + "." + EXPRESSIONS_KEY));
       String alignValue = String.valueOf(properties.get(type + "." + ALIGN_KEY));
@@ -49,8 +50,7 @@ public class BasicShellTableFactory implements ShellTableFactory {
       List<String> headers =  Arrays.asList(headersValue.split(delimiter));
       List<String> expressions =  Arrays.asList(expressionsValue.split(delimiter));
       List<String> alignments =  Arrays.asList(alignValue.split(delimiter));
-      //TODO: Make it easier to have the implementation pluggable / configurable.
-      ShellTable shellTable = new GroovyShellTable();
+      ShellTable shellTable = new ScriptEngineShellTable(engine);
 
       shellTable.setType(type);
       shellTable.setHeaders(headers);
