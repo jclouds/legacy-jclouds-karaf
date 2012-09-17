@@ -174,11 +174,12 @@ The suffix defines the configuration topic. For example hardware.headers defines
 In the following commands the hardware category will be used as example.
 
 **Defining the command headers**
-To specify the headers of a command we need to place to specify the headers configuration as a comma separated list.
+To specify the headers of a command we need to place to specify the headers configuration as a semicoln separated list.
 For hardware:
-</pre>
-hardware.headers=[id],[ram],[cpu],[cores]
-</pre>
+
+
+    hardware.headers=[id];[ram];[cpu];[cores]
+
 
 **Defining the display data**
 Display data are configured as a comma separated list of groovy expressions. The expressions will be evaluated on the object of interest (in our example the hardware object).
@@ -188,6 +189,15 @@ For example the Hardware object contains a collection of Processors and each pro
 **Defining the sort order**
 To specify the sort column, the sortBy option can be used to point to the header of the column of interest.
 For example hardware hardware.shortby=[cpu].
+
+**Changing the delimeter**
+Most of the configuration options for the shell table are passed as delimited strings. What happens when you want to change the delimiter?
+By default the delimeter is the semicoln symbol, but for each command category you can specify the delimiter. For example:
+
+
+    hardware.delimeter=,
+    hardware.headers=[id],[ram],[cpu],[cores]
+
 
 Using jclouds-karaf with the OBR features of Karaf
 --------------------------------------------------
