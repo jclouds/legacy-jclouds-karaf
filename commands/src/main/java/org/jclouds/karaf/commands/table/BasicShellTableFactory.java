@@ -39,15 +39,16 @@ public class BasicShellTableFactory implements ShellTableFactory {
    */
   @Override
   public ShellTable build(String type) {
+      String delimiter = properties.containsKey(type + "." + DELIMITER_KEY) ? String.valueOf(properties.get(type + "." + DELIMITER_KEY)) : ";";
       String headersValue = String.valueOf(properties.get(type + "." + HEADERS_KEY));
       String expressionsValue = String.valueOf(properties.get(type + "." + EXPRESSIONS_KEY));
       String alignValue = String.valueOf(properties.get(type + "." + ALIGN_KEY));
       String shortByValue = String.valueOf(properties.get(type + "." + SHORTBY_KEY));
       Boolean ascendingValue = Boolean.parseBoolean(String.valueOf(properties.get(type + "." + ASCENDING_KEY)));
 
-      List<String> headers =  Arrays.asList(headersValue.split(","));
-      List<String> expressions =  Arrays.asList(expressionsValue.split(","));
-      List<String> alignments =  Arrays.asList(alignValue.split(","));
+      List<String> headers =  Arrays.asList(headersValue.split(delimiter));
+      List<String> expressions =  Arrays.asList(expressionsValue.split(delimiter));
+      List<String> alignments =  Arrays.asList(alignValue.split(delimiter));
       //TODO: Make it easier to have the implementation pluggable / configurable.
       ShellTable shellTable = new GroovyShellTable();
 

@@ -23,6 +23,7 @@ package org.jclouds.karaf.commands.table;
  */
 public interface ShellTableFactory {
 
+  String DELIMITER_KEY = "delimiter";
   String HEADERS_KEY = "headers";
   String ALIGN_KEY = "alignments";
   String EXPRESSIONS_KEY = "expressions";
