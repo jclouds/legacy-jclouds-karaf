@@ -12,7 +12,7 @@ Install jclouds AWS Modules
 ----------------------------
 Install the feature and a provider for blobstore and compute service:
    
-    karaf@root> features:addurl mvn:org.jclouds.karaf/jclouds-karaf/1.5.0-SNAPSHOT/xml/features
+    karaf@root> features:addurl mvn:org.jclouds.karaf/jclouds-karaf/1.5.0/xml/features
     karaf@root> features:install jclouds-aws-s3
     karaf@root> features:install jclouds-aws-ec2
 
@@ -141,6 +141,48 @@ You can copy a bundle to a blob and install it directly from there:
 
     karaf@root> features:install jclouds-url-handler
     karaf@root>osgi:install -s blob:/PROVIDER/CONTAINER/PATH_TO_BUNDLE
+
+Using multiple serives per provider/api
+---------------------------------------
+
+As of jclouds-karaf 1.5.0 you are able to register multiple compute and blobstore services per provider or api. The commands will allow you to specify which serivce to use (just specifying provider/api isn't enough since we have multiple services).
+To "name" the service, you can use the --id option in the serivce create commands. If no id is specified the provider/api name will be used instead.
+
+For compute services:
+
+    jclouds:compute-service-create --id aws1 --provider aws-ec2 ...
+    jclouds:node-list --id aws1
+
+
+This can be very usefull when you want to configure either different accounts per provider/api or use different configuration options. A small example:
+
+    jclouds:compute-service-create --id aws-eu-west-1 --provider aws-ec2 --add-option jclouds.regions=eu-west-1
+    jclouds:compute-service-create --id aws-us-east-1 --provider aws-ec2 --add-option jclouds.regions=us-east-1
+
+The available ids are now shown in the compute-service-list commands:
+
+    jclouds:compute-service-list
+
+    Compute Providers:
+    ------------------
+    [id]                     [type]       [service]
+    aws-ec2                  compute      [ aws-eu-west-1 aws-us-east-1 ]
+
+
+To destroy one of the two available services:
+
+    jclouds:compute-service-destroy aws-us-east-1
+    jclouds:compute-service-list
+
+    Compute Providers:
+    ------------------
+    [id]                     [type]       [service]
+    aws-ec2                  compute      [ aws-eu-west-1 ]
+
+
+Blobstore services work in a very similar manner:
+
+    jclouds:blobstore-service-create --id s3-1 --provider aws-s3 ...
 
 
 Using environmental variables
