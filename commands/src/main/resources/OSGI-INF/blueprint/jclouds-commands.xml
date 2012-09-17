@@ -166,11 +166,20 @@
                 <property name="bundleContext" ref="blueprintBundleContext"/>
                 <property name="configAdmin" ref="configAdmin"/>
             </action>
+            <optional-completers>
+              <entry key="--provider" value-ref="availableComputeProviderCompleter"/>
+              <entry key="--api" value-ref="availableComputeApiCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/compute-service-destroy">
             <action class="org.jclouds.karaf.commands.compute.ComputeServiceDestroyCommand">
                 <property name="configAdmin" ref="configAdmin"/>
             </action>
+            <optional-completers>
+                <entry key="--id" value-ref="computeServiceIdCompleter"/>
+                <entry key="--provider" value-ref="computeProviderCompleter"/>
+                <entry key="--api" value-ref="computeApiCompleter"/>
+            </optional-completers>
         </command>
 
         <command name="jclouds/blobstore-service-list">
@@ -185,11 +194,20 @@
                 <property name="bundleContext" ref="blueprintBundleContext"/>
                 <property name="configAdmin" ref="configAdmin"/>
             </action>
+            <optional-completers>
+                <entry key="--provider" value-ref="availableBlobStoreProviderCompleter"/>
+                <entry key="--api" value-ref="availableBlobStoreApiCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/blobstore-service-destroy">
             <action class="org.jclouds.karaf.commands.blobstore.BlobStoreServiceDestroyCommand">
                 <property name="configAdmin" ref="configAdmin"/>
             </action>
+            <optional-completers>
+                <entry key="--id" value-ref="blobStoreServiceIdCompleter"/>
+                <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
+                <entry key="--api" value-ref="blobStoreApiCompleter"/>
+            </optional-completers>
         </command>
         <command name="jclouds/node-list">
             <action class="org.jclouds.karaf.commands.compute.NodeListCommand">
@@ -340,14 +358,34 @@
         <property name="cacheProvider" ref="cacheProvider"/>
     </bean>
 
-    <bean id="blobStoreProviderCompleter"
-          class="org.jclouds.karaf.commands.blobstore.completer.BlobStoreProviderCompleter">
+    <bean id="blobStoreProviderCompleter" class="org.jclouds.karaf.commands.blobstore.completer.BlobStoreProviderCompleter">
+        <argument>
+          <value>false</value>
+        </argument>
         <property name="blobStoreServices" ref="blobStoreServices"/>
+    </bean>
+
+    <bean id="availableBlobStoreProviderCompleter" class="org.jclouds.karaf.commands.blobstore.completer.BlobStoreProviderCompleter">
+      <argument>
+        <value>true</value>
+      </argument>
+      <property name="blobStoreServices" ref="blobStoreServices"/>
     </bean>
 
     <bean id="blobStoreApiCompleter"
           class="org.jclouds.karaf.commands.blobstore.completer.BlobStoreApiCompleter">
+        <argument>
+          <value>false</value>
+        </argument>
         <property name="blobStoreServices" ref="blobStoreServices"/>
+    </bean>
+
+  <bean id="availableBlobStoreApiCompleter"
+        class="org.jclouds.karaf.commands.blobstore.completer.BlobStoreApiCompleter">
+      <argument>
+        <value>true</value>
+      </argument>
+      <property name="blobStoreServices" ref="blobStoreServices"/>
     </bean>
 
     <!-- Compute Completers -->
@@ -356,11 +394,31 @@
     </bean>
 
     <bean id="computeProviderCompleter" class="org.jclouds.karaf.commands.compute.completer.ComputeProviderCompleter">
+        <argument>
+          <value>false</value>
+        </argument>
         <property name="computeServices" ref="computeServices"/>
     </bean>
 
+    <bean id="availableComputeProviderCompleter" class="org.jclouds.karaf.commands.compute.completer.ComputeProviderCompleter">
+       <argument>
+        <value>true</value>
+       </argument>
+       <property name="computeServices" ref="computeServices"/>
+     </bean>
+
     <bean id="computeApiCompleter" class="org.jclouds.karaf.commands.compute.completer.ComputeApiCompleter">
+        <argument>
+          <value>false</value>
+        </argument>
         <property name="computeServices" ref="computeServices"/>
+    </bean>
+
+     <bean id="availableComputeApiCompleter" class="org.jclouds.karaf.commands.compute.completer.ComputeApiCompleter">
+        <argument>
+          <value>true</value>
+        </argument>
+      <property name="computeServices" ref="computeServices"/>
     </bean>
 
     <bean id="activeNodeCompleter" class="org.jclouds.karaf.commands.compute.completer.ActiveNodesCompleter"
@@ -415,6 +473,24 @@
     <service ref="computeProviderCompleter" auto-export="interfaces">
         <service-properties>
             <entry key="completer-type" value="compute-provider"/>
+        </service-properties>
+    </service>
+
+    <service ref="availableComputeProviderCompleter" auto-export="interfaces">
+        <service-properties>
+            <entry key="completer-type" value="available-compute-provider"/>
+        </service-properties>
+    </service>
+
+    <service ref="computeApiCompleter" auto-export="interfaces">
+        <service-properties>
+            <entry key="completer-type" value="compute-api"/>
+        </service-properties>
+    </service>
+
+    <service ref="availableComputeApiCompleter" auto-export="interfaces">
+        <service-properties>
+            <entry key="completer-type" value="available-compute-api"/>
         </service-properties>
     </service>
 
@@ -482,6 +558,24 @@
     <service ref="blobStoreProviderCompleter" auto-export="interfaces">
         <service-properties>
             <entry key="completer-type" value="blobstore-provider"/>
+        </service-properties>
+    </service>
+
+    <service ref="availableBlobStoreProviderCompleter" auto-export="interfaces">
+        <service-properties>
+          <entry key="completer-type" value="available-blobstore-provider"/>
+        </service-properties>
+    </service>
+
+    <service ref="blobStoreApiCompleter" auto-export="interfaces">
+        <service-properties>
+            <entry key="completer-type" value="blobstore-api"/>
+        </service-properties>
+    </service>
+
+    <service ref="availableBlobStoreApiCompleter" auto-export="interfaces">
+        <service-properties>
+            <entry key="completer-type" value="available-blobstore-api"/>
         </service-properties>
     </service>
 

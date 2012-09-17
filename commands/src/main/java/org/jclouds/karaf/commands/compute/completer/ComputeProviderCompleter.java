@@ -20,9 +20,12 @@ package org.jclouds.karaf.commands.compute.completer;
 
 import java.util.List;
 
+import com.google.common.reflect.TypeToken;
 import org.apache.karaf.shell.console.Completer;
 import org.apache.karaf.shell.console.completer.StringsCompleter;
 import org.jclouds.compute.ComputeService;
+import org.jclouds.compute.ComputeServiceContext;
+import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.Providers;
 
 public class ComputeProviderCompleter implements Completer {
@@ -30,10 +33,20 @@ public class ComputeProviderCompleter implements Completer {
    private final StringsCompleter delegate = new StringsCompleter();
    private List<? extends ComputeService> computeServices;
 
+   private final boolean displayProvidersWithoutService;
+
+   public ComputeProviderCompleter(boolean displayProvidersWithoutService) {
+     this.displayProvidersWithoutService = displayProvidersWithoutService;
+   }
+
    @Override
    public int complete(String buffer, int cursor, List<String> candidates) {
       try {
-         if (computeServices != null) {
+        if (displayProvidersWithoutService) {
+          for (ProviderMetadata providerMetadata : Providers.viewableAs(TypeToken.of(ComputeServiceContext.class))) {
+            delegate.getStrings().add(providerMetadata.getId());
+          }
+        } else if (computeServices != null) {
             for (ComputeService computeService : computeServices) {
                String id = computeService.getContext().unwrap().getId();
                if (Providers.withId(id) != null) {

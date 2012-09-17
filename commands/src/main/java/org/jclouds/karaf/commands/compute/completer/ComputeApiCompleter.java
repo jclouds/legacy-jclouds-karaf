@@ -20,20 +20,33 @@ package org.jclouds.karaf.commands.compute.completer;
 
 import java.util.List;
 
+import com.google.common.reflect.TypeToken;
 import org.apache.karaf.shell.console.Completer;
 import org.apache.karaf.shell.console.completer.StringsCompleter;
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.apis.Apis;
 import org.jclouds.compute.ComputeService;
+import org.jclouds.compute.ComputeServiceContext;
 
 public class ComputeApiCompleter implements Completer {
 
    private final StringsCompleter delegate = new StringsCompleter();
    private List<? extends ComputeService> computeServices;
 
-   @Override
+   private final boolean displayApisWithoutService;
+
+   public ComputeApiCompleter(boolean displayApisWithoutService) {
+     this.displayApisWithoutService = displayApisWithoutService;
+   }
+
+  @Override
    public int complete(String buffer, int cursor, List<String> candidates) {
       try {
-         if (computeServices != null) {
+         if (displayApisWithoutService) {
+           for (ApiMetadata apiMetadata : Apis.viewableAs(TypeToken.of(ComputeServiceContext.class))) {
+             delegate.getStrings().add(apiMetadata.getId());
+           }
+         } else if (computeServices != null) {
             for (ComputeService computeService : computeServices) {
                String id = computeService.getContext().unwrap().getId();
                if (Apis.withId(id) != null) {
