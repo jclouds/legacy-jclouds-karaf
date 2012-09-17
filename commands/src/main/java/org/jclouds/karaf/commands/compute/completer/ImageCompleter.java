@@ -23,7 +23,8 @@ import java.util.Set;
 import org.apache.karaf.shell.console.Completer;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.Image;
-import org.jclouds.karaf.commands.compute.Constants;
+import org.jclouds.karaf.core.Constants;
+import static org.jclouds.karaf.utils.compute.ComputeHelper.findCacheKeysForService;
 
 public class ImageCompleter extends ComputeCompleterSupport implements Completer {
 
@@ -37,7 +38,9 @@ public class ImageCompleter extends ComputeCompleterSupport implements Completer
          Set<? extends Image> images = computeService.listImages();
          if (images != null) {
             for (Image image : images) {
-               cache.put(computeService.getContext().unwrap().getId(), image.getId());
+              for (String cacheKey : findCacheKeysForService(computeService)) {
+                cache.put(cacheKey, image.getId());
+              }
             }
          }
       }

@@ -19,7 +19,7 @@
 package org.jclouds.karaf.commands.compute.completer;
 
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.karaf.commands.compute.Constants;
+import org.jclouds.karaf.core.Constants;
 
 public class InactiveNodesCompleter extends NodesCompleter {
 

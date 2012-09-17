@@ -132,14 +132,14 @@
     </build>
 
     <modules>
+        <module>core</module>
         <module>utils</module>
+        <module>cache</module>
         <module>commands</module>
         <module>services</module>
         <module>urlhandler</module>
         <module>feature</module>
         <module>itests</module>
-        <module>cache</module>
-        <module>core</module>
     </modules>
 
     <properties>

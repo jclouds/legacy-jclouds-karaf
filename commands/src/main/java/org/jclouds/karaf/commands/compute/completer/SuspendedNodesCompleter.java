@@ -20,7 +20,7 @@ package org.jclouds.karaf.commands.compute.completer;
 
 import org.apache.karaf.shell.console.Completer;
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.karaf.commands.compute.Constants;
+import org.jclouds.karaf.core.Constants;
 
 public class SuspendedNodesCompleter extends NodesCompleter implements Completer {
 

@@ -24,11 +24,14 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import com.google.inject.Module;
@@ -43,7 +46,7 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
 
     private final Logger logger = LoggerFactory.getLogger(BlobUrlHandler.class);
 
-    private static String SYNTAX = "blob:provider/container/blob";
+    private static String SYNTAX = "blob:provider/container/blob?id=?????";
 
     private List<BlobStore> blobStores = new LinkedList<BlobStore>();
 
@@ -71,6 +74,7 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
     }
 
     public class Connection extends URLConnection {
+        final String id;
         final String providerName;
         final String containerName;
         final String blobName;
@@ -94,6 +98,13 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
                 builder.append("/").append(parts[i]);
             }
             this.blobName = builder.toString();
+            //Parse the query string for id.
+            Map<String, String> parameters = parseUrlParameters(url);
+            if (parameters != null && parameters.containsKey("id")) {
+              id = parameters.get("id");
+            } else {
+              id = null;
+            }
         }
 
         @Override
@@ -103,7 +114,7 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
         @Override
         public InputStream getInputStream() throws IOException {
             try {
-                BlobStore blobStore = BlobStoreHelper.getBlobStore(providerName,blobStores);
+                BlobStore blobStore = BlobStoreHelper.getBlobStore(id, providerName, blobStores);
                 if (blobStore == null && url.getUserInfo() != null) {
                     String userInfo = url.getUserInfo();
                     String[] ui = userInfo.split(":");
@@ -134,7 +145,7 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
         @Override
         public OutputStream getOutputStream() throws IOException {
            try {
-               BlobStore blobStore = BlobStoreHelper.getBlobStore(providerName, blobStores);
+               BlobStore blobStore = BlobStoreHelper.getBlobStore(id, providerName, blobStores);
                if (!blobStore.containerExists(containerName)) {
                     blobStore.createContainerInLocation(null,containerName);
                }
@@ -147,6 +158,19 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
                 throw (IOException) new IOException("Error opening blob protocol url").initCause(e);
             }
         }
+
+      protected Map<String, String> parseUrlParameters(URL url) {
+        Map<String, String> map = new HashMap<String, String>();
+        if (url != null && url.getQuery() != null) {
+          String[] params = url.getQuery().split("&");
+          for (String param : params) {
+            String name = param.split("=")[0];
+            String value = param.split("=")[1];
+            map.put(name, value);
+          }
+        }
+        return map;
+      }
     }
 
 

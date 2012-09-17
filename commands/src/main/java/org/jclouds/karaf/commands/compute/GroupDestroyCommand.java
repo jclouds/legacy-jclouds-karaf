@@ -28,7 +28,8 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Predicate;
-
+import org.jclouds.karaf.core.Constants;
+import static org.jclouds.karaf.utils.compute.ComputeHelper.findCacheKeysForService;
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
@@ -56,19 +57,18 @@ public class GroupDestroyCommand extends ComputeCommandWithOptions {
          });
 
          for (NodeMetadata node : nodeMetadatas) {
-            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(
-                     service.getContext().unwrap().getId(), node.getId());
-            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(
-                     service.getContext().unwrap().getId(), node.getId());
-            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(
-                     service.getContext().unwrap().getId(), node.getId());
+           for (String cacheKey : findCacheKeysForService(service)) {
+            cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(cacheKey, node.getId());
+            cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(cacheKey, node.getId());
+            cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(cacheKey, node.getId());
             aggregatedMetadata.add(node);
+           }
          }
       }
 
       if (!aggregatedMetadata.isEmpty()) {
          System.out.println("Destroyed nodes:");
-         printNodes(aggregatedMetadata,  System.out);
+         printNodes(service, aggregatedMetadata,  System.out);
       }
 
       return null;

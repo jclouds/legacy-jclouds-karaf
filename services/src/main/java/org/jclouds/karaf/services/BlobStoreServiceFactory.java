@@ -88,9 +88,10 @@ public class BlobStoreServiceFactory extends ServiceFactorySupport implements Bl
                 }
 
 
+              //We are removing credentials as we don't want them to be visible in the service registration.
+                String identity = (String) properties.remove(IDENTITY);
+                String credential = (String) properties.remove(CREDENTIAL);
                 String endpoint = (String) properties.get(ENDPOINT);
-                String identity = (String) properties.get(IDENTITY);
-                String credential = (String) properties.get(CREDENTIAL);
 
                 BlobStoreContext context = null;
                 ContextBuilder builder = null;

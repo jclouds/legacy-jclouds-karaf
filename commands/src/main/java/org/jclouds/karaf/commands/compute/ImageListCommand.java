@@ -40,7 +40,7 @@ public class ImageListCommand extends ComputeCommandWithOptions {
          System.err.println(t.getMessage());
          return null;
       }
-     printImages(service.listImages(), System.out);
+     printImages(service, service.listImages(), System.out);
       return null;
    }
 

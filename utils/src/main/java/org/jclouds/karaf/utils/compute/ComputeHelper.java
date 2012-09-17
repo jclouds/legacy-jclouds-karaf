@@ -18,20 +18,56 @@
 
 package org.jclouds.karaf.utils.compute;
 
+import java.util.LinkedList;
 import java.util.List;
 
+import com.google.common.base.Strings;
 import org.jclouds.compute.ComputeService;
+import org.jclouds.karaf.core.Constants;
 
 public class ComputeHelper {
 
+  /**
+   * Returns the cache keys for a given {@link ComputeService}.
+   * @param computeService
+   * @return
+   */
+  public static List<String> findCacheKeysForService(ComputeService computeService) {
+    List<String> keys = new LinkedList<String>();
+    String serviceId = (String) computeService.getContext().unwrap().getProviderMetadata().getDefaultProperties().get(Constants.JCLOUDS_SERVICE_ID);
+    String providerOrApi = computeService.getContext().unwrap().getId();
+    if (serviceId != null) {
+      keys.add(serviceId);
+    }
+    if (providerOrApi != null) {
+      keys.add(providerOrApi);
+    }
+    return keys;
+  }
+
     /**
-     * Chooses a {@link ComputeService} that matches the specified provider or api.
+     * Chooses a {@link ComputeService} that matches the specified a service id or a provider / api.
+     * @param id
      * @param providerOrApi
      * @param services
      * @return
      */
-    public static ComputeService getComputeService(String providerOrApi, List<ComputeService> services) {
-        if (providerOrApi != null) {
+    public static ComputeService getComputeService(String id, String providerOrApi, List<ComputeService> services) {
+        if (!Strings.isNullOrEmpty(id)) {
+          ComputeService service = null;
+          for (ComputeService svc : services) {
+            if (id.equals(svc.getContext().unwrap().getProviderMetadata().getDefaultProperties().getProperty(Constants.JCLOUDS_SERVICE_ID))) {
+              service = svc;
+              break;
+            }
+          }
+          if (service == null) {
+            throw new IllegalArgumentException("No compute service with id" + id + " found.");
+          }
+          return service;
+        }
+
+        if (!Strings.isNullOrEmpty(providerOrApi)) {
             ComputeService service = null;
             for (ComputeService svc : services) {
                 if (providerOrApi.equals(svc.getContext().unwrap().getId())) {

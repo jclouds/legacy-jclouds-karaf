@@ -20,6 +20,7 @@ package org.jclouds.karaf.commands.compute.completer;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.felix.service.command.CommandSession;
@@ -35,6 +36,7 @@ import com.google.common.collect.Multimap;
 
 public abstract class ComputeCompleterSupport implements Completer, Cacheable<ComputeService> {
 
+   private static final String ID_OPTION = "--id";
    private static final String PROVIDER_OPTION = "--provider";
    private static final String API_OPTION = "--api";
 
@@ -49,10 +51,13 @@ public abstract class ComputeCompleterSupport implements Completer, Cacheable<Co
      delegate.getStrings().clear();
 
      if (list != null) {
+        String serviceId = extractServiceId(list.getArguments());
        String providerOrApi = extractProviderOrApiFromArguments(list.getArguments());
        Collection<String> values;
 
-       if (providerOrApi != null && cache.containsKey(providerOrApi)) {
+       if (serviceId != null && cache.containsKey(serviceId)) {
+         values = cache.get(serviceId);
+       } else if (providerOrApi != null && cache.containsKey(providerOrApi)) {
          values = cache.get(providerOrApi);
        } else {
          values = cache.values();
@@ -68,6 +73,25 @@ public abstract class ComputeCompleterSupport implements Completer, Cacheable<Co
      return delegate.complete(buffer, cursor, candidates);
    }
 
+  /**
+   * Parses the arguemnts and extracts the service id.
+   * @param args
+   * @return
+   */
+  private String extractServiceId(String... args) {
+    String id = null;
+    if (args != null && args.length > 0) {
+      List<String> arguments = Arrays.asList(args);
+      if (arguments.contains(ID_OPTION)) {
+        int index = arguments.indexOf(ID_OPTION);
+        if (arguments.size() > index) {
+          return arguments.get(index + 1);
+        }
+      }
+    }
+    return id;
+  }
+
     /**
      * Parses the arguments and extracts the provider or api option value
      * @param args
@@ -77,6 +101,12 @@ public abstract class ComputeCompleterSupport implements Completer, Cacheable<Co
         String id = null;
         if (args != null && args.length > 0) {
             List<String> arguments = Arrays.asList(args);
+            if (arguments.contains(ID_OPTION)) {
+               int index = arguments.indexOf(ID_OPTION);
+               if (arguments.size() > index) {
+                  return arguments.get(index + 1);
+               }
+            }
             if (arguments.contains(PROVIDER_OPTION)) {
                 int index = arguments.indexOf(PROVIDER_OPTION);
                 if (arguments.size() > index) {

@@ -18,15 +18,11 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
-import java.util.Dictionary;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.apis.Apis;
 import org.jclouds.blobstore.BlobStore;
+import org.jclouds.karaf.core.Constants;
 import org.jclouds.karaf.utils.EnvHelper;
 import org.jclouds.providers.Providers;
 import org.osgi.framework.BundleContext;
@@ -34,8 +30,13 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
 @Command(scope = "jclouds", name = "blobstore-service-create", description = "Creates a BlobStore service.", detailedDescription = "classpath:blobstore-service-create.txt")
-public class BlobStoreCreateCommand extends BlobStoreServiceCommand {
+public class BlobStoreServiceCreateCommand extends BlobStoreServiceCommand {
 
    @Option(name = "--add-option", multiValued = true, description = "Adds a key value pair to the configuration.")
    protected String[] options;
@@ -47,13 +48,19 @@ public class BlobStoreCreateCommand extends BlobStoreServiceCommand {
 
    @Override
    protected Object doExecute() throws Exception {
-      if (provider == null && api == null) {
+      if (provider == null && api == null && id == null) {
          System.err.println("You need to specify at least a valid provider or api.");
          return null;
       }
 
+      if (id == null && provider != null) {
+       id = provider;
+      } else if (id == null && api != null) {
+       id = api;
+      }
+
       Map<String, String> props = parseOptions(options);
-      registerBlobStore(configAdmin, provider, api, identity, credential, endpoint, props);
+      registerBlobStore(configAdmin, id, provider, api, identity, credential, endpoint, props);
       if (noWait) {
          return null;
       } else if (!isProviderOrApiInstalled(provider, api)) {
@@ -61,8 +68,8 @@ public class BlobStoreCreateCommand extends BlobStoreServiceCommand {
                   .println("Provider / api currently not installed. Service will be created once it does get installed.");
          return null;
       } else {
-         System.out.println("Waiting for blobstore  service.");
-         waitForBlobStore(bundleContext, provider, api);
+        System.out.println(String.format("Waiting for blostore service with id: %s.", id));
+        waitForBlobStore(bundleContext, id, provider, api);
       }
       return null;
    }
@@ -99,7 +106,7 @@ public class BlobStoreCreateCommand extends BlobStoreServiceCommand {
     */
    private Map<String, String> parseOptions(String[] options) {
       Map<String, String> props = new HashMap<String, String>();
-      if (options != null && options.length > 1) {
+      if (options != null && options.length >= 1) {
          for (String option : options) {
             if (option.contains("=")) {
                String key = option.substring(0, option.indexOf("="));
@@ -124,7 +131,7 @@ public class BlobStoreCreateCommand extends BlobStoreServiceCommand {
     * @param props
     * @throws Exception
     */
-   private void registerBlobStore(final ConfigurationAdmin configurationAdmin, final String provider, final String api,
+   private void registerBlobStore(final ConfigurationAdmin configurationAdmin, final String id, final String provider, final String api,
             final String identity, final String credential, final String endpoint, final Map<String, String> props)
             throws Exception {
       Runnable registrationTask = new Runnable() {
@@ -132,7 +139,7 @@ public class BlobStoreCreateCommand extends BlobStoreServiceCommand {
          public void run() {
             try {
                Configuration configuration = findOrCreateFactoryConfiguration(configurationAdmin,
-                        "org.jclouds.blobstore", provider, api);
+                        "org.jclouds.blobstore", id, provider, api);
                if (configuration != null) {
                   @SuppressWarnings("unchecked")
                   Dictionary<Object, Object> dictionary = configuration.getProperties();
@@ -146,6 +153,9 @@ public class BlobStoreCreateCommand extends BlobStoreServiceCommand {
                   String credentialValue = EnvHelper.getComputeCredential(credential);
                   String endpointValue = EnvHelper.getComputeEndpoint(endpoint);
 
+                  if (id != null) {
+                    dictionary.put(Constants.JCLOUDS_SERVICE_ID, id);
+                  }
                   if (providerValue != null) {
                      dictionary.put("provider", providerValue);
                   }
@@ -184,11 +194,15 @@ public class BlobStoreCreateCommand extends BlobStoreServiceCommand {
     * @param api
     * @return
     */
-   public synchronized BlobStore waitForBlobStore(BundleContext bundleContext, String provider, String api) {
+   public synchronized BlobStore waitForBlobStore(BundleContext bundleContext, String id, String provider, String api) {
       BlobStore blobStore = null;
       try {
          for (int r = 0; r < 6; r++) {
             ServiceReference[] references = null;
+            if (id != null) {
+              references = bundleContext.getAllServiceReferences(BlobStore.class.getName(), "(org.jclouds.service.id="
+                      + id + ")");
+            }
             if (provider != null) {
                references = bundleContext.getAllServiceReferences(BlobStore.class.getName(), "(provider=" + provider
                         + ")");

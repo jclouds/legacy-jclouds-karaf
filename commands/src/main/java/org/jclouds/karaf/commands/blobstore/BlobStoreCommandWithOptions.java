@@ -39,6 +39,9 @@ import com.google.inject.Module;
  */
 public abstract class BlobStoreCommandWithOptions extends BlobStoreCommandBase {
 
+   @Option(name = "--id", description = "The service id. Used to distinct between multiple service of the same provider/api. Only usable in interactive mode.")
+   protected String id;
+
    @Option(name = "--provider", description = "The provider to use.")
    protected String provider;
 
@@ -78,25 +81,28 @@ public abstract class BlobStoreCommandWithOptions extends BlobStoreCommandBase {
    }
 
    protected BlobStore getBlobStore() {
-      if (services != null && services.size() == 1) {
+      if ((id == null && provider == null && api == null) && (services != null && services.size() == 1)) {
          return services.get(0);
       }
+
       BlobStore blobStore = null;
       String providerValue = EnvHelper.getBlobStoreProvider(provider);
       String apiValue = EnvHelper.getBlobStoreApi(api);
       String identityValue = EnvHelper.getBlobStoreIdentity(identity);
       String credentialValue = EnvHelper.getBlobStoreCredential(credential);
       String endpointValue = EnvHelper.getBlobStoreEndpoint(endpoint);
-
+      boolean serviceIdProvided = !Strings.isNullOrEmpty(id);
       boolean canCreateService = (!Strings.isNullOrEmpty(providerValue) || !Strings.isNullOrEmpty(apiValue))
                && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);
 
       String providerOrApiValue = !Strings.isNullOrEmpty(providerValue) ? providerValue : apiValue;
 
       try {
-         blobStore = BlobStoreHelper.getBlobStore(providerOrApiValue, getBlobStoreServices());
+         blobStore = BlobStoreHelper.getBlobStore(id, providerOrApiValue, getBlobStoreServices());
       } catch (Throwable t) {
-         if (!canCreateService) {
+        if (serviceIdProvided) {
+          throw new RuntimeException("Could not find blobstore service with id:" + id);
+        } else if (!canCreateService) {
             StringBuilder sb = new StringBuilder();
             sb.append("Insufficient information to create blobstore service:").append("\n");
             if (providerOrApiValue == null) {

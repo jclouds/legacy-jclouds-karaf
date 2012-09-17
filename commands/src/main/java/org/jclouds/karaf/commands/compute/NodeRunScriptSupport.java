@@ -75,7 +75,7 @@ public abstract class NodeRunScriptSupport extends ComputeCommandWithOptions {
          NodeMetadata nodeMetadata = nodeMetaDataSet.toArray(new NodeMetadata[0])[0];
 
          // If we have multiple nodes we just want the headers, but not full details.
-         printNodeInfo(nodeMetaDataSet, nodeMetaDataSet.size() == 1, System.out);
+         printNodeInfo(service, nodeMetaDataSet, nodeMetaDataSet.size() == 1, System.out);
 
          LoginCredentials credentials = nodeMetadata.getCredentials();
 

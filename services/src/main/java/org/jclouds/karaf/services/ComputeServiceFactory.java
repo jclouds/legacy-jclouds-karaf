@@ -112,8 +112,9 @@ public class ComputeServiceFactory extends ServiceFactorySupport implements Comp
                     return;
                 }
 
-                String identity = (String) properties.get(IDENTITY);
-                String credential = (String) properties.get(CREDENTIAL);
+                //We are removing credentials as we don't want them to be visible in the service registration.
+                String identity = (String) properties.remove(IDENTITY);
+                String credential = (String) properties.remove(CREDENTIAL);
                 String endpoint = (String) properties.get(ENDPOINT);
                 String storeType = (String) properties.get(CREDENTIAL_STORE);
                 String eventSupport = (String) properties.get(NODE_EVENT_SUPPORT);

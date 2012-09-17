@@ -35,7 +35,7 @@ import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 
 @Command(scope = "jclouds", name = "compute-service-create", description = "Creates a compute service", detailedDescription = "classpath:compute-service-create.txt")
-public class ComputeCreateCommand extends ComputeServiceCommand {
+public class ComputeServiceCreateCommand extends ComputeServiceCommand {
 
    @Option(name = "--add-option", multiValued = true, description = "Adds a key value pair to the configuration.")
    protected String[] options;
@@ -52,17 +52,22 @@ public class ComputeCreateCommand extends ComputeServiceCommand {
          return null;
       }
 
+      if (id == null && provider != null) {
+         id = provider;
+      } else if (id == null && api != null) {
+         id = api;
+      }
+
       Map<String, String> props = parseOptions(options);
-      registerComputeService(configAdmin, provider, api, identity, credential, endpoint, props);
+      registerComputeService(configAdmin, id, provider, api, identity, credential, endpoint, props);
       if (noWait) {
          return null;
       } else if (!isProviderOrApiInstalled(provider, api)) {
-         System.out
-                  .println("Provider / api currently not installed. Service will be created once it does get installed.");
+         System.out.println("Provider / api currently not installed. Service will be created once it does get installed.");
          return null;
       } else {
-         System.out.println("Waiting for compute service.");
-         waitForComputeService(bundleContext, provider, api);
+         System.out.println(String.format("Waiting for compute service with id: %s.", id));
+         waitForComputeService(bundleContext, id, provider, api);
       }
       return null;
    }
@@ -99,7 +104,7 @@ public class ComputeCreateCommand extends ComputeServiceCommand {
     */
    private Map<String, String> parseOptions(String[] options) {
       Map<String, String> props = new HashMap<String, String>();
-      if (options != null && options.length > 1) {
+      if (options != null && options.length >= 1) {
          for (String option : options) {
             if (option.contains("=")) {
                String key = option.substring(0, option.indexOf("="));
@@ -116,6 +121,7 @@ public class ComputeCreateCommand extends ComputeServiceCommand {
     * 
     * 
     * @param configurationAdmin
+    * @param id
     * @param provider
     * @param api
     * @param identity
@@ -124,15 +130,14 @@ public class ComputeCreateCommand extends ComputeServiceCommand {
     * @param props
     * @throws Exception
     */
-   private void registerComputeService(final ConfigurationAdmin configurationAdmin, final String provider,
+   private void registerComputeService(final ConfigurationAdmin configurationAdmin,final String id, final String provider,
             final String api, final String identity, final String credential, final String endpoint,
             final Map<String, String> props) throws Exception {
       Runnable registrationTask = new Runnable() {
          @Override
          public void run() {
             try {
-               Configuration configuration = findOrCreateFactoryConfiguration(configurationAdmin,
-                        "org.jclouds.compute", provider, api);
+               Configuration configuration = findOrCreateFactoryConfiguration(configurationAdmin, "org.jclouds.compute", id, provider, api);
                if (configuration != null) {
                   @SuppressWarnings("unchecked")
                   Dictionary<Object, Object> dictionary = configuration.getProperties();
@@ -146,6 +151,9 @@ public class ComputeCreateCommand extends ComputeServiceCommand {
                   String credentialValue = EnvHelper.getComputeCredential(credential);
                   String endpointValue = EnvHelper.getComputeEndpoint(endpoint);
 
+                  if (id != null) {
+                    dictionary.put("org.jclouds.service.id", id);
+                  }
                   if (providerValue != null) {
                      dictionary.put("provider", providerValue);
                   }
@@ -184,12 +192,16 @@ public class ComputeCreateCommand extends ComputeServiceCommand {
     * @param api
     * @return
     */
-   public synchronized ComputeService waitForComputeService(BundleContext bundleContext, String provider, String api) {
+   public synchronized ComputeService waitForComputeService(BundleContext bundleContext, String id, String provider, String api) {
       ComputeService computeService = null;
       try {
          for (int r = 0; r < 6; r++) {
             ServiceReference[] references = null;
-            if (provider != null) {
+            if (id != null) {
+              references = bundleContext.getAllServiceReferences(ComputeService.class.getName(), "(org.jclouds.service.id="
+                      + id + ")");
+            }
+            else if (provider != null) {
                references = bundleContext.getAllServiceReferences(ComputeService.class.getName(), "(provider="
                         + provider + ")");
             } else if (api != null) {

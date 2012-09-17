@@ -35,6 +35,7 @@ import org.jclouds.apis.ApiMetadata;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.util.BlobStoreUtils;
+import org.jclouds.karaf.core.Constants;
 import org.jclouds.karaf.cache.BasicCacheProvider;
 import org.jclouds.karaf.cache.CacheProvider;
 import org.jclouds.providers.ProviderMetadata;
@@ -249,14 +250,16 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
             String indent, PrintStream out) {
       out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
       for (String provider : providers.keySet()) {
-         boolean registered = false;
+        StringBuilder sb = new StringBuilder();
+        sb.append("[ ");
          for (BlobStore blobStore : blobStores) {
+           String serviceId = (String) blobStore.getContext().unwrap().getProviderMetadata().getDefaultProperties().get(Constants.JCLOUDS_SERVICE_ID);
             if (blobStore.getContext().unwrap().getId().equals(provider)) {
-               registered = true;
-               break;
+               sb.append(serviceId).append(" ");
             }
          }
-         out.println(String.format(PROVIDERFORMAT, provider, "blobstore", registered));
+         sb.append("]");
+         out.println(String.format(PROVIDERFORMAT, provider, "blobstore", sb.toString()));
       }
    }
 
@@ -264,14 +267,16 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
             PrintStream out) {
       out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
       for (String provider : apis.keySet()) {
-         boolean registered = false;
+         StringBuilder sb = new StringBuilder();
+         sb.append("[ ");
          for (BlobStore blobStore : blobStores) {
+           String serviceId = (String) blobStore.getContext().unwrap().getProviderMetadata().getDefaultProperties().get(Constants.JCLOUDS_SERVICE_ID);
             if (blobStore.getContext().unwrap().getId().equals(provider)) {
-               registered = true;
-               break;
+              sb.append(serviceId).append(" ");
             }
          }
-         out.println(String.format(PROVIDERFORMAT, provider, "blobstore", registered));
+         sb.append("]");
+         out.println(String.format(PROVIDERFORMAT, provider, "blobstore", sb.toString()));
       }
    }
 

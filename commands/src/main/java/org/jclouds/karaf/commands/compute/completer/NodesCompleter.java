@@ -24,7 +24,8 @@ import org.apache.karaf.shell.console.Completer;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.karaf.commands.compute.Constants;
+import org.jclouds.karaf.core.Constants;
+import static org.jclouds.karaf.utils.compute.ComputeHelper.findCacheKeysForService;
 
 public class NodesCompleter extends ComputeCompleterSupport implements Completer {
 
@@ -40,7 +41,9 @@ public class NodesCompleter extends ComputeCompleterSupport implements Completer
             for (ComputeMetadata compute : computeMetadatas) {
                NodeMetadata node = (NodeMetadata) compute;
                if (apply(node)) {
-                  cache.put(computeService.getContext().unwrap().getId(), node.getId());
+                 for (String cacheKey : findCacheKeysForService(computeService)) {
+                   cache.put(cacheKey, node.getId());
+                 }
                }
             }
          }

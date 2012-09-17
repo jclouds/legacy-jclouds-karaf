@@ -22,6 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
 import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.logLevel;
+import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.debugConfiguration;
 import static org.ops4j.pax.exam.CoreOptions.scanFeatures;
 
 import java.io.File;
@@ -146,7 +147,7 @@ public class AwsS3LiveTest extends JcloudsLiveTestSupport {
     public Option[] config() {
         return new Option[]{
                 jcloudsDistributionConfiguration(), keepRuntimeFolder(), logLevel(LogLevelOption.LogLevel.ERROR),
-                //debugConfiguration("5005",true),
+                debugConfiguration("5005",true),
                 systemProperty("jclouds.aws.identity"),
                 systemProperty("jclouds.aws.credential"),
                 systemProperty("jclouds.karaf.version",MavenUtils.getArtifactVersion(JCLOUDS_KARAF_GROUP_ID, JCLOUDS_KARAF_ARTIFACT_ID)),

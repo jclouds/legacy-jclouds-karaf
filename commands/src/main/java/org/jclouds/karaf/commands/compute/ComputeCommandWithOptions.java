@@ -39,6 +39,9 @@ import com.google.inject.Module;
  */
 public abstract class ComputeCommandWithOptions extends ComputeCommandBase {
 
+   @Option(name = "--id", description = "The service id. Used to distinct between multiple service of the same provider/api. Only ")
+   protected String id;
+
    @Option(name = "--provider", description = "The provider or use.")
    protected String provider;
 
@@ -69,24 +72,28 @@ public abstract class ComputeCommandWithOptions extends ComputeCommandBase {
    }
 
    protected ComputeService getComputeService() {
-      if (computeServices != null && computeServices.size() == 1) {
+      if ((id == null && provider == null && api == null) &&(computeServices != null && computeServices.size() == 1)) {
          return computeServices.get(0);
       }
+
       ComputeService computeService = null;
       String providerValue = EnvHelper.getComputeProvider(provider);
       String apiValue = EnvHelper.getComputeApi(api);
       String identityValue = EnvHelper.getComputeIdentity(identity);
       String credentialValue = EnvHelper.getComputeCredential(credential);
       String endpointValue = EnvHelper.getComputeEndpoint(endpoint);
+      boolean serviceIdProvided = !Strings.isNullOrEmpty(id);
       boolean canCreateService = (!Strings.isNullOrEmpty(providerValue) || !Strings.isNullOrEmpty(apiValue))
                && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);
 
       String providerOrApiValue = !Strings.isNullOrEmpty(providerValue) ? providerValue : apiValue;
 
       try {
-         computeService = ComputeHelper.getComputeService(providerOrApiValue, getComputeServices());
+         computeService = ComputeHelper.getComputeService(id, providerOrApiValue, getComputeServices());
       } catch (Throwable t) {
-         if (!canCreateService) {
+         if (serviceIdProvided) {
+           throw new RuntimeException("Could not find compute service with id:" + id);
+         } else if (!canCreateService) {
             StringBuilder sb = new StringBuilder();
             sb.append("Insufficient information to create compute service:").append("\n");
             if (providerOrApiValue == null) {

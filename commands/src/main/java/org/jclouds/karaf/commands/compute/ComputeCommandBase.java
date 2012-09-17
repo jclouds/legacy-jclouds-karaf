@@ -41,9 +41,13 @@ import org.jclouds.karaf.cache.CacheProvider;
 import org.jclouds.karaf.commands.table.internal.PropertyShellTableFactory;
 import org.jclouds.karaf.commands.table.ShellTable;
 import org.jclouds.karaf.commands.table.ShellTableFactory;
+import org.jclouds.karaf.core.Constants;
+import org.jclouds.karaf.utils.compute.ComputeHelper;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.AuthorizationException;
 import org.osgi.service.cm.ConfigurationAdmin;
+
+import static org.jclouds.karaf.utils.compute.ComputeHelper.findCacheKeysForService;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
@@ -74,14 +78,16 @@ public abstract class ComputeCommandBase extends AbstractAction {
             String indent, PrintStream out) {
       out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
       for (String provider : providers.keySet()) {
-         boolean registered = false;
+         StringBuilder sb = new StringBuilder();
+         sb.append("[ ");
          for (ComputeService computeService : computeServices) {
-            if (computeService.getContext().unwrap().getId().equals(provider)) {
-               registered = true;
-               break;
+            String serviceId = (String) computeService.getContext().unwrap().getProviderMetadata().getDefaultProperties().get(Constants.JCLOUDS_SERVICE_ID);
+            if (computeService.getContext().unwrap().getId().equals(provider) && serviceId != null) {
+               sb.append(serviceId).append(" ");
             }
          }
-         out.println(String.format(PROVIDERFORMAT, provider, "compute", registered));
+         sb.append("]");
+         out.println(String.format(PROVIDERFORMAT, provider, "compute", sb.toString()));
       }
    }
 
@@ -89,46 +95,53 @@ public abstract class ComputeCommandBase extends AbstractAction {
             PrintStream out) {
       out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
       for (String api : apis.keySet()) {
-         boolean registered = false;
+        StringBuilder sb = new StringBuilder();
+        sb.append("[ ");
          for (ComputeService computeService : computeServices) {
-            if (computeService.getContext().unwrap().getId().equals(api)) {
-               registered = true;
-               break;
+           String serviceId = (String) computeService.getContext().unwrap().getProviderMetadata().getDefaultProperties().get(Constants.JCLOUDS_SERVICE_ID);
+            if (computeService.getContext().unwrap().getId().equals(api) && serviceId != null) {
+              sb.append(serviceId).append(" ");
             }
          }
-         out.println(String.format(PROVIDERFORMAT, api, "compute", registered));
+        sb.append("]");
+         out.println(String.format(PROVIDERFORMAT, api, "compute", sb.toString()));
       }
    }
 
-   protected void printNodes(Set<? extends ComputeMetadata> nodes, PrintStream out) {
+   protected void printNodes(ComputeService service, Set<? extends ComputeMetadata> nodes, PrintStream out) {
      ShellTable table = shellTableFactory.build("node");
      table.setDisplayData(nodes);
      table.display(out, true, true);
 
       for (ComputeMetadata metadata : nodes) {
          NodeMetadata node = (NodeMetadata) metadata;
-         cacheProvider.getProviderCacheForType(Constants.GROUP).put(node.getProviderId(), node.getGroup());
+        for (String cacheKey : findCacheKeysForService(service)) {
+          cacheProvider.getProviderCacheForType(Constants.GROUP).put(cacheKey, node.getGroup());
+        }
       }
    }
 
-   protected void printHardwares(Set<? extends Hardware> hardwares, PrintStream out) {
+   protected void printHardwares(ComputeService service, Set<? extends Hardware> hardwares, PrintStream out) {
      ShellTable table = shellTableFactory.build("hardware");
      table.setDisplayData(hardwares);
      table.display(out, true, true);
 
       for (Hardware hardware : hardwares) {
-         cacheProvider.getProviderCacheForType(Constants.HARDWARE_CACHE)
-                  .put(hardware.getProviderId(), hardware.getId());
+         for (String cacheKey : findCacheKeysForService(service)) {
+           cacheProvider.getProviderCacheForType(Constants.HARDWARE_CACHE).put(cacheKey, hardware.getId());
+         }
       }
    }
 
-   protected void printImages(Set<? extends Image> images, PrintStream out) {
+   protected void printImages(ComputeService service, Set<? extends Image> images, PrintStream out) {
       ShellTable table = shellTableFactory.build("image");
       table.setDisplayData(images);
       table.display(out, true, true);
 
       for (Image image : images) {
-         cacheProvider.getProviderCacheForType(Constants.IMAGE_CACHE).put(image.getProviderId(), image.getId());
+        for (String cacheKey : findCacheKeysForService(service)) {
+         cacheProvider.getProviderCacheForType(Constants.IMAGE_CACHE).put(cacheKey, image.getId());
+        }
       }
    }
 
@@ -143,8 +156,9 @@ public abstract class ComputeCommandBase extends AbstractAction {
       for (Location loc : computeService.listAssignableLocations()) {
          for (Location p = loc; p != null; p = p.getParent()) {
             all.add(p);
-            cacheProvider.getProviderCacheForType(Constants.LOCATION_CACHE).put(
-                     computeService.getContext().unwrap().getId(), p.getId());
+            for (String cacheKey : findCacheKeysForService(computeService)) {
+            cacheProvider.getProviderCacheForType(Constants.LOCATION_CACHE).put(cacheKey, p.getId());
+            }
          }
       }
       return all;
@@ -209,8 +223,8 @@ public abstract class ComputeCommandBase extends AbstractAction {
       return sb.toString();
    }
 
-   protected void printNodeInfo(Set<? extends NodeMetadata> nodes, boolean details, PrintStream out) {
-      printNodes(nodes,  out);
+   protected void printNodeInfo(ComputeService service, Set<? extends NodeMetadata> nodes, boolean details, PrintStream out) {
+      printNodes(service, nodes,  out);
       if (details) {
          for (NodeMetadata node : nodes) {
             out.println();

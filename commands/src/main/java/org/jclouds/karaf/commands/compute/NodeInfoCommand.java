@@ -44,7 +44,7 @@ public class NodeInfoCommand extends ComputeCommandWithOptions {
       }
 
       NodeMetadata node = service.getNodeMetadata(id);
-      printNodeInfo(Sets.newHashSet(node), true, System.out);
+      printNodeInfo(service, Sets.newHashSet(node), true, System.out);
       return null;
    }
 }

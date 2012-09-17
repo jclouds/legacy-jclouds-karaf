@@ -31,6 +31,11 @@
 
     <dependencies>
         <dependency>
+          <groupId>org.jclouds.karaf</groupId>
+          <artifactId>core</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.jclouds</groupId>
             <artifactId>jclouds-compute</artifactId>
             <exclusions>

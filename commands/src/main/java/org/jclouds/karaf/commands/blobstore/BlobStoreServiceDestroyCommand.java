@@ -23,7 +23,7 @@ import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 
 @Command(scope = "jclouds", name = "blobstore-service-destroy", description = "Destroys a BlobStore service.", detailedDescription = "classpath:blobstore-service-destroy.txt")
-public class BlobStoreDestroyCommand extends BlobStoreServiceCommand {
+public class BlobStoreServiceDestroyCommand extends BlobStoreServiceCommand {
 
    @Override
    protected Object doExecute() throws Exception {
@@ -32,7 +32,13 @@ public class BlobStoreDestroyCommand extends BlobStoreServiceCommand {
          return null;
       }
 
-      Configuration configuration = findOrCreateFactoryConfiguration(configAdmin, "org.jclouds.blobstore", provider,
+      if (id == null && provider != null) {
+        id = provider;
+      } else if (id == null && api != null) {
+        id = api;
+      }
+
+      Configuration configuration = findOrCreateFactoryConfiguration(configAdmin, "org.jclouds.blobstore", id, provider,
                api);
       if (configuration != null) {
          configuration.delete();

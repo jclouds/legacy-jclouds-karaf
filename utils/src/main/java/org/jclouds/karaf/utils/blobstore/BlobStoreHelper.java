@@ -18,16 +18,37 @@
 
 package org.jclouds.karaf.utils.blobstore;
 
-import java.util.List;
-import java.util.Properties;
-
+import com.google.common.base.Strings;
+import com.google.inject.Module;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.BlobStoreContextFactory;
+import org.jclouds.karaf.core.Constants;
 
-import com.google.inject.Module;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
 
 public class BlobStoreHelper {
+
+  /**
+   * Returns the cache keys for a given {@link org.jclouds.compute.ComputeService}.
+   *
+   * @param blobStore
+   * @return
+   */
+  public static List<String> findCacheKeysForService(BlobStore blobStore) {
+    List<String> keys = new LinkedList<String>();
+    String serviceId = (String) blobStore.getContext().unwrap().getProviderMetadata().getDefaultProperties().get(Constants.JCLOUDS_SERVICE_ID);
+    String providerOrApi = blobStore.getContext().unwrap().getId();
+    if (serviceId != null) {
+      keys.add(serviceId);
+    }
+    if (providerOrApi != null) {
+      keys.add(providerOrApi);
+    }
+    return keys;
+  }
 
     /**
      * Chooses a {@link BlobStore} that matches the specified provider or api.
@@ -35,8 +56,22 @@ public class BlobStoreHelper {
      * @param services
      * @return
      */
-    public static BlobStore getBlobStore(String providerOrApi, List<BlobStore> services) {
-        if (providerOrApi != null) {
+    public static BlobStore getBlobStore(String id, String providerOrApi, List<BlobStore> services) {
+      if (!Strings.isNullOrEmpty(id)) {
+        BlobStore service = null;
+        for (BlobStore svc : services) {
+          if (id.equals(svc.getContext().unwrap().getProviderMetadata().getDefaultProperties().getProperty(Constants.JCLOUDS_SERVICE_ID))) {
+            service = svc;
+            break;
+          }
+        }
+        if (service == null) {
+          throw new IllegalArgumentException("No blobstore service with id" + id + " found.");
+        }
+        return service;
+      }
+
+      if (providerOrApi != null) {
             BlobStore service = null;
             for (BlobStore svc : services) {
                 if (providerOrApi.equals(svc.getContext().unwrap().getId())) {

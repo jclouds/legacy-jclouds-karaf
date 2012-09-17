@@ -22,7 +22,7 @@ import org.apache.felix.gogo.commands.Command;
 import org.jclouds.karaf.core.BlobStoreProviderOrApiRegistry;
 
 @Command(scope = "jclouds", name = "blobstore-service-list", description = "List available BlobStore services.", detailedDescription = "classpath:blobstore-service-list.txt")
-public class BlobStoreListCommand extends BlobStoreCommandBase {
+public class BlobStoreServiceListCommand extends BlobStoreCommandBase {
 
    private BlobStoreProviderOrApiRegistry blobStoreProviderOrApiRegistry;
 

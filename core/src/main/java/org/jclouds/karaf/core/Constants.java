@@ -16,9 +16,11 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.compute;
+package org.jclouds.karaf.core;
 
 public class Constants {
+
+   public static final String JCLOUDS_SERVICE_ID = "org.jclouds.service.id";
 
    public static final String NODE_CACHE = "NODE_CACHE";
    public static final String ACTIVE_NODE_CACHE = "ACTIVE_NODE_CACHE";

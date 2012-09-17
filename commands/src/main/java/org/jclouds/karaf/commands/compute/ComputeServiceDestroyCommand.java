@@ -23,7 +23,7 @@ import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 
 @Command(scope = "jclouds", name = "compute-service-destroy", description = "Destroys a compute service", detailedDescription = "classpath:compute-service-destroy.txt")
-public class ComputeDestroyCommand extends ComputeServiceCommand {
+public class ComputeServiceDestroyCommand extends ComputeServiceCommand {
 
    @Override
    protected Object doExecute() throws Exception {
@@ -32,7 +32,13 @@ public class ComputeDestroyCommand extends ComputeServiceCommand {
          return null;
       }
 
-      Configuration configuration = findOrCreateFactoryConfiguration(configAdmin, "org.jclouds.compute", provider, api);
+      if (id == null && provider != null) {
+        id = provider;
+      } else if (id == null && api != null) {
+        id = api;
+      }
+
+      Configuration configuration = findOrCreateFactoryConfiguration(configAdmin, "org.jclouds.compute", id, provider, api);
       if (configuration != null) {
          configuration.delete();
       } else {
