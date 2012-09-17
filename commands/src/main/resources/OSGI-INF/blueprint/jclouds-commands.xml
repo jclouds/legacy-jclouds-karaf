@@ -175,11 +175,9 @@
             <action class="org.jclouds.karaf.commands.compute.ComputeServiceDestroyCommand">
                 <property name="configAdmin" ref="configAdmin"/>
             </action>
-            <optional-completers>
-                <entry key="--id" value-ref="computeServiceIdCompleter"/>
-                <entry key="--provider" value-ref="computeProviderCompleter"/>
-                <entry key="--api" value-ref="computeApiCompleter"/>
-            </optional-completers>
+            <completers>
+                <ref component-id="computeServiceIdCompleter"/>
+            </completers>
         </command>
 
         <command name="jclouds/blobstore-service-list">
@@ -203,11 +201,9 @@
             <action class="org.jclouds.karaf.commands.blobstore.BlobStoreServiceDestroyCommand">
                 <property name="configAdmin" ref="configAdmin"/>
             </action>
-            <optional-completers>
-                <entry key="--id" value-ref="blobStoreServiceIdCompleter"/>
-                <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
-                <entry key="--api" value-ref="blobStoreApiCompleter"/>
-            </optional-completers>
+            <completers>
+                <ref component-id="blobStoreServiceIdCompleter"/>
+            </completers>
         </command>
         <command name="jclouds/node-list">
             <action class="org.jclouds.karaf.commands.compute.NodeListCommand">

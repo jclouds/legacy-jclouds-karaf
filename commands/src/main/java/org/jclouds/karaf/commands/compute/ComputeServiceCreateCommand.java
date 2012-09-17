@@ -35,7 +35,7 @@ import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 
 @Command(scope = "jclouds", name = "compute-service-create", description = "Creates a compute service", detailedDescription = "classpath:compute-service-create.txt")
-public class ComputeServiceCreateCommand extends ComputeServiceCommand {
+public class ComputeServiceCreateCommand extends ComputeCommandWithOptions {
 
    @Option(name = "--add-option", multiValued = true, description = "Adds a key value pair to the configuration.")
    protected String[] options;

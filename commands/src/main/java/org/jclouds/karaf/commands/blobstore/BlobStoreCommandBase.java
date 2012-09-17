@@ -26,6 +26,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +41,8 @@ import org.jclouds.karaf.cache.BasicCacheProvider;
 import org.jclouds.karaf.cache.CacheProvider;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.AuthorizationException;
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,10 +56,12 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(BlobStoreCommandBase.class);
 
+   public static final String FACTORY_FILTER = "(service.factoryPid=%s)";
    public static final String PROVIDERFORMAT = "%-24s %-12s %-12s";
 
    protected List<BlobStore> services = new ArrayList<BlobStore>();
    protected CacheProvider cacheProvider = new BasicCacheProvider();
+   protected ConfigurationAdmin configAdmin;
 
    @Override
    public Object execute(CommandSession session) throws Exception {
@@ -77,7 +82,49 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
       return services;
    }
 
-   /**
+  /**
+   * Finds a {@link org.osgi.service.cm.Configuration} if exists, or creates a new one.
+   *
+   * @param configurationAdmin
+   * @param factoryPid
+   * @param provider
+   * @param api
+   * @return
+   * @throws java.io.IOException
+   */
+  protected Configuration findOrCreateFactoryConfiguration(ConfigurationAdmin configurationAdmin, String factoryPid,
+                                                           String id, String provider, String api) throws IOException {
+    Configuration configuration = null;
+    if (configurationAdmin != null) {
+      try {
+        Configuration[] configurations = configurationAdmin.listConfigurations(String.format(FACTORY_FILTER,
+                factoryPid));
+        if (configurations != null) {
+          for (Configuration conf : configurations) {
+            Dictionary<?, ?> dictionary = conf.getProperties();
+            if (dictionary != null && id != null) {
+              if (id.equals(dictionary.get(Constants.JCLOUDS_SERVICE_ID))) {
+                return conf;
+              }
+            } else {
+              if (dictionary != null && provider != null && provider.equals(dictionary.get("provider"))) {
+                return conf;
+              } else if (dictionary != null && api != null && api.equals(dictionary.get("api"))) {
+                return conf;
+              }
+            }
+          }
+        }
+      } catch (Exception e) {
+        // noop
+      }
+      configuration = configurationAdmin.createFactoryConfiguration(factoryPid, null);
+    }
+    return configuration;
+  }
+
+
+  /**
     * Reads an Object from the blob store.
     * 
     * @param blobStore
@@ -287,4 +334,12 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
    public void setCacheProvider(CacheProvider cacheProvider) {
       this.cacheProvider = cacheProvider;
    }
+
+  public ConfigurationAdmin getConfigAdmin() {
+    return configAdmin;
+  }
+
+  public void setConfigAdmin(ConfigurationAdmin configAdmin) {
+    this.configAdmin = configAdmin;
+  }
 }

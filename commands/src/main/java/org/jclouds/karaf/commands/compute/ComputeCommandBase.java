@@ -17,8 +17,10 @@
  */
 package org.jclouds.karaf.commands.compute;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -45,6 +47,7 @@ import org.jclouds.karaf.core.Constants;
 import org.jclouds.karaf.utils.compute.ComputeHelper;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.AuthorizationException;
+import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 
 import static org.jclouds.karaf.utils.compute.ComputeHelper.findCacheKeysForService;
@@ -56,12 +59,12 @@ public abstract class ComputeCommandBase extends AbstractAction {
 
    public static final String NODE_DETAILS_FORMAT = "%20s %-60s";
    public static final String PROVIDERFORMAT = "%-24s %-12s %-12s";
+   public static final String FACTORY_FILTER = "(service.factoryPid=%s)";
 
+   protected ConfigurationAdmin configAdmin;
    protected CacheProvider cacheProvider = new BasicCacheProvider();
    protected List<ComputeService> computeServices = new ArrayList<ComputeService>();
    protected ShellTableFactory shellTableFactory = new PropertyShellTableFactory();
-
-  private ConfigurationAdmin configurationAdmin;
 
    @Override
    public Object execute(CommandSession session) throws Exception {
@@ -238,6 +241,47 @@ public abstract class ComputeCommandBase extends AbstractAction {
       }
    }
 
+
+  /**
+   * Finds a {@link org.osgi.service.cm.Configuration} if exists, or creates a new one.
+   *
+   * @param configurationAdmin
+   * @param factoryPid
+   * @param provider
+   * @param api
+   * @return
+   * @throws java.io.IOException
+   */
+  protected Configuration findOrCreateFactoryConfiguration(ConfigurationAdmin configurationAdmin, String factoryPid, String id, String provider, String api) throws IOException {
+    Configuration configuration = null;
+    if (configurationAdmin != null) {
+      try {
+        Configuration[] configurations = configurationAdmin.listConfigurations(String.format(FACTORY_FILTER, factoryPid));
+        if (configurations != null) {
+          for (Configuration conf : configurations) {
+            Dictionary<?, ?> dictionary = conf.getProperties();
+            //If id has been specified only try to match by id, ignore the rest.
+            if (dictionary != null && id != null) {
+              if (id.equals(dictionary.get(Constants.JCLOUDS_SERVICE_ID))) {
+                return conf;
+              }
+            } else {
+              if (dictionary != null && provider != null && provider.equals(dictionary.get("provider"))) {
+                return conf;
+              } else if (dictionary != null && api != null && api.equals(dictionary.get("api"))) {
+                return conf;
+              }
+            }
+          }
+        }
+      } catch (Exception e) {
+        // noop
+      }
+      configuration = configurationAdmin.createFactoryConfiguration(factoryPid, null);
+    }
+    return configuration;
+  }
+
    protected double getMemory(Hardware hardware) {
       return hardware.getRam();
    }
@@ -259,11 +303,11 @@ public abstract class ComputeCommandBase extends AbstractAction {
    }
 
    public ConfigurationAdmin getConfigAdmin() {
-      return configurationAdmin;
+      return configAdmin;
    }
 
-   public void setConfigAdmin(ConfigurationAdmin configurationAdmin) {
-      this.configurationAdmin = configurationAdmin;
+   public void setConfigAdmin(ConfigurationAdmin configAdmin) {
+      this.configAdmin = configAdmin;
    }
 
    public CacheProvider getCacheProvider() {

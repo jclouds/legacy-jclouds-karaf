@@ -18,28 +18,25 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
+import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 
 @Command(scope = "jclouds", name = "blobstore-service-destroy", description = "Destroys a BlobStore service.", detailedDescription = "classpath:blobstore-service-destroy.txt")
-public class BlobStoreServiceDestroyCommand extends BlobStoreServiceCommand {
+public class BlobStoreServiceDestroyCommand extends BlobStoreCommandBase {
+
+  @Argument(index = 0, required = true, multiValued = false, description = "The service id. Used to distinct between multiple service of the same provider/api. Only ")
+  protected String id;
 
    @Override
    protected Object doExecute() throws Exception {
-      if (provider == null && api == null) {
-         System.err.println("You need to specify at least a valid provider or api.");
-         return null;
+      if (id == null) {
+        System.err.println("You need to either specify the service id.");
+        return null;
       }
 
-      if (id == null && provider != null) {
-        id = provider;
-      } else if (id == null && api != null) {
-        id = api;
-      }
-
-      Configuration configuration = findOrCreateFactoryConfiguration(configAdmin, "org.jclouds.blobstore", id, provider,
-               api);
+      Configuration configuration = findOrCreateFactoryConfiguration(configAdmin, "org.jclouds.blobstore", id, null, null);
       if (configuration != null) {
          configuration.delete();
       } else {
