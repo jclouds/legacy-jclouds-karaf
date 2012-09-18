@@ -70,7 +70,7 @@ public abstract class BlobStoreCommandWithOptions extends BlobStoreCommandBase {
 
    protected List<BlobStore> getBlobStoreServices() {
       if (provider == null && api == null) {
-         return services;
+         return blobStoreServices;
       } else {
          try {
             return Collections.singletonList(getBlobStore());
@@ -81,8 +81,8 @@ public abstract class BlobStoreCommandWithOptions extends BlobStoreCommandBase {
    }
 
    protected BlobStore getBlobStore() {
-      if ((id == null && provider == null && api == null) && (services != null && services.size() == 1)) {
-         return services.get(0);
+      if ((id == null && provider == null && api == null) && (blobStoreServices != null && blobStoreServices.size() == 1)) {
+         return blobStoreServices.get(0);
       }
 
       BlobStore blobStore = null;
@@ -98,7 +98,7 @@ public abstract class BlobStoreCommandWithOptions extends BlobStoreCommandBase {
       String providerOrApiValue = !Strings.isNullOrEmpty(providerValue) ? providerValue : apiValue;
 
       try {
-         blobStore = BlobStoreHelper.getBlobStore(id, providerOrApiValue, getBlobStoreServices());
+         blobStore = BlobStoreHelper.getBlobStore(id, providerOrApiValue, blobStoreServices);
       } catch (Throwable t) {
         if (serviceIdProvided) {
           throw new RuntimeException("Could not find blobstore service with id:" + id);

@@ -59,7 +59,7 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
    public static final String FACTORY_FILTER = "(service.factoryPid=%s)";
    public static final String PROVIDERFORMAT = "%-24s %-12s %-12s";
 
-   protected List<BlobStore> services = new ArrayList<BlobStore>();
+   protected List<BlobStore> blobStoreServices = new ArrayList<BlobStore>();
    protected CacheProvider cacheProvider = new BasicCacheProvider();
    protected ConfigurationAdmin configAdmin;
 
@@ -75,11 +75,11 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
    }
 
    public void setBlobStoreServices(List<BlobStore> services) {
-      this.services = services;
+      this.blobStoreServices = services;
    }
 
    protected List<BlobStore> getBlobStoreServices() {
-      return services;
+      return blobStoreServices;
    }
 
   /**

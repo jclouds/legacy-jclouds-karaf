@@ -89,7 +89,7 @@ public abstract class ComputeCommandWithOptions extends ComputeCommandBase {
       String providerOrApiValue = !Strings.isNullOrEmpty(providerValue) ? providerValue : apiValue;
 
       try {
-         computeService = ComputeHelper.getComputeService(id, providerOrApiValue, getComputeServices());
+         computeService = ComputeHelper.getComputeService(id, providerOrApiValue, computeServices);
       } catch (Throwable t) {
          if (serviceIdProvided) {
            throw new RuntimeException("Could not find compute service with id:" + id);
