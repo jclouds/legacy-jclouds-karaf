@@ -143,18 +143,18 @@ public class NodeCreateCommand extends ComputeCommandWithOptions {
          System.out.println("Failed to create nodes:" + ex.getMessage());
       }
 
-      if (metadatas != null && !metadatas.isEmpty()) {
-         System.out.println("Created nodes:");
-         printNodes(service, metadatas, System.out);
-      }
+     if (metadatas != null && !metadatas.isEmpty()) {
+       System.out.println("Created nodes:");
+       printNodes(service, metadatas, System.out);
 
-      for (NodeMetadata node : metadatas) {
-        for (String cacheKey : findCacheKeysForService(service)) {
-          cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).put(cacheKey, node.getId());
-          cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).put(cacheKey, node.getId());
-          cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).put(cacheKey, node.getId());
-        }
-      }
+       for (NodeMetadata node : metadatas) {
+         for (String cacheKey : findCacheKeysForService(service)) {
+           cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).put(cacheKey, node.getId());
+           cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).put(cacheKey, node.getId());
+           cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).put(cacheKey, node.getId());
+         }
+       }
+     }
 
       return null;
    }
