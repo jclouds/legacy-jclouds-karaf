@@ -32,8 +32,8 @@ public class ImageCreateCommand extends ComputeCommandWithOptions {
    @Argument(name = "id", index = 0, description = "The id of the node to use as a template.", required = true, multiValued = false)
    private String id;
 
-   @Argument(name = "name", index = 1, description = "The name of the image template.", required = true, multiValued = false)
-   private String name;
+   @Argument(name = "imageName", index = 1, description = "The name of the image template.", required = true, multiValued = false)
+   private String imageName;
 
    @Override
    protected Object doExecute() throws Exception {
@@ -51,7 +51,7 @@ public class ImageCreateCommand extends ComputeCommandWithOptions {
          return null;
       }
       ImageExtension imageExtension = service.getImageExtension().get();
-      ImageTemplate imageTemplate = imageExtension.buildImageTemplateFromNode(name, id);
+      ImageTemplate imageTemplate = imageExtension.buildImageTemplateFromNode(imageName, id);
       ListenableFuture<Image> imageFuture = imageExtension.createImage(imageTemplate);
       Image image = imageFuture.get();
       System.out.println("Succesfully created image:" + image.getId());

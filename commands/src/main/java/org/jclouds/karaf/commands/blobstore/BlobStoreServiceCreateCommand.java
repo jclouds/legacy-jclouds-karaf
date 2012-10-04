@@ -48,19 +48,19 @@ public class BlobStoreServiceCreateCommand extends BlobStoreCommandWithOptions {
 
    @Override
    protected Object doExecute() throws Exception {
-      if (provider == null && api == null && id == null) {
+      if (provider == null && api == null && name == null) {
          System.err.println("You need to specify at least a valid provider or api.");
          return null;
       }
 
-      if (id == null && provider != null) {
-       id = provider;
-      } else if (id == null && api != null) {
-       id = api;
+      if (name == null && provider != null) {
+       name = provider;
+      } else if (name == null && api != null) {
+       name = api;
       }
 
       Map<String, String> props = parseOptions(options);
-      registerBlobStore(configAdmin, id, provider, api, identity, credential, endpoint, props);
+      registerBlobStore(configAdmin, name, provider, api, identity, credential, endpoint, props);
       if (noWait) {
          return null;
       } else if (!isProviderOrApiInstalled(provider, api)) {
@@ -68,8 +68,8 @@ public class BlobStoreServiceCreateCommand extends BlobStoreCommandWithOptions {
                   .println("Provider / api currently not installed. Service will be created once it does get installed.");
          return null;
       } else {
-        System.out.println(String.format("Waiting for blostore service with id: %s.", id));
-        waitForBlobStore(bundleContext, id, provider, api);
+        System.out.println(String.format("Waiting for blostore service with name: %s.", name));
+        waitForBlobStore(bundleContext, name, provider, api);
       }
       return null;
    }
@@ -153,24 +153,24 @@ public class BlobStoreServiceCreateCommand extends BlobStoreCommandWithOptions {
                   String credentialValue = EnvHelper.getComputeCredential(credential);
                   String endpointValue = EnvHelper.getComputeEndpoint(endpoint);
 
-                  if (id != null) {
-                    dictionary.put(Constants.JCLOUDS_SERVICE_ID, id);
-                  }
-                  if (providerValue != null) {
-                     dictionary.put("provider", providerValue);
-                  }
-                  if (apiValue != null) {
-                     dictionary.put("api", apiValue);
-                  }
-                  if (endpointValue != null) {
-                     dictionary.put("endpoint", endpointValue);
-                  }
-                  if (credentialValue != null) {
-                     dictionary.put("credential", credentialValue);
-                  }
-                  if (identityValue != null) {
-                     dictionary.put("identity", identityValue);
-                  }
+                 if (id != null) {
+                   dictionary.put(Constants.NAME, id);
+                 }
+                 if (providerValue != null) {
+                   dictionary.put(Constants.PROVIDER, providerValue);
+                 }
+                 if (apiValue != null) {
+                   dictionary.put(Constants.API, apiValue);
+                 }
+                 if (endpointValue != null) {
+                   dictionary.put(Constants.ENDPOINT, endpointValue);
+                 }
+                 if (credentialValue != null) {
+                   dictionary.put(Constants.CREDENTIAL, credentialValue);
+                 }
+                 if (identityValue != null) {
+                   dictionary.put(Constants.IDENTITY, identityValue);
+                 }
                   for (Map.Entry<String, String> entry : props.entrySet()) {
                      String key = entry.getKey();
                      String value = entry.getValue();
@@ -194,20 +194,20 @@ public class BlobStoreServiceCreateCommand extends BlobStoreCommandWithOptions {
     * @param api
     * @return
     */
-   public synchronized BlobStore waitForBlobStore(BundleContext bundleContext, String id, String provider, String api) {
+   public synchronized BlobStore waitForBlobStore(BundleContext bundleContext, String name, String provider, String api) {
       BlobStore blobStore = null;
       try {
          for (int r = 0; r < 6; r++) {
             ServiceReference[] references = null;
-            if (id != null) {
-              references = bundleContext.getAllServiceReferences(BlobStore.class.getName(), "(org.jclouds.service.id="
-                      + id + ")");
+            if (name != null) {
+              references = bundleContext.getAllServiceReferences(BlobStore.class.getName(), "("+Constants.NAME+"="
+                      + name + ")");
             }
             if (provider != null) {
-               references = bundleContext.getAllServiceReferences(BlobStore.class.getName(), "(provider=" + provider
+               references = bundleContext.getAllServiceReferences(BlobStore.class.getName(), "("+Constants.PROVIDER+"=" + provider
                         + ")");
             } else if (api != null) {
-               references = bundleContext.getAllServiceReferences(BlobStore.class.getName(), "(api=" + api + ")");
+               references = bundleContext.getAllServiceReferences(BlobStore.class.getName(), "("+Constants.API+"=" + api + ")");
             }
             if (references != null && references.length > 0) {
                blobStore = (BlobStore) bundleContext.getService(references[0]);

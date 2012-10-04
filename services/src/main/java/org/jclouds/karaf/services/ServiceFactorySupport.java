@@ -36,14 +36,8 @@ public abstract class ServiceFactorySupport implements ManagedServiceFactory {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ComputeServiceFactory.class);
 
-    public static final String PROVIDER = "provider";
-    public static final String API = "api";
-    public static final String ENDPOINT = "endpoint";
-    public static final String IDENTITY = "identity";
-    public static final String CREDENTIAL = "credential";
 
-
-    protected final Map<String, ServiceRegistration> registrations = new ConcurrentHashMap<String, ServiceRegistration>();
+  protected final Map<String, ServiceRegistration> registrations = new ConcurrentHashMap<String, ServiceRegistration>();
 
     protected final Map<String, Dictionary> pendingPids = new HashMap<String, Dictionary>();
     protected final Map<String, Dictionary> activePids = new HashMap<String, Dictionary>();

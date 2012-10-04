@@ -27,6 +27,7 @@ import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.karaf.core.BlobStoreProviderOrApiListener;
 import org.jclouds.karaf.core.BlobStoreProviderOrApiRegistry;
+import org.jclouds.karaf.core.Constants;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.osgi.framework.BundleContext;
@@ -64,8 +65,8 @@ public class BlobStoreServiceFactory extends ServiceFactorySupport implements Bl
                     Object val = properties.get(key);
                     props.put(key, val);
                 }
-                String provider = (String) properties.get(PROVIDER);
-                String api = (String) properties.get(API);
+                String provider = (String) properties.get(Constants.PROVIDER);
+                String api = (String) properties.get(Constants.API);
 
                 ProviderMetadata providerMetadata = null;
                 ApiMetadata apiMetadata = null;
@@ -89,9 +90,10 @@ public class BlobStoreServiceFactory extends ServiceFactorySupport implements Bl
 
 
               //We are removing credentials as we don't want them to be visible in the service registration.
-                String identity = (String) properties.remove(IDENTITY);
-                String credential = (String) properties.remove(CREDENTIAL);
-                String endpoint = (String) properties.get(ENDPOINT);
+                String id = (String) properties.get(Constants.NAME);
+                String identity = (String) properties.remove(Constants.IDENTITY);
+                String credential = (String) properties.remove(Constants.CREDENTIAL);
+                String endpoint = (String) properties.get(Constants.ENDPOINT);
 
                 BlobStoreContext context = null;
                 ContextBuilder builder = null;
@@ -106,7 +108,7 @@ public class BlobStoreServiceFactory extends ServiceFactorySupport implements Bl
                 if (!Strings.isNullOrEmpty(endpoint)) {
                     builder = builder.endpoint(endpoint);
                 }
-                context = builder.credentials(identity, credential)
+                context = builder.name(id).credentials(identity, credential)
                         .modules(ImmutableSet.<Module>of(new Log4JLoggingModule()))
                         .overrides(props)
                         .build(BlobStoreContext.class);

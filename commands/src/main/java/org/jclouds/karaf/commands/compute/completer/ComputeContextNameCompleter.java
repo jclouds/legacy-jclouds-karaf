@@ -16,26 +16,27 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.blobstore.completer;
+package org.jclouds.karaf.commands.compute.completer;
 
 import org.apache.karaf.shell.console.Completer;
 import org.apache.karaf.shell.console.completer.StringsCompleter;
-import org.jclouds.blobstore.BlobStore;
+import org.jclouds.compute.ComputeService;
 import org.jclouds.karaf.core.Constants;
+import org.jclouds.providers.Providers;
 
 import java.util.List;
 
-public class BlobStoreServiceIdCompleter implements Completer {
+public class ComputeContextNameCompleter implements Completer {
 
    private final StringsCompleter delegate = new StringsCompleter();
-   private List<? extends BlobStore> blobStoreServices;
+   private List<? extends ComputeService> computeServices;
 
    @Override
    public int complete(String buffer, int cursor, List<String> candidates) {
       try {
-         if (blobStoreServices != null) {
-            for (BlobStore blobStore : blobStoreServices) {
-               String id = (String) blobStore.getContext().unwrap().getProviderMetadata().getDefaultProperties().get(Constants.JCLOUDS_SERVICE_ID);
+         if (computeServices != null) {
+            for (ComputeService computeService : computeServices) {
+               String id = (String) computeService.getContext().unwrap().getName();
                if (id != null) {
                   delegate.getStrings().add(id);
                }
@@ -47,11 +48,11 @@ public class BlobStoreServiceIdCompleter implements Completer {
       return delegate.complete(buffer, cursor, candidates);
    }
 
-   public List<? extends BlobStore> getBlobStoreServices() {
-      return blobStoreServices;
+   public List<? extends ComputeService> getComputeServices() {
+      return computeServices;
    }
 
-   public void setBlobStoreServices(List<? extends BlobStore> blobStoreServices) {
-      this.blobStoreServices = blobStoreServices;
+   public void setComputeServices(List<? extends ComputeService> computeServices) {
+      this.computeServices = computeServices;
    }
 }

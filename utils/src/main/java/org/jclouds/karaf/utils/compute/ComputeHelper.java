@@ -34,10 +34,10 @@ public class ComputeHelper {
    */
   public static List<String> findCacheKeysForService(ComputeService computeService) {
     List<String> keys = new LinkedList<String>();
-    String serviceId = (String) computeService.getContext().unwrap().getProviderMetadata().getDefaultProperties().get(Constants.JCLOUDS_SERVICE_ID);
+    String contextName = (String) computeService.getContext().unwrap().getName();
     String providerOrApi = computeService.getContext().unwrap().getId();
-    if (serviceId != null) {
-      keys.add(serviceId);
+    if (contextName != null) {
+      keys.add(contextName);
     }
     if (providerOrApi != null) {
       keys.add(providerOrApi);
@@ -56,7 +56,7 @@ public class ComputeHelper {
         if (!Strings.isNullOrEmpty(id)) {
           ComputeService service = null;
           for (ComputeService svc : services) {
-            if (id.equals(svc.getContext().unwrap().getProviderMetadata().getDefaultProperties().getProperty(Constants.JCLOUDS_SERVICE_ID))) {
+            if (id.equals(svc.getContext().unwrap().getName())) {
               service = svc;
               break;
             }

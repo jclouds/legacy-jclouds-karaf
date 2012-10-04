@@ -39,8 +39,8 @@ import com.google.inject.Module;
  */
 public abstract class ComputeCommandWithOptions extends ComputeCommandBase {
 
-   @Option(name = "--id", description = "The service id. Used to distinct between multiple service of the same provider/api. Only ")
-   protected String id;
+   @Option(name = "--name", description = "The service context name. Used to distinct between multiple service of the same provider/api. Only ")
+   protected String name;
 
    @Option(name = "--provider", description = "The provider or use.")
    protected String provider;
@@ -72,7 +72,7 @@ public abstract class ComputeCommandWithOptions extends ComputeCommandBase {
    }
 
    protected ComputeService getComputeService() {
-      if ((id == null && provider == null && api == null) &&(computeServices != null && computeServices.size() == 1)) {
+      if ((name == null && provider == null && api == null) &&(computeServices != null && computeServices.size() == 1)) {
          return computeServices.get(0);
       }
 
@@ -82,17 +82,17 @@ public abstract class ComputeCommandWithOptions extends ComputeCommandBase {
       String identityValue = EnvHelper.getComputeIdentity(identity);
       String credentialValue = EnvHelper.getComputeCredential(credential);
       String endpointValue = EnvHelper.getComputeEndpoint(endpoint);
-      boolean serviceIdProvided = !Strings.isNullOrEmpty(id);
+      boolean contextNameProvided = !Strings.isNullOrEmpty(name);
       boolean canCreateService = (!Strings.isNullOrEmpty(providerValue) || !Strings.isNullOrEmpty(apiValue))
                && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);
 
       String providerOrApiValue = !Strings.isNullOrEmpty(providerValue) ? providerValue : apiValue;
 
       try {
-         computeService = ComputeHelper.getComputeService(id, providerOrApiValue, computeServices);
+         computeService = ComputeHelper.getComputeService(name, providerOrApiValue, computeServices);
       } catch (Throwable t) {
-         if (serviceIdProvided) {
-           throw new RuntimeException("Could not find compute service with id:" + id);
+         if (contextNameProvided) {
+           throw new RuntimeException("Could not find compute service with id:" + name);
          } else if (!canCreateService) {
             StringBuilder sb = new StringBuilder();
             sb.append("Insufficient information to create compute service:").append("\n");

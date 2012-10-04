@@ -28,7 +28,7 @@
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
             <optional-completers>
-                <entry key="--id" value-ref="computeServiceIdCompleter"/>
+                <entry key="--name" value-ref="computeContextNameCompleter"/>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
                 <entry key="--api" value-ref="computeApiCompleter"/>
                 <entry key="--imageId" value-ref="imageCompleter"/>
@@ -46,7 +46,7 @@
                 <ref component-id="activeNodeCompleter"/>
             </completers>
             <optional-completers>
-                <entry key="--id" value-ref="computeServiceIdCompleter"/>
+                <entry key="--name" value-ref="computeContextNameCompleter"/>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
                 <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
@@ -57,7 +57,7 @@
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
             <optional-completers>
-                <entry key="--id" value-ref="computeServiceIdCompleter"/>
+                <entry key="--name" value-ref="computeContextNameCompleter"/>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
                 <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
@@ -71,7 +71,7 @@
                 <ref component-id="groupCompleter"/>
             </completers>
             <optional-completers>
-                <entry key="--id" value-ref="computeServiceIdCompleter"/>
+                <entry key="--name" value-ref="computeContextNameCompleter"/>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
                 <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
@@ -85,7 +85,7 @@
                 <ref component-id="activeNodeCompleter"/>
             </completers>
             <optional-completers>
-                <entry key="--id" value-ref="computeServiceIdCompleter"/>
+                <entry key="--name" value-ref="computeContextNameCompleter"/>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
                 <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
@@ -113,7 +113,7 @@
                 <null/>
             </completers>
             <optional-completers>
-                <entry key="--id" value-ref="computeServiceIdCompleter"/>
+                <entry key="--name" value-ref="computeContextNameCompleter"/>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
                 <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
@@ -128,7 +128,7 @@
                 <null/>
             </completers>
             <optional-completers>
-                <entry key="--id" value-ref="computeServiceIdCompleter"/>
+                <entry key="--name" value-ref="computeContextNameCompleter"/>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
                 <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
@@ -149,7 +149,7 @@
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
             <optional-completers>
-                <entry key="--id" value-ref="computeServiceIdCompleter"/>
+                <entry key="--name" value-ref="computeContextNameCompleter"/>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
                 <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
@@ -176,7 +176,7 @@
                 <property name="configAdmin" ref="configAdmin"/>
             </action>
             <completers>
-                <ref component-id="computeServiceIdCompleter"/>
+                <ref component-id="computeContextNameCompleter"/>
                 <null/>
             </completers>
         </command>
@@ -203,7 +203,7 @@
                 <property name="configAdmin" ref="configAdmin"/>
             </action>
             <completers>
-                <ref component-id="blobStoreServiceIdCompleter"/>
+                <ref component-id="blobStoreContextNameCompleter"/>
                 <null/>
             </completers>
         </command>
@@ -213,7 +213,7 @@
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
             <optional-completers>
-                <entry key="--id" value-ref="computeServiceIdCompleter"/>
+                <entry key="--name" value-ref="computeContextNameCompleter"/>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
                 <entry key="--api" value-ref="computeApiCompleter"/>
                 <entry key="--group" value-ref="groupCompleter"/>
@@ -226,7 +226,7 @@
                 <property name="shellTableFactory" ref="shellTableFactory"/>
             </action>
             <optional-completers>
-                <entry key="--id" value-ref="computeServiceIdCompleter"/>
+                <entry key="--name" value-ref="computeContextNameCompleter"/>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
                 <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
@@ -238,7 +238,7 @@
                 <property name="shellTableFactory" ref="shellTableFactory"/>
             </action>
             <optional-completers>
-                <entry key="--id" value-ref="computeServiceIdCompleter"/>
+                <entry key="--name" value-ref="computeContextNameCompleter"/>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
                 <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
@@ -250,7 +250,7 @@
                 <property name="shellTableFactory" ref="shellTableFactory"/>
             </action>
             <optional-completers>
-                <entry key="--id" value-ref="computeServiceIdCompleter"/>
+                <entry key="--name" value-ref="computeContextNameCompleter"/>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
                 <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
@@ -265,7 +265,7 @@
                 <null/>
             </completers>
             <optional-completers>
-                <entry key="--id" value-ref="computeServiceIdCompleter"/>
+                <entry key="--name" value-ref="computeContextNameCompleter"/>
                 <entry key="--provider" value-ref="computeProviderCompleter"/>
                 <entry key="--api" value-ref="computeApiCompleter"/>
             </optional-completers>
@@ -281,7 +281,7 @@
                 <null/>
             </completers>
             <optional-completers>
-                <entry key="--id" value-ref="blobStoreServiceIdCompleter"/>
+                <entry key="--name" value-ref="blobStoreContextNameCompleter"/>
                 <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
                 <entry key="--api" value-ref="blobStoreApiCompleter"/>
             </optional-completers>
@@ -298,7 +298,7 @@
                 <null/>
             </completers>
             <optional-completers>
-                <entry key="--id" value-ref="blobStoreServiceIdCompleter"/>
+                <entry key="--name" value-ref="blobStoreContextNameCompleter"/>
                 <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
                 <entry key="--api" value-ref="blobStoreApiCompleter"/>
             </optional-completers>
@@ -309,7 +309,7 @@
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
             <optional-completers>
-                <entry key="--id" value-ref="blobStoreServiceIdCompleter"/>
+                <entry key="--name" value-ref="blobStoreContextNameCompleter"/>
                 <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
                 <entry key="--api" value-ref="blobStoreApiCompleter"/>
             </optional-completers>
@@ -320,7 +320,7 @@
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
             <optional-completers>
-                <entry key="--id" value-ref="blobStoreServiceIdCompleter"/>
+                <entry key="--name" value-ref="blobStoreContextNameCompleter"/>
                 <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
                 <entry key="--api" value-ref="blobStoreApiCompleter"/>
             </optional-completers>
@@ -334,7 +334,7 @@
                 <ref component-id="containerCompleter"/>
             </completers>
             <optional-completers>
-                <entry key="--id" value-ref="blobStoreServiceIdCompleter"/>
+                <entry key="--name" value-ref="blobStoreContextNameCompleter"/>
                 <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
                 <entry key="--api" value-ref="blobStoreApiCompleter"/>
             </optional-completers>
@@ -343,7 +343,7 @@
 
 
     <!-- Blob Completers -->
-    <bean id="blobStoreServiceIdCompleter" class="org.jclouds.karaf.commands.blobstore.completer.BlobStoreServiceIdCompleter">
+    <bean id="blobStoreContextNameCompleter" class="org.jclouds.karaf.commands.blobstore.completer.BlobStoreContextNameCompleter">
       <property name="blobStoreServices" ref="blobStoreServices"/>
     </bean>
 
@@ -387,7 +387,7 @@
     </bean>
 
     <!-- Compute Completers -->
-    <bean id="computeServiceIdCompleter" class="org.jclouds.karaf.commands.compute.completer.ComputeServiceIdCompleter">
+    <bean id="computeContextNameCompleter" class="org.jclouds.karaf.commands.compute.completer.ComputeContextNameCompleter">
        <property name="computeServices" ref="computeServices"/>
     </bean>
 
@@ -462,7 +462,7 @@
     </service-properties>
   </service>
 
-    <service ref="computeServiceIdCompleter" auto-export="interfaces">
+    <service ref="computeContextNameCompleter" auto-export="interfaces">
        <service-properties>
           <entry key="completer-type" value="compute-service-id"/>
        </service-properties>
@@ -547,7 +547,7 @@
         </service-properties>
     </service>
 
-   <service ref="blobStoreServiceIdCompleter" auto-export="interfaces">
+   <service ref="blobStoreContextNameCompleter" auto-export="interfaces">
        <service-properties>
            <entry key="completer-type" value="blobstore-service-id"/>
        </service-properties>

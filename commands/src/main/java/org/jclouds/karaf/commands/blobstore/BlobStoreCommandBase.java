@@ -36,9 +36,9 @@ import org.jclouds.apis.ApiMetadata;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.util.BlobStoreUtils;
-import org.jclouds.karaf.core.Constants;
 import org.jclouds.karaf.cache.BasicCacheProvider;
 import org.jclouds.karaf.cache.CacheProvider;
+import org.jclouds.karaf.core.Constants;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.AuthorizationException;
 import org.osgi.service.cm.Configuration;
@@ -103,7 +103,7 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
           for (Configuration conf : configurations) {
             Dictionary<?, ?> dictionary = conf.getProperties();
             if (dictionary != null && id != null) {
-              if (id.equals(dictionary.get(Constants.JCLOUDS_SERVICE_ID))) {
+              if (id.equals(dictionary.get(Constants.NAME))) {
                 return conf;
               }
             } else {
@@ -300,9 +300,9 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
         StringBuilder sb = new StringBuilder();
         sb.append("[ ");
          for (BlobStore blobStore : blobStores) {
-           String serviceId = (String) blobStore.getContext().unwrap().getProviderMetadata().getDefaultProperties().get(Constants.JCLOUDS_SERVICE_ID);
+           String contextName = (String) blobStore.getContext().unwrap().getName();
             if (blobStore.getContext().unwrap().getId().equals(provider)) {
-               sb.append(serviceId).append(" ");
+               sb.append(contextName).append(" ");
             }
          }
          sb.append("]");
@@ -317,9 +317,9 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
          StringBuilder sb = new StringBuilder();
          sb.append("[ ");
          for (BlobStore blobStore : blobStores) {
-           String serviceId = (String) blobStore.getContext().unwrap().getProviderMetadata().getDefaultProperties().get(Constants.JCLOUDS_SERVICE_ID);
+           String contextName = (String) blobStore.getContext().unwrap().getName();
             if (blobStore.getContext().unwrap().getId().equals(provider)) {
-              sb.append(serviceId).append(" ");
+              sb.append(contextName).append(" ");
             }
          }
          sb.append("]");

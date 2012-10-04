@@ -53,12 +53,12 @@ public abstract class BlobStoreCompleterSupport implements Completer, Cacheable<
      delegate.getStrings().clear();
 
      if (list != null) {
-       String serviceId = extractServiceId(list.getArguments());
+       String contextName = extractContextName(list.getArguments());
        String providerOrApi = extractProviderOrApiFromArguments(list.getArguments());
        Collection<String> values;
 
-       if (serviceId != null && cache.containsKey(serviceId)) {
-         values = cache.get(serviceId);
+       if (contextName != null && cache.containsKey(contextName)) {
+         values = cache.get(contextName);
        } else if (providerOrApi != null && cache.containsKey(providerOrApi)) {
          values = cache.get(providerOrApi);
        } else {
@@ -80,7 +80,7 @@ public abstract class BlobStoreCompleterSupport implements Completer, Cacheable<
    * @param args
    * @return
    */
-  private String extractServiceId(String... args) {
+  private String extractContextName(String... args) {
     String id = null;
     if (args != null && args.length > 0) {
       List<String> arguments = Arrays.asList(args);
