@@ -27,6 +27,7 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.apis.Apis;
 import org.jclouds.compute.ComputeService;
+import org.jclouds.karaf.core.Constants;
 import org.jclouds.karaf.utils.EnvHelper;
 import org.jclouds.providers.Providers;
 import org.osgi.framework.BundleContext;
@@ -52,22 +53,22 @@ public class ComputeServiceCreateCommand extends ComputeCommandWithOptions {
          return null;
       }
 
-      if (id == null && provider != null) {
-         id = provider;
-      } else if (id == null && api != null) {
-         id = api;
+      if (name == null && provider != null) {
+         name = provider;
+      } else if (name == null && api != null) {
+         name = api;
       }
 
       Map<String, String> props = parseOptions(options);
-      registerComputeService(configAdmin, id, provider, api, identity, credential, endpoint, props);
+      registerComputeService(configAdmin, name, provider, api, identity, credential, endpoint, props);
       if (noWait) {
          return null;
       } else if (!isProviderOrApiInstalled(provider, api)) {
          System.out.println("Provider / api currently not installed. Service will be created once it does get installed.");
          return null;
       } else {
-         System.out.println(String.format("Waiting for compute service with id: %s.", id));
-         waitForComputeService(bundleContext, id, provider, api);
+         System.out.println(String.format("Waiting for compute service with name: %s.", name));
+         waitForComputeService(bundleContext, name, provider, api);
       }
       return null;
    }
@@ -121,7 +122,7 @@ public class ComputeServiceCreateCommand extends ComputeCommandWithOptions {
     * 
     * 
     * @param configurationAdmin
-    * @param id
+    * @param name
     * @param provider
     * @param api
     * @param identity
@@ -130,14 +131,14 @@ public class ComputeServiceCreateCommand extends ComputeCommandWithOptions {
     * @param props
     * @throws Exception
     */
-   private void registerComputeService(final ConfigurationAdmin configurationAdmin,final String id, final String provider,
+   private void registerComputeService(final ConfigurationAdmin configurationAdmin,final String name, final String provider,
             final String api, final String identity, final String credential, final String endpoint,
             final Map<String, String> props) throws Exception {
       Runnable registrationTask = new Runnable() {
          @Override
          public void run() {
             try {
-               Configuration configuration = findOrCreateFactoryConfiguration(configurationAdmin, "org.jclouds.compute", id, provider, api);
+               Configuration configuration = findOrCreateFactoryConfiguration(configurationAdmin, "org.jclouds.compute", name, provider, api);
                if (configuration != null) {
                   @SuppressWarnings("unchecked")
                   Dictionary<Object, Object> dictionary = configuration.getProperties();
@@ -151,23 +152,23 @@ public class ComputeServiceCreateCommand extends ComputeCommandWithOptions {
                   String credentialValue = EnvHelper.getComputeCredential(credential);
                   String endpointValue = EnvHelper.getComputeEndpoint(endpoint);
 
-                  if (id != null) {
-                    dictionary.put("org.jclouds.service.id", id);
+                  if (name != null) {
+                    dictionary.put(Constants.NAME, name);
                   }
                   if (providerValue != null) {
-                     dictionary.put("provider", providerValue);
+                     dictionary.put(Constants.PROVIDER, providerValue);
                   }
                   if (apiValue != null) {
-                     dictionary.put("api", apiValue);
+                     dictionary.put(Constants.API, apiValue);
                   }
                   if (endpointValue != null) {
-                     dictionary.put("endpoint", endpointValue);
+                     dictionary.put(Constants.ENDPOINT, endpointValue);
                   }
                   if (credentialValue != null) {
-                     dictionary.put("credential", credentialValue);
+                     dictionary.put(Constants.CREDENTIAL, credentialValue);
                   }
                   if (identityValue != null) {
-                     dictionary.put("identity", identityValue);
+                     dictionary.put(Constants.IDENTITY, identityValue);
                   }
                   for (Map.Entry<String, String> entry : props.entrySet()) {
                      String key = entry.getKey();
@@ -192,21 +193,22 @@ public class ComputeServiceCreateCommand extends ComputeCommandWithOptions {
     * @param api
     * @return
     */
-   public synchronized ComputeService waitForComputeService(BundleContext bundleContext, String id, String provider, String api) {
+   public synchronized ComputeService waitForComputeService(BundleContext bundleContext, String name, String provider, String api) {
       ComputeService computeService = null;
       try {
          for (int r = 0; r < 6; r++) {
             ServiceReference[] references = null;
-            if (id != null) {
-              references = bundleContext.getAllServiceReferences(ComputeService.class.getName(), "(org.jclouds.service.id="
-                      + id + ")");
+            if (name != null) {
+              references = bundleContext.getAllServiceReferences(ComputeService.class.getName(), "("+Constants.NAME+"="
+                      + name + ")");
             }
             else if (provider != null) {
-               references = bundleContext.getAllServiceReferences(ComputeService.class.getName(), "(provider="
+               references = bundleContext.getAllServiceReferences(ComputeService.class.getName(), "("+Constants.PROVIDER+"="
                         + provider + ")");
             } else if (api != null) {
-               references = bundleContext.getAllServiceReferences(ComputeService.class.getName(), "(api=" + api + ")");
+               references = bundleContext.getAllServiceReferences(ComputeService.class.getName(), "("+Constants.API+"=" + api + ")");
             }
+
             if (references != null && references.length > 0) {
                computeService = (ComputeService) bundleContext.getService(references[0]);
                return computeService;

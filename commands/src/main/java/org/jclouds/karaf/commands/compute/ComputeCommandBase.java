@@ -44,7 +44,6 @@ import org.jclouds.karaf.commands.table.internal.PropertyShellTableFactory;
 import org.jclouds.karaf.commands.table.ShellTable;
 import org.jclouds.karaf.commands.table.ShellTableFactory;
 import org.jclouds.karaf.core.Constants;
-import org.jclouds.karaf.utils.compute.ComputeHelper;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.AuthorizationException;
 import org.osgi.service.cm.Configuration;
@@ -84,9 +83,9 @@ public abstract class ComputeCommandBase extends AbstractAction {
          StringBuilder sb = new StringBuilder();
          sb.append("[ ");
          for (ComputeService computeService : computeServices) {
-            String serviceId = (String) computeService.getContext().unwrap().getProviderMetadata().getDefaultProperties().get(Constants.JCLOUDS_SERVICE_ID);
-            if (computeService.getContext().unwrap().getId().equals(provider) && serviceId != null) {
-               sb.append(serviceId).append(" ");
+            String contextName = (String) computeService.getContext().unwrap().getName();
+            if (computeService.getContext().unwrap().getId().equals(provider) && contextName != null) {
+               sb.append(contextName).append(" ");
             }
          }
          sb.append("]");
@@ -101,9 +100,9 @@ public abstract class ComputeCommandBase extends AbstractAction {
         StringBuilder sb = new StringBuilder();
         sb.append("[ ");
          for (ComputeService computeService : computeServices) {
-           String serviceId = (String) computeService.getContext().unwrap().getProviderMetadata().getDefaultProperties().get(Constants.JCLOUDS_SERVICE_ID);
-            if (computeService.getContext().unwrap().getId().equals(api) && serviceId != null) {
-              sb.append(serviceId).append(" ");
+           String contextName = (String) computeService.getContext().unwrap().getName();
+            if (computeService.getContext().unwrap().getId().equals(api) && contextName != null) {
+              sb.append(contextName).append(" ");
             }
          }
         sb.append("]");
@@ -262,7 +261,7 @@ public abstract class ComputeCommandBase extends AbstractAction {
             Dictionary<?, ?> dictionary = conf.getProperties();
             //If id has been specified only try to match by id, ignore the rest.
             if (dictionary != null && id != null) {
-              if (id.equals(dictionary.get(Constants.JCLOUDS_SERVICE_ID))) {
+              if (id.equals(dictionary.get(Constants.NAME))) {
                 return conf;
               }
             } else {

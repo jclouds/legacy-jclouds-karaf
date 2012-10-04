@@ -20,15 +20,21 @@ package org.jclouds.karaf.core;
 
 public class Constants {
 
-   public static final String JCLOUDS_SERVICE_ID = "org.jclouds.service.id";
 
-   public static final String NODE_CACHE = "NODE_CACHE";
-   public static final String ACTIVE_NODE_CACHE = "ACTIVE_NODE_CACHE";
-   public static final String INACTIVE_NODE_CACHE = "INACTIVE_NODE_CACHE";
-   public static final String SUSPENDED_NODE_CACHE = "SUSPENDED_NODE_CACHE";
+  public static final String NODE_CACHE = "NODE_CACHE";
+  public static final String ACTIVE_NODE_CACHE = "ACTIVE_NODE_CACHE";
+  public static final String INACTIVE_NODE_CACHE = "INACTIVE_NODE_CACHE";
+  public static final String SUSPENDED_NODE_CACHE = "SUSPENDED_NODE_CACHE";
 
-   public static final String IMAGE_CACHE = "IMAGE_CACHE";
-   public static final String LOCATION_CACHE = "LOCATION_CACHE";
-   public static final String HARDWARE_CACHE = "HARDWARE_CACHE";
-   public static final String GROUP = "GROUP";
+  public static final String IMAGE_CACHE = "IMAGE_CACHE";
+  public static final String LOCATION_CACHE = "LOCATION_CACHE";
+  public static final String HARDWARE_CACHE = "HARDWARE_CACHE";
+  public static final String GROUP = "GROUP";
+
+  public static final String NAME = "name";
+  public static final String PROVIDER = "provider";
+  public static final String API = "api";
+  public static final String ENDPOINT = "endpoint";
+  public static final String IDENTITY = "identity";
+  public static final String CREDENTIAL = "credential";
 }

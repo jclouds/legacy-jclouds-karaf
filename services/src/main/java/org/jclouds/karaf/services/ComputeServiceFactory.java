@@ -27,6 +27,7 @@ import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.karaf.core.ComputeProviderOrApiListener;
 import org.jclouds.karaf.core.ComputeProviderOrApiRegistry;
 import org.jclouds.karaf.core.ComputeServiceEventProxy;
+import org.jclouds.karaf.core.Constants;
 import org.jclouds.karaf.core.CredentialStore;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
 import org.jclouds.providers.ProviderMetadata;
@@ -90,8 +91,8 @@ public class ComputeServiceFactory extends ServiceFactorySupport implements Comp
                     props.put(key, val);
                 }
 
-                String provider = (String) properties.get(PROVIDER);
-                String api = (String) properties.get(API);
+                String provider = (String) properties.get(Constants.PROVIDER);
+                String api = (String) properties.get(Constants.API);
 
                 ProviderMetadata providerMetadata = null;
                 ApiMetadata apiMetadata = null;
@@ -113,9 +114,10 @@ public class ComputeServiceFactory extends ServiceFactorySupport implements Comp
                 }
 
                 //We are removing credentials as we don't want them to be visible in the service registration.
-                String identity = (String) properties.remove(IDENTITY);
-                String credential = (String) properties.remove(CREDENTIAL);
-                String endpoint = (String) properties.get(ENDPOINT);
+                String id = (String) properties.get(Constants.NAME);
+                String identity = (String) properties.remove(Constants.IDENTITY);
+                String credential = (String) properties.remove(Constants.CREDENTIAL);
+                String endpoint = (String) properties.get(Constants.ENDPOINT);
                 String storeType = (String) properties.get(CREDENTIAL_STORE);
                 String eventSupport = (String) properties.get(NODE_EVENT_SUPPORT);
                 Boolean enableEventSupport = false;
@@ -141,13 +143,13 @@ public class ComputeServiceFactory extends ServiceFactorySupport implements Comp
                     builder = builder.endpoint(endpoint);
                 }
 
-                builder = builder.modules(ImmutableSet.<Module>of(new Log4JLoggingModule(), new SshjSshClientModule()));
+                builder = builder.name(id).modules(ImmutableSet.<Module>of(new Log4JLoggingModule(), new SshjSshClientModule()));
 
                 if (credentialStore != null) {
                     builder = builder.modules(ImmutableSet.<Module>of(credentialStore));
                 }
 
-                builder = builder.credentials(identity, credential).overrides(props);
+                builder = builder.name(id).credentials(identity, credential).overrides(props);
 
                 ComputeServiceContext context = builder.build(ComputeServiceContext.class);
 

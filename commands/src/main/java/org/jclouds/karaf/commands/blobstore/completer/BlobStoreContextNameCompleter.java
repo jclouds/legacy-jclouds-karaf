@@ -16,27 +16,26 @@
  * ====================================================================
  */
 
-package org.jclouds.karaf.commands.compute.completer;
+package org.jclouds.karaf.commands.blobstore.completer;
 
 import org.apache.karaf.shell.console.Completer;
 import org.apache.karaf.shell.console.completer.StringsCompleter;
-import org.jclouds.compute.ComputeService;
+import org.jclouds.blobstore.BlobStore;
 import org.jclouds.karaf.core.Constants;
-import org.jclouds.providers.Providers;
 
 import java.util.List;
 
-public class ComputeServiceIdCompleter implements Completer {
+public class BlobStoreContextNameCompleter implements Completer {
 
    private final StringsCompleter delegate = new StringsCompleter();
-   private List<? extends ComputeService> computeServices;
+   private List<? extends BlobStore> blobStoreServices;
 
    @Override
    public int complete(String buffer, int cursor, List<String> candidates) {
       try {
-         if (computeServices != null) {
-            for (ComputeService computeService : computeServices) {
-               String id = (String) computeService.getContext().unwrap().getProviderMetadata().getDefaultProperties().get(Constants.JCLOUDS_SERVICE_ID);
+         if (blobStoreServices != null) {
+            for (BlobStore blobStore : blobStoreServices) {
+               String id = (String) blobStore.getContext().unwrap().getName();
                if (id != null) {
                   delegate.getStrings().add(id);
                }
@@ -48,11 +47,11 @@ public class ComputeServiceIdCompleter implements Completer {
       return delegate.complete(buffer, cursor, candidates);
    }
 
-   public List<? extends ComputeService> getComputeServices() {
-      return computeServices;
+   public List<? extends BlobStore> getBlobStoreServices() {
+      return blobStoreServices;
    }
 
-   public void setComputeServices(List<? extends ComputeService> computeServices) {
-      this.computeServices = computeServices;
+   public void setBlobStoreServices(List<? extends BlobStore> blobStoreServices) {
+      this.blobStoreServices = blobStoreServices;
    }
 }

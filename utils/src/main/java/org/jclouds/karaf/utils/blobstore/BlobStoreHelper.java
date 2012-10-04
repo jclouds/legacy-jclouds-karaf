@@ -39,10 +39,10 @@ public class BlobStoreHelper {
    */
   public static List<String> findCacheKeysForService(BlobStore blobStore) {
     List<String> keys = new LinkedList<String>();
-    String serviceId = (String) blobStore.getContext().unwrap().getProviderMetadata().getDefaultProperties().get(Constants.JCLOUDS_SERVICE_ID);
+    String contextName = (String) blobStore.getContext().unwrap().getName();
     String providerOrApi = blobStore.getContext().unwrap().getId();
-    if (serviceId != null) {
-      keys.add(serviceId);
+    if (contextName != null) {
+      keys.add(contextName);
     }
     if (providerOrApi != null) {
       keys.add(providerOrApi);
@@ -60,7 +60,7 @@ public class BlobStoreHelper {
       if (!Strings.isNullOrEmpty(id)) {
         BlobStore service = null;
         for (BlobStore svc : services) {
-          if (id.equals(svc.getContext().unwrap().getProviderMetadata().getDefaultProperties().getProperty(Constants.JCLOUDS_SERVICE_ID))) {
+          if (id.equals(svc.getContext().unwrap().getName())) {
             service = svc;
             break;
           }

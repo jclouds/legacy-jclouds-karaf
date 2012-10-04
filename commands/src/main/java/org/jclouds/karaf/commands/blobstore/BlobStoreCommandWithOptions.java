@@ -39,8 +39,8 @@ import com.google.inject.Module;
  */
 public abstract class BlobStoreCommandWithOptions extends BlobStoreCommandBase {
 
-   @Option(name = "--id", description = "The service id. Used to distinct between multiple service of the same provider/api. Only usable in interactive mode.")
-   protected String id;
+   @Option(name = "--name", description = "The service context name. Used to distinct between multiple service of the same provider/api. Only usable in interactive mode.")
+   protected String name;
 
    @Option(name = "--provider", description = "The provider to use.")
    protected String provider;
@@ -81,7 +81,7 @@ public abstract class BlobStoreCommandWithOptions extends BlobStoreCommandBase {
    }
 
    protected BlobStore getBlobStore() {
-      if ((id == null && provider == null && api == null) && (blobStoreServices != null && blobStoreServices.size() == 1)) {
+      if ((name == null && provider == null && api == null) && (blobStoreServices != null && blobStoreServices.size() == 1)) {
          return blobStoreServices.get(0);
       }
 
@@ -91,17 +91,17 @@ public abstract class BlobStoreCommandWithOptions extends BlobStoreCommandBase {
       String identityValue = EnvHelper.getBlobStoreIdentity(identity);
       String credentialValue = EnvHelper.getBlobStoreCredential(credential);
       String endpointValue = EnvHelper.getBlobStoreEndpoint(endpoint);
-      boolean serviceIdProvided = !Strings.isNullOrEmpty(id);
+      boolean contextNameProvided = !Strings.isNullOrEmpty(name);
       boolean canCreateService = (!Strings.isNullOrEmpty(providerValue) || !Strings.isNullOrEmpty(apiValue))
                && !Strings.isNullOrEmpty(identityValue) && !Strings.isNullOrEmpty(credentialValue);
 
       String providerOrApiValue = !Strings.isNullOrEmpty(providerValue) ? providerValue : apiValue;
 
       try {
-         blobStore = BlobStoreHelper.getBlobStore(id, providerOrApiValue, blobStoreServices);
+         blobStore = BlobStoreHelper.getBlobStore(name, providerOrApiValue, blobStoreServices);
       } catch (Throwable t) {
-        if (serviceIdProvided) {
-          throw new RuntimeException("Could not find blobstore service with id:" + id);
+        if (contextNameProvided) {
+          throw new RuntimeException("Could not find blobstore service with id:" + name);
         } else if (!canCreateService) {
             StringBuilder sb = new StringBuilder();
             sb.append("Insufficient information to create blobstore service:").append("\n");
