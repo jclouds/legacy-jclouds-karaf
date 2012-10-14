@@ -158,7 +158,7 @@
         <httpcore.version>4.1</httpcore.version>
         <java-xmlbuilder.bundle.version>0.3_1</java-xmlbuilder.bundle.version>
         <javax.inject.bundle.version>1_1</javax.inject.bundle.version>
-        <jclouds.version>1.5.1</jclouds.version>
+        <jclouds.version>${project.version}</jclouds.version>
         <jersey.version>1.11</jersey.version>
         <jersey.bundle.version>1.11_1</jersey.bundle.version>
         <joda.version>2.1</joda.version>
@@ -180,7 +180,7 @@
         <scripting.api.bundle.version>2.0.0</scripting.api.bundle.version>
         <slf4j.version>1.5.8</slf4j.version>
         <snakeyaml.version>1.9</snakeyaml.version>
-        <sshj.version>0.8.0</sshj.version>
+        <sshj.version>0.8.1</sshj.version>
 
         <!-- Plugin Versions -->
         <depends-maven-plugin.version>1.2</depends-maven-plugin.version>
