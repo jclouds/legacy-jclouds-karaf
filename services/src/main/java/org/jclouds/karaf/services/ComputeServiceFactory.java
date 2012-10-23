@@ -48,13 +48,11 @@ public class ComputeServiceFactory extends ServiceFactorySupport implements Comp
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ComputeServiceFactory.class);
 
-
     public static final String NODE_EVENT_SUPPORT = "eventsupport";
     public static final String CREDENTIAL_STORE = "credential-store";
     public static final String DEFAULT_CREDENTIAL_STORE_TYPE = "cadmin";
     public static final String CREDENTIAL_STORE_FILTER = "(&(objectClass=org.jclouds.karaf.core.CredentialStore)(credential-store-type=%s))";
 
-    private ServiceTracker credentialStoreTracker;
     private final BundleContext bundleContext;
 
 
@@ -63,6 +61,7 @@ public class ComputeServiceFactory extends ServiceFactorySupport implements Comp
     }
 
     private CredentialStore lookupStore(String type) {
+      ServiceTracker credentialStoreTracker = null;
         try {
             credentialStoreTracker = new ServiceTracker(bundleContext, bundleContext.createFilter(String.format(CREDENTIAL_STORE_FILTER, type)), null);
             credentialStoreTracker.open();
@@ -71,6 +70,10 @@ public class ComputeServiceFactory extends ServiceFactorySupport implements Comp
             LOGGER.error("Error looking up credential store.", e);
         } catch (InterruptedException e) {
             LOGGER.error("Timed out waiting for store.", e);
+        } finally {
+          if (credentialStoreTracker != null) {
+            credentialStoreTracker.close();
+          }
         }
         return null;
     }
