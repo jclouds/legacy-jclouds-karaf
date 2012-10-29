@@ -22,7 +22,7 @@ import java.io.PrintStream;
 import java.util.Collection;
 import java.util.List;
 
-public interface ShellTable {
+public interface ShellTable<D extends Object> {
 
   String LEFT = "left";
   String RIGHT = "right";
@@ -69,7 +69,7 @@ public interface ShellTable {
 
   public void setAscending(boolean ascending);
 
-  public Collection getDisplayData();
+  public D getDisplayData();
 
-  public void setDisplayData(Collection displayData);
+  public void setDisplayData(D displayData);
 }
