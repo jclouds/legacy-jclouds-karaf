@@ -34,16 +34,22 @@ public class CacheManager<T> implements Runnable {
     protected final List<Cacheable<T>> cacheables = new LinkedList<Cacheable<T>> ();
     protected final Map<String, T> services = new HashMap<String, T>();
 
+    private UpdateCachesTask updatesCachesTask;
+
     public void init() {
       scheduledExecutorService.scheduleAtFixedRate(this,0,5, TimeUnit.MINUTES);
     }
     public void destroy() {
-      scheduledExecutorService.shutdown();
+      if (updatesCachesTask != null) {
+        updatesCachesTask.stop();
+      }
+      scheduledExecutorService.shutdownNow();
     }
 
     @Override
     public void run() {
         //Update all cacheables for all services.
-        new UpdateCachesTask(cacheables,services).run();
+        this.updatesCachesTask = new UpdateCachesTask(cacheables,services);
+        this.updatesCachesTask.run();
     }
 }

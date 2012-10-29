@@ -31,6 +31,7 @@ public class UpdateCachesTask<T> implements Runnable {
 
     private final List<Cacheable<T>> cacheables;
     private final Map<String, T> services;
+    private boolean keepRunning = true;
 
     public UpdateCachesTask(List<Cacheable<T>> cacheables, Map<String, T> services) {
         this.cacheables = cacheables;
@@ -44,13 +45,19 @@ public class UpdateCachesTask<T> implements Runnable {
                 if (cacheables != null && !cacheables.isEmpty()) {
                     for (Cacheable<T> cacheable : cacheables) {
                         try {
+                          if (keepRunning) {
                             cacheable.updateOnAdded(service);
+                          }
                         } catch (Throwable t) {
-                            LOGGER.warn("Error while updating cache:" + t.getMessage());
+                            LOGGER.debug("Error while updating cache:" + t.getMessage());
                         }
                     }
                 }
             }
         }
+    }
+
+    public void stop() {
+      keepRunning = false;
     }
 }
