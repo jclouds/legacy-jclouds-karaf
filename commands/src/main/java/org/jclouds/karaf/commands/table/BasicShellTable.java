@@ -20,6 +20,7 @@
 package org.jclouds.karaf.commands.table;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import org.jclouds.karaf.commands.table.internal.AlphanumericComparator;
 
 import java.io.PrintStream;
@@ -30,7 +31,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class BasicShellTable implements ShellTable {
+public abstract class BasicShellTable<D extends Object> implements ShellTable<D> {
 
   private String type;
   private List<String> headers;
@@ -38,12 +39,12 @@ public abstract class BasicShellTable implements ShellTable {
   private List<String> alignments;
   private String sortBy;
   private boolean ascending;
-  private Collection displayData;
+  private D displayData;
 
   private final Comparator comparator = new AlphanumericComparator();
 
   /**
-   * Evaluate an expression on the given Object and return a {@link String} repressenation of the result.
+   * Evaluate an expression on the given Object and return a {@link String} representation of the result.
    * @param object
    * @param expression
    * @return
@@ -56,9 +57,17 @@ public abstract class BasicShellTable implements ShellTable {
    */
   public void display(PrintStream out, boolean showHeaders, boolean showData) {
     List<String[]> table = new ArrayList<String[]>();
+    Iterable iterableData = null;
+
+    //If display data is an iterable use as is, else wrap data inside a collection.
+    if (Iterable.class.isAssignableFrom(displayData.getClass())) {
+      iterableData = (Iterable) displayData;
+    } else {
+      iterableData = Lists.newArrayList(displayData);
+    }
 
     //Populate table
-    for (Object obj : displayData) {
+    for (Object obj : iterableData) {
       String[] values = new String[displayExpression.size()];
       for (int i=0; i < displayExpression.size(); i++) {
         values[i] = evaluate(obj, displayExpression.get(i));
@@ -184,11 +193,11 @@ public abstract class BasicShellTable implements ShellTable {
     this.ascending = ascending;
   }
 
-  public Collection getDisplayData() {
+  public D getDisplayData() {
     return displayData;
   }
 
-  public void setDisplayData(Collection displayData) {
+  public void setDisplayData(D displayData) {
     this.displayData = displayData;
   }
 }

@@ -27,7 +27,7 @@ import javax.script.ScriptEngineManager;
 /**
  * A shell table implementation that works with groovy expressions.
  */
-public class ScriptEngineShellTable extends BasicShellTable {
+public class ScriptEngineShellTable<D extends Object> extends BasicShellTable<D> {
 
   private final String engine;
   private final ScriptEngineManager scriptEngineFactory = new ScriptEngineManager();
