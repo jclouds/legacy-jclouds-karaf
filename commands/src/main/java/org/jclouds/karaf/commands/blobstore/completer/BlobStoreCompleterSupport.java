@@ -77,7 +77,7 @@ public abstract class BlobStoreCompleterSupport implements Completer, Cacheable<
    }
 
   /**
-   * Parses the arguemnts and extracts the service id.
+   * Parses the arguments and extracts the service id.
    * @param args
    * @return
    */

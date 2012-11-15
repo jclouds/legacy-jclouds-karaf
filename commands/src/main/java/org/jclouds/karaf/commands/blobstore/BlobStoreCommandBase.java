@@ -180,7 +180,7 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
       if (blobStore.blobExists(containerName, blobName)) {
          return blobStore.getBlob(containerName, blobName).getPayload();
       } else {
-         throw new Exception("Blob " + blobName + " does not exist in conatiner " + containerName + ".");
+         throw new Exception("Blob " + blobName + " does not exist in container " + containerName + ".");
       }
    }
 

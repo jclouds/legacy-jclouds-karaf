@@ -254,7 +254,7 @@ public class ComputeServiceEventProxy implements ComputeService {
 
     /**
      * nodes matching the filter are treated as a logical set. Using the resume command, you can save
-     * time by resumeing the nodes in parallel.
+     * time by resuming the nodes in parallel.
      * <p/>
      * <h4>note</h4>
      * <p/>

@@ -74,7 +74,7 @@ public class ConfigurationAdminCredentialStore extends CredentialStore {
             try {
                 Dictionary dictionary = configuration.getProperties();
                 if (dictionary == null) {
-                    dictionary = newDisctionary();
+                    dictionary = newDictionary();
                 }
                 Enumeration keys = dictionary.keys();
                 while (keys.hasMoreElements()) {
@@ -97,7 +97,7 @@ public class ConfigurationAdminCredentialStore extends CredentialStore {
             }
         }
 
-        public Dictionary newDisctionary() {
+        public Dictionary newDictionary() {
             Dictionary dictionary = new Properties();
             return dictionary;
         }
@@ -151,7 +151,7 @@ public class ConfigurationAdminCredentialStore extends CredentialStore {
             try {
                 Dictionary dictionary = configuration.getProperties();
                 if (dictionary == null) {
-                    dictionary = newDisctionary();
+                    dictionary = newDictionary();
                 }
 
                 String identityKey = o + "/identity";
@@ -173,7 +173,7 @@ public class ConfigurationAdminCredentialStore extends CredentialStore {
 
         public void clear() {
             try {
-                configuration.update(newDisctionary());
+                configuration.update(newDictionary());
             } catch (IOException e) {
                 LOGGER.warn("Failed to clear configuration admin jclouds credentials store.", e);
             }

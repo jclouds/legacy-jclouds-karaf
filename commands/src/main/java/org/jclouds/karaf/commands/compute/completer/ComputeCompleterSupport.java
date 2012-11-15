@@ -75,7 +75,7 @@ public abstract class ComputeCompleterSupport implements Completer, Cacheable<Co
    }
 
   /**
-   * Parses the arguemnts and extracts the service id.
+   * Parses the arguments and extracts the service id.
    * @param args
    * @return
    */

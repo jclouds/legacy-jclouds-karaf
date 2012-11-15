@@ -53,7 +53,7 @@ public class ComputeServiceListCommand extends ComputeCommandBase {
          }
 
       } catch (Exception ex) {
-         // noope
+         // noop
       }
       return null;
    }
