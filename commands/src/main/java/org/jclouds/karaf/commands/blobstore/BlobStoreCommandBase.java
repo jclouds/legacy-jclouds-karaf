@@ -177,11 +177,11 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
     */
    public InputSupplier<InputStream> getBlobInputStream(BlobStore blobStore, String containerName, String blobName)
          throws Exception {
-      if (blobStore.blobExists(containerName, blobName)) {
-         return blobStore.getBlob(containerName, blobName).getPayload();
-      } else {
+      Blob blob = blobStore.getBlob(containerName, blobName);
+      if (blob == null) {
          throw new Exception("Blob " + blobName + " does not exist in container " + containerName + ".");
       }
+      return blob.getPayload();
    }
 
    /**
