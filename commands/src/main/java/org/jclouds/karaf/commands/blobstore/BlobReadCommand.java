@@ -20,7 +20,6 @@
 package org.jclouds.karaf.commands.blobstore;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 
 import org.apache.felix.gogo.commands.Argument;
@@ -28,8 +27,9 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.blobstore.BlobStore;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
-import com.google.common.io.ByteStreams;
+import com.google.common.io.CharStreams;
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
 
@@ -71,7 +71,7 @@ public class BlobReadCommand extends BlobStoreCommandWithOptions {
       }
 
       if (display) {
-         System.err.println(new String(ByteStreams.toByteArray(supplier)));
+         CharStreams.copy(CharStreams.newReaderSupplier(supplier, Charsets.UTF_8), System.err);
       }
       return null;
    }
