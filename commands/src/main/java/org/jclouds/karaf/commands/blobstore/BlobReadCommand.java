@@ -30,6 +30,8 @@ import org.jclouds.blobstore.BlobStore;
 
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
+import com.google.common.io.Files;
+import com.google.common.io.InputSupplier;
 
 /**
  * @author: iocanel
@@ -59,16 +61,17 @@ public class BlobReadCommand extends BlobStoreCommandWithOptions {
          return null;
       }
 
+      InputSupplier<InputStream> supplier = getBlobInputStream(blobStore, containerName, blobName);
+
       if (!Strings.isNullOrEmpty(file)) {
          File f = new File(file);
          if (!f.exists() && f.createNewFile()) {
-            ByteStreams.copy(getBlobInputStream(blobStore, containerName, blobName), new FileOutputStream(f));
+            Files.copy(supplier, f);
          }
       }
 
       if (display) {
-         InputStream inputStream = getBlobInputStream(blobStore, containerName, blobName);
-         System.err.println(new String(ByteStreams.toByteArray(inputStream)));
+         System.err.println(new String(ByteStreams.toByteArray(supplier)));
       }
       return null;
    }
