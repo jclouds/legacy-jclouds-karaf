@@ -47,7 +47,7 @@ public class BlobReadCommand extends BlobStoreCommandWithOptions {
    String file;
 
    @Option(name = "-d", aliases = "--display", description = "Display the content to the console", required = false, multiValued = false)
-   Boolean display;
+   boolean display;
 
    @Override
    protected Object doExecute() throws Exception {
