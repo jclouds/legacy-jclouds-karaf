@@ -56,7 +56,7 @@ public class ImageCreateCommand extends ComputeCommandWithOptions {
       ImageTemplate imageTemplate = imageExtension.buildImageTemplateFromNode(imageName, id);
       ListenableFuture<Image> imageFuture = imageExtension.createImage(imageTemplate);
       Image image = imageFuture.get();
-      System.out.println("Succesfully created image:" + image.getId());
+      System.out.println("Successfully created image:" + image.getId());
       return null;
    }
 

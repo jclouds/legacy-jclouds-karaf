@@ -61,7 +61,7 @@ public class JcloudsLiveTestSupport extends JcloudsFeaturesTestSupport {
     }
 
     /**
-     * Creates a Manged Compute Service using the configured system properties.
+     * Creates a Managed Compute Service using the configured system properties.
      */
     public void createManagedComputeService(String provider, boolean eventSupport) {
         List<String> options = new LinkedList<String>();
@@ -77,7 +77,7 @@ public class JcloudsLiveTestSupport extends JcloudsFeaturesTestSupport {
 
 
     /**
-     * Creates a Manged Compute Service using the configured system properties.
+     * Creates a Managed Compute Service using the configured system properties.
      */
     public void createManagedBlobStoreService(String provider) {
         String cmd = "jclouds:blobstore-service-create --provider " + provider + " --identity " + identity + " --credential " + credential;
