@@ -257,46 +257,6 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
       return result;
    }
 
-   /**
-    * Reads a bye[] from a URL.
-    * 
-    * @param url
-    * @return
-    */
-   public byte[] readFromUrl(URL url) {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      DataInputStream dis = null;
-      try {
-         dis = new DataInputStream(url.openStream());
-         int size = 0;
-         while ((size = dis.available()) > 0) {
-            byte[] buffer = new byte[size];
-            baos.write(buffer);
-         }
-         return baos.toByteArray();
-      } catch (IOException e) {
-         LOGGER.warn("Failed to read from stream.", e);
-      } finally {
-         if (dis != null) {
-            try {
-               dis.close();
-            } catch (Exception e) {
-               // Ignore
-            }
-         }
-
-         if (baos != null) {
-            try {
-               baos.close();
-            } catch (Exception e) {
-               // Ignore
-            }
-         }
-
-      }
-      return new byte[0];
-   }
-
    protected void printBlobStoreProviders(Map<String, ProviderMetadata> providers, List<BlobStore> blobStores,
             String indent, PrintStream out) {
       out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
