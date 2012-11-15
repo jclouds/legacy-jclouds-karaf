@@ -51,14 +51,14 @@ public class BlobDeleteCommand extends BlobStoreCommandWithOptions {
       for (String container : containerNames) {
          if (!blobNames.isEmpty()) {
             for (String blobName : blobNames) {
-               if (getBlobStore().blobExists(container, blobName)) {
-                  getBlobStore().removeBlob(container, blobName);
+               if (blobStore.blobExists(container, blobName)) {
+                  blobStore.removeBlob(container, blobName);
                   cacheProvider.getProviderCacheForType("blob").remove(blobStore.getContext().unwrap().getId(),
                            blobName);
                }
             }
          } else {
-            getBlobStore().deleteContainer(container);
+            blobStore.deleteContainer(container);
             cacheProvider.getProviderCacheForType("container").remove(blobStore.getContext().unwrap().getId(),
                      container);
          }
