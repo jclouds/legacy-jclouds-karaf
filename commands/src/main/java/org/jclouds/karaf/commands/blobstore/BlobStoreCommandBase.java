@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
+import com.google.common.io.InputSupplier;
 
 /**
  * @author iocanel
@@ -174,9 +175,10 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
     * @param blobName
     * @return
     */
-   public InputStream getBlobInputStream(BlobStore blobStore, String containerName, String blobName) throws Exception {
+   public InputSupplier<InputStream> getBlobInputStream(BlobStore blobStore, String containerName, String blobName)
+         throws Exception {
       if (blobStore.blobExists(containerName, blobName)) {
-         return blobStore.getBlob(containerName, blobName).getPayload().getInput();
+         return blobStore.getBlob(containerName, blobName).getPayload();
       } else {
          throw new Exception("Blob " + blobName + " does not exist in conatiner " + containerName + ".");
       }
