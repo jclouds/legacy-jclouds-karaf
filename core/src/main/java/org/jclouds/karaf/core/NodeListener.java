@@ -22,7 +22,7 @@ package org.jclouds.karaf.core;
 import org.jclouds.compute.domain.NodeMetadata;
 
 /**
- * A listner which listens for node events.
+ * A listener which listens for node events.
  */
 public interface NodeListener {
 

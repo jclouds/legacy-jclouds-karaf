@@ -29,7 +29,7 @@ public interface ShellTable<D extends Object> {
   String RIGHT = "right";
 
   /**
-   * Evaluate an expression on the given Object and return a {@link String} repressenation of the result.
+   * Evaluate an expression on the given Object and return a {@link String} representation of the result.
    *
    * @param object
    * @param expression
