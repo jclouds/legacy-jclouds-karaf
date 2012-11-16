@@ -50,7 +50,7 @@ public class UpdateCachesTask<T> implements Runnable {
                             cacheable.updateOnAdded(service);
                           }
                         } catch (Throwable t) {
-                            LOGGER.debug("Error while updating cache:" + t.getMessage());
+                            LOGGER.warn("Error while updating cache:" + t.getMessage());
                         }
                     }
                 }
