@@ -33,6 +33,14 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.compendium</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jclouds</groupId>
             <artifactId>jclouds-compute</artifactId>
         </dependency>
@@ -70,6 +78,7 @@
                             org.jclouds.karaf.cache.blobstore,
                             org.jclouds.karaf.cache.compute
                         </Private-Package>
+                        <Bundle-Activator>org.jclouds.karaf.cache.Activator</Bundle-Activator>
                     </instructions>
                 </configuration>
             </plugin>
