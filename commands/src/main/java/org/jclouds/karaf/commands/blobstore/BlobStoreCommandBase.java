@@ -126,48 +126,6 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
     return configuration;
   }
 
-
-  /**
-    * Reads an Object from the blob store.
-    * 
-    * @param blobStore
-    * @param containerName
-    * @param blobName
-    * @return
-    */
-   public Object read(BlobStore blobStore, String containerName, String blobName) {
-      Object result = null;
-      ObjectInputStream ois = null;
-
-      blobStore.createContainerInLocation(null, containerName);
-
-      InputStream is = blobStore.getBlob(containerName, blobName).getPayload().getInput();
-
-      try {
-         ois = new ObjectInputStream(is);
-         result = ois.readObject();
-      } catch (IOException e) {
-         LOGGER.error("Error reading object.", e);
-      } catch (ClassNotFoundException e) {
-         LOGGER.error("Error reading object.", e);
-      } finally {
-         if (ois != null) {
-            try {
-               ois.close();
-            } catch (IOException e) {
-            }
-         }
-
-         if (is != null) {
-            try {
-               is.close();
-            } catch (IOException e) {
-            }
-         }
-      }
-      return result;
-   }
-
    /**
     * Returns an InputStream to a {@link org.jclouds.blobstore.domain.Blob}.
     * 
@@ -182,20 +140,6 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
          throw new Exception("Blob " + blobName + " does not exist in container " + containerName + ".");
       }
       return blob.getPayload();
-   }
-
-   /**
-    * Writes to the {@link org.jclouds.blobstore.domain.Blob} by serializing an Object.
-    * 
-    * @param blobStore
-    * @param containerName
-    * @param blobName
-    * @param object
-    */
-   public void write(BlobStore blobStore, String containerName, String blobName, Object object) {
-      Blob blob = blobStore.blobBuilder(blobName).build();
-      blob.setPayload(toBytes(object));
-      blobStore.putBlob(containerName, blob);
    }
 
    /**
@@ -221,40 +165,6 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
       } catch (Exception ex) {
          LOGGER.warn("Error closing input stream.", ex);
       }
-   }
-
-   public byte[] toBytes(Object object) {
-      byte[] result = null;
-
-      if (object instanceof byte[]) {
-         return (byte[]) object;
-      }
-
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      ObjectOutputStream oos = null;
-
-      try {
-         oos = new ObjectOutputStream(baos);
-         oos.writeObject(object);
-         result = baos.toByteArray();
-      } catch (IOException e) {
-         LOGGER.error("Error while writing blob", e);
-      } finally {
-         if (oos != null) {
-            try {
-               oos.close();
-            } catch (IOException e) {
-            }
-         }
-
-         if (baos != null) {
-            try {
-               baos.close();
-            } catch (IOException e) {
-            }
-         }
-      }
-      return result;
    }
 
    protected void printBlobStoreProviders(Map<String, ProviderMetadata> providers, List<BlobStore> blobStores,
