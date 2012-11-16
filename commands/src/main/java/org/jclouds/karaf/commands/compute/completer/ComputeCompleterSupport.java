@@ -21,7 +21,6 @@ package org.jclouds.karaf.commands.compute.completer;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.felix.service.command.CommandSession;
@@ -37,7 +36,7 @@ import com.google.common.collect.Multimap;
 
 public abstract class ComputeCompleterSupport implements Completer, Cacheable<ComputeService> {
 
-   private static final String ID_OPTION = "--id";
+   private static final String NAME_OPTION = "--name";
    private static final String PROVIDER_OPTION = "--provider";
    private static final String API_OPTION = "--api";
 
@@ -83,8 +82,8 @@ public abstract class ComputeCompleterSupport implements Completer, Cacheable<Co
     String id = null;
     if (args != null && args.length > 0) {
       List<String> arguments = Arrays.asList(args);
-      if (arguments.contains(ID_OPTION)) {
-        int index = arguments.indexOf(ID_OPTION);
+      if (arguments.contains(NAME_OPTION)) {
+        int index = arguments.indexOf(NAME_OPTION);
         if (arguments.size() > index) {
           return arguments.get(index + 1);
         }
@@ -102,8 +101,8 @@ public abstract class ComputeCompleterSupport implements Completer, Cacheable<Co
         String id = null;
         if (args != null && args.length > 0) {
             List<String> arguments = Arrays.asList(args);
-            if (arguments.contains(ID_OPTION)) {
-               int index = arguments.indexOf(ID_OPTION);
+            if (arguments.contains(NAME_OPTION)) {
+               int index = arguments.indexOf(NAME_OPTION);
                if (arguments.size() > index) {
                   return arguments.get(index + 1);
                }
