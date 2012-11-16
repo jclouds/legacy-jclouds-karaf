@@ -75,8 +75,10 @@ public class BlobStoreServiceFactory extends ServiceFactorySupport implements Bl
 
                 if (!Strings.isNullOrEmpty(provider) && installedProviders.containsKey(provider)) {
                     providerMetadata = installedProviders.get(provider);
+                    validate(providerMetadata, properties);
                 } else if (!Strings.isNullOrEmpty(api) && installedApis.containsKey(api)) {
                     apiMetadata = installedApis.get(api);
+                    validate(apiMetadata, properties);
                 } else {
                     if (!Strings.isNullOrEmpty(provider)) {
                         providerPids.put(provider, pid);
@@ -90,7 +92,7 @@ public class BlobStoreServiceFactory extends ServiceFactorySupport implements Bl
                 }
 
 
-              //We are removing credentials as we don't want them to be visible in the service registration.
+                //We are removing credentials as we don't want them to be visible in the service registration.
                 String id = (String) properties.get(Constants.NAME);
                 String identity = (String) properties.remove(Constants.IDENTITY);
                 String credential = (String) properties.remove(Constants.CREDENTIAL);
@@ -123,7 +125,9 @@ public class BlobStoreServiceFactory extends ServiceFactorySupport implements Bl
                     activePids.put(pid, pendingPids.remove(pid));
                 }
             }
-        } catch (Exception ex) {
+        } catch (InvalidConfigurationException ex) {
+            LOGGER.warn("Invalid configuration: {}", ex.getMessage());
+        }  catch (Exception ex) {
             LOGGER.error("Error creating blobstore service.", ex);
         } finally {
             ServiceRegistration oldRegistration = (newRegistration == null)
