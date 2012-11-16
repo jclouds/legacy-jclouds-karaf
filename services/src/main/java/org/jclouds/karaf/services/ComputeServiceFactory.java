@@ -104,8 +104,10 @@ public class ComputeServiceFactory extends ServiceFactorySupport implements Comp
 
                 if (!Strings.isNullOrEmpty(provider) && installedProviders.containsKey(provider)) {
                     providerMetadata = installedProviders.get(provider);
+                    validate(providerMetadata, properties);
                 } else if (!Strings.isNullOrEmpty(api) && installedApis.containsKey(api)) {
                     apiMetadata = installedApis.get(api);
+                    validate(apiMetadata, properties);
                 } else {
                     if (!Strings.isNullOrEmpty(provider)) {
                         providerPids.put(provider, pid);
@@ -126,6 +128,15 @@ public class ComputeServiceFactory extends ServiceFactorySupport implements Comp
                 String storeType = (String) properties.get(CREDENTIAL_STORE);
                 String eventSupport = (String) properties.get(NODE_EVENT_SUPPORT);
                 Boolean enableEventSupport = false;
+
+                if (Strings.isNullOrEmpty(credential) && providerMetadata != null && !providerMetadata.getApiMetadata().getDefaultCredential().isPresent()) {
+                    LOGGER.warn("No credential specified and provider {}.", providerMetadata.getId());
+                    return;
+                }
+                if (Strings.isNullOrEmpty(credential) && apiMetadata != null && !apiMetadata.getDefaultCredential().isPresent()) {
+                    LOGGER.warn("No credential specified and api {}.", apiMetadata.getId());
+                    return;
+                }
 
                 if (storeType == null || storeType.isEmpty()) {
                     storeType = DEFAULT_CREDENTIAL_STORE_TYPE;
@@ -174,6 +185,8 @@ public class ComputeServiceFactory extends ServiceFactorySupport implements Comp
                     activePids.put(pid, pendingPids.remove(pid));
                 }
             }
+        } catch (InvalidConfigurationException ex) {
+            LOGGER.warn("Invalid configuration: {}", ex.getMessage());
         } catch (Exception ex) {
             LOGGER.error("Error creating compute service.", ex);
         } finally {

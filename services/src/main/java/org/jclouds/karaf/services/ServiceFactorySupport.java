@@ -19,7 +19,9 @@
 
 package org.jclouds.karaf.services;
 
+import com.google.common.base.Strings;
 import org.jclouds.apis.ApiMetadata;
+import org.jclouds.karaf.core.Constants;
 import org.jclouds.providers.ProviderMetadata;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
@@ -133,6 +135,43 @@ public abstract class ServiceFactorySupport implements ManagedServiceFactory {
             if (lock.isHeldByCurrentThread()) {
                 lock.unlock();
             }
+        }
+    }
+
+
+    /**
+     * Checks if configuration is valid for the specified {@link ProviderMetadata}.
+     * @param providerMetadata
+     * @param properties
+     * @throws InvalidConfigurationException
+     */
+    static void validate(ProviderMetadata providerMetadata, Dictionary properties) throws InvalidConfigurationException {
+        if (Strings.isNullOrEmpty((String) properties.get(Constants.IDENTITY)) && !providerMetadata.getApiMetadata().getDefaultIdentity().isPresent()) {
+            throw new InvalidConfigurationException("No identity specified.");
+        }
+
+        if (Strings.isNullOrEmpty((String) properties.get(Constants.CREDENTIAL)) && !providerMetadata.getApiMetadata().getDefaultCredential().isPresent()) {
+            throw new InvalidConfigurationException("No credential specified specified.");
+        }
+    }
+
+    /**
+     * Checks if configuration is valid for the specified {@link ApiMetadata}
+     * @param apiMetadata
+     * @param properties
+     * @throws InvalidConfigurationException
+     */
+    static void validate(ApiMetadata apiMetadata, Dictionary properties) throws InvalidConfigurationException {
+        if (Strings.isNullOrEmpty((String) properties.get(Constants.IDENTITY)) && !apiMetadata.getDefaultIdentity().isPresent()) {
+            throw new InvalidConfigurationException("No identity specified.");
+        }
+
+        if (Strings.isNullOrEmpty((String) properties.get(Constants.CREDENTIAL)) && !apiMetadata.getDefaultCredential().isPresent()) {
+            throw new InvalidConfigurationException("No credential specified specified.");
+        }
+
+        if (Strings.isNullOrEmpty((String) properties.get(Constants.ENDPOINT)) && !apiMetadata.getDefaultEndpoint().isPresent()) {
+            throw new InvalidConfigurationException("No credential specified specified.");
         }
     }
 
