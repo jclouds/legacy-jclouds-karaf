@@ -19,7 +19,12 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.FileInputStream;
 import java.net.URL;
+
+import com.google.common.io.Closeables;
 
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
@@ -38,11 +43,14 @@ public class BlobWriteCommand extends BlobStoreCommandWithOptions {
    @Argument(index = 1, name = "blobName", description = "The name of the blob", required = true, multiValued = false)
    String blobName;
 
-   @Argument(index = 2, name = "payload", description = "A url pointing to a payload, or just a string payload", required = true, multiValued = false)
+   @Argument(index = 2, name = "payload", description = "Payload, interpreted as a file name by default", required = true, multiValued = false)
    String payload;
 
-   @Option(name = "-s", aliases = "--store-url", description = "Option to store in the blob the url itself", required = false, multiValued = false)
-   boolean storeUrl;
+   @Option(name = "-s", aliases = "--string-payload", description = "Use string payload instead of a file", required = false, multiValued = false)
+   boolean stringPayload;
+
+   @Option(name = "-u", aliases = "--url-payload", description = "Use payload from a URL instead of a file", required = false, multiValued = false)
+   boolean urlPayload;
 
    @Override
    protected Object doExecute() throws Exception {
@@ -54,16 +62,18 @@ public class BlobWriteCommand extends BlobStoreCommandWithOptions {
          return null;
       }
 
-      URL url = null;
-      try {
-         url = new URL(payload);
-      } catch (Exception e) {
-         // Ignore
-      }
-      if (url == null || storeUrl) {
-         write(blobStore, containerName, blobName, payload);
+      InputStream input;
+      if (stringPayload) {
+         input = new ByteArrayInputStream(payload.getBytes());  // use default Charset
+      } else if (urlPayload) {
+         input = new URL(payload).openStream();
       } else {
-         write(blobStore, containerName, blobName, url.openStream());
+         input = new FileInputStream(payload);
+      }
+      try {
+         write(blobStore, containerName, blobName, input);
+      } finally {
+         Closeables.closeQuietly(input);
       }
 
       cacheProvider.getProviderCacheForType("container").put(blobStore.getContext().unwrap().getId(), containerName);
