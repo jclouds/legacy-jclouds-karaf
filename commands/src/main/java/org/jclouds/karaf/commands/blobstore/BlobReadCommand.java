@@ -45,8 +45,8 @@ public class BlobReadCommand extends BlobStoreCommandWithOptions {
    @Argument(index = 1, name = "blobName", description = "The name of the blob", required = true, multiValued = false)
    String blobName;
 
-   @Option(name = "-f", aliases = "--to-file", description = "The file to store the blob", required = false, multiValued = false)
-   String file;
+   @Argument(index = 2, name = "toFile", description = "The file to store the blob", required = false, multiValued = false)
+   String fileName;
 
    @Option(name = "-d", aliases = "--display", description = "Display the content to the console", required = false, multiValued = false)
    boolean display;
@@ -63,16 +63,16 @@ public class BlobReadCommand extends BlobStoreCommandWithOptions {
 
       InputSupplier<InputStream> supplier = getBlobInputStream(blobStore, containerName, blobName);
 
-      if (!Strings.isNullOrEmpty(file)) {
-         File f = new File(file);
-         if (!f.exists() && f.createNewFile()) {
-            Files.copy(supplier, f);
+      if (display) {
+         CharStreams.copy(CharStreams.newReaderSupplier(supplier, Charsets.UTF_8), System.err);
+         System.err.flush();
+      } else {
+         File file = new File(fileName);
+         if (!file.exists() && file.createNewFile()) {
+            Files.copy(supplier, file);
          }
       }
 
-      if (display) {
-         CharStreams.copy(CharStreams.newReaderSupplier(supplier, Charsets.UTF_8), System.err);
-      }
       return null;
    }
 }
