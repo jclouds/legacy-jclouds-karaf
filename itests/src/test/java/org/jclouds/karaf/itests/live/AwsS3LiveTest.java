@@ -108,7 +108,7 @@ public class AwsS3LiveTest extends JcloudsLiveTestSupport {
             System.err.println(executeCommand("jclouds:blobstore-list"));
             System.err.println(executeCommand("jclouds:blobstore-create itest-container"));
 
-            System.err.println(executeCommand("jclouds:blobstore-write itest-container  " +
+            System.err.println(executeCommand("jclouds:blobstore-write -u itest-container  " +
                     "maven2/org/jclouds/api/byon/" +version+"/"+artifactId+"-"+version+".jar " +
                     "mvn:"+groupId+"/"+artifactId+"/"+version));
 
