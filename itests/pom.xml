@@ -22,7 +22,7 @@
     <parent>
         <artifactId>jclouds-karaf-pom</artifactId>
         <groupId>org.jclouds</groupId>
-        <version>1.5.4-SNAPSHOT</version>
+        <version>1.5.3_1</version>
         <relativePath>..</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
