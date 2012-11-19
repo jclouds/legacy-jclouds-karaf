@@ -580,7 +580,7 @@
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <feature version='${project.version}'>jclouds-compute</feature>
-        <feature version='${project.version}'>jclouds-driver-jsch</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
         <bundle>mvn:org.jclouds.karaf/core/${project.version}</bundle>
         <bundle>mvn:org.jclouds.karaf/services/${project.version}</bundle>
     </feature>
