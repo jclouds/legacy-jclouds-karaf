@@ -45,7 +45,40 @@ public class ObrResolverTest extends JcloudsFeaturesTestSupport {
     }
 
     /**
-     * This test checks that when the obr resolver is installed
+     * This test checks that when the obr resolver is installed, jclouds-services feature can be properly installed.
+     * @throws Exception
+     */
+    @Test
+    public void testJcloudsKarafServicesResolution() throws Exception {
+        installAndCheckFeature("obr");
+        installAndCheckFeature("jclouds-services");
+        String jcloudsServicesBundles = executeCommand("osgi:list -s | grep -i -c org.jclouds.karaf.services");
+        assertNotNull(jcloudsServicesBundles);
+        int jcloudsServicesBundlesCount = Integer.parseInt(jcloudsServicesBundles.trim());
+        assertEquals("Expected only one jclouds-services bundle", 1, jcloudsServicesBundlesCount);
+    }
+
+    /**
+     * This test checks that when the obr resolver is installed, jclouds-commands feature can be properly installed.
+     * @throws Exception
+     */
+    @Test
+    public void testJcloudsKarafCommandsResolution() throws Exception {
+        installAndCheckFeature("obr");
+        installAndCheckFeature("jclouds-commands");
+        String jcloudsCommandsBundles = executeCommand("osgi:list -s | grep -i -c org.jclouds.karaf.commands");
+        assertNotNull(jcloudsCommandsBundles);
+        int jcloudsCommandsBundlesCount = Integer.parseInt(jcloudsCommandsBundles.trim());
+        assertEquals("Expected only one jclouds-commands bundle", 1, jcloudsCommandsBundlesCount);
+
+        String jcloudsServicesBundles = executeCommand("osgi:list -s | grep -i -c org.jclouds.karaf.services");
+        assertNotNull(jcloudsServicesBundles);
+        int jcloudsServicesBundlesCount = Integer.parseInt(jcloudsServicesBundles.trim());
+        assertEquals("Expected only one jclouds-services bundle", 1, jcloudsServicesBundlesCount);
+    }
+
+    /**
+     * This test checks that when the obr resolver is installed, we don't have multiple jersey bundles.
      * @throws Exception
      */
     @Test
