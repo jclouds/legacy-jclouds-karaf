@@ -67,6 +67,7 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                         <Export-Package>org.jclouds.karaf.cache;version=${project.version}</Export-Package>
+                        <Export-Service>org.jclouds.karaf.cache.CacheProvider</Export-Service>
                         <Import-Package>
                             !org.jclouds.karaf.cache*,
                             org.jclouds*;version=${jclouds.version},
