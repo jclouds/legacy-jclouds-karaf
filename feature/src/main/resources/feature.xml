@@ -151,6 +151,12 @@
         <bundle dependency='true'>mvn:org.jclouds.api/rackspace-cloudidentity/${jclouds.version}</bundle>
     </feature>
 
+    <feature name="jclouds-api-chef" description="Jclouds - API - Chef" version="${project.version}" resolver="(obr)">
+        <feature version='${project.version}'>jclouds</feature>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.api/chef/${project.version}</bundle>
+    </feature>
 
     <!-- Drivers -->
     <feature name='jclouds-driver-jsch' description='JClouds - Drivers - Jsch' version='${project.version}' resolver='(obr)'>
@@ -598,6 +604,8 @@
         <bundle>mvn:org.jclouds.karaf/cache/${project.version}</bundle>
         <bundle>mvn:org.jclouds.karaf/commands/${project.version}</bundle>
     </feature>
+
+
 
      <feature name="jclouds-url-handler" description="Url Handler for JClouds Blobs" version="${project.version}" resolver="(obr)">
         <feature version='${project.version}'>jclouds</feature>
