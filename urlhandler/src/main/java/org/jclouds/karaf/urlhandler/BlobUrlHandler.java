@@ -34,7 +34,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import com.google.common.io.Closeables;
 import com.google.inject.Module;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
@@ -51,6 +54,7 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
 
     private List<BlobStore> blobStores = new LinkedList<BlobStore>();
 
+    private ExecutorService executorService = Executors.newCachedThreadPool();
 
     /**
      * Open the connection for the given URL.
@@ -66,7 +70,7 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
         }
         String[] parts = url.getPath().split("/");
 
-        if (parts.length == 2 && ( url.getHost() == null || url.getHost().trim().length() == 0)) {
+        if (parts.length == 2 && (url.getHost() == null || url.getHost().trim().length() == 0)) {
             throw new MalformedURLException("Provider cannot be null or empty. Syntax: " + SYNTAX);
         }
 
@@ -88,23 +92,23 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
             String[] parts = url.getPath().split("/");
             if (url.getHost() == null || url.getHost().trim().length() == 0) {
                 this.providerName = parts[index++];
-            }  else {
+            } else {
                 this.providerName = url.getHost();
             }
             this.containerName = parts[index++];
             StringBuilder builder = new StringBuilder();
             builder.append(parts[index++]);
 
-            for (int i = index; i < parts.length;i++) {
+            for (int i = index; i < parts.length; i++) {
                 builder.append("/").append(parts[i]);
             }
             this.blobName = builder.toString();
             //Parse the query string for id.
             Map<String, String> parameters = parseUrlParameters(url);
             if (parameters != null && parameters.containsKey("id")) {
-              id = parameters.get("id");
+                id = parameters.get("id");
             } else {
-              id = null;
+                id = null;
             }
         }
 
@@ -131,7 +135,7 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
                 }
                 if (!blobStore.containerExists(containerName)) {
                     throw new IOException("Container " + containerName + " does not exists");
-                } else if (!blobStore.blobExists(containerName,blobName)) {
+                } else if (!blobStore.blobExists(containerName, blobName)) {
                     throw new IOException("Blob " + blobName + " does not exists");
                 }
 
@@ -145,38 +149,50 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
 
         @Override
         public OutputStream getOutputStream() throws IOException {
-           try {
-               BlobStore blobStore = BlobStoreHelper.getBlobStore(id, providerName, blobStores);
-               if (!blobStore.containerExists(containerName)) {
-                    blobStore.createContainerInLocation(null,containerName);
-               }
-
-               PipedOutputStream out = new PipedOutputStream();
-               PipedInputStream is = new PipedInputStream(out);
-               blobStore.getBlob(containerName, blobName).setPayload(is);
-               return out;
+            try {
+                final BlobStore blobStore = BlobStoreHelper.getBlobStore(id, providerName, blobStores);
+                if (!blobStore.containerExists(containerName)) {
+                    blobStore.createContainerInLocation(null, containerName);
+                }
+                PipedOutputStream out = new PipedOutputStream();
+                final PipedInputStream is = new PipedInputStream(out);
+                //We want to read the blob from a different Thread to avoid deadlocking.
+                Runnable putBlob = new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Blob blob = blobStore.getBlob(containerName, blobName);
+                            blob.setPayload(is);
+                            blobStore.putBlob(containerName, blob);
+                        } finally {
+                            Closeables.closeQuietly(is);
+                        }
+                    }
+                };
+                executorService.submit(putBlob);
+                return out;
             } catch (Exception e) {
                 throw (IOException) new IOException("Error opening blob protocol url").initCause(e);
             }
         }
 
-      protected Map<String, String> parseUrlParameters(URL url) {
-        Map<String, String> map = new HashMap<String, String>();
-        if (url != null && url.getQuery() != null) {
-          String[] params = url.getQuery().split("&");
-          for (String param : params) {
-            String name = param.split("=")[0];
-            String value = param.split("=")[1];
-            map.put(name, value);
-          }
+        protected Map<String, String> parseUrlParameters(URL url) {
+            Map<String, String> map = new HashMap<String, String>();
+            if (url != null && url.getQuery() != null) {
+                String[] params = url.getQuery().split("&");
+                for (String param : params) {
+                    String name = param.split("=")[0];
+                    String value = param.split("=")[1];
+                    map.put(name, value);
+                }
+            }
+            return map;
         }
-        return map;
-      }
     }
 
 
     public void setBlobStores(List<BlobStore> blobStores) {
-       this.blobStores = blobStores;
+        this.blobStores = blobStores;
     }
 
     public List<BlobStore> getBlobStores() {

@@ -26,9 +26,14 @@ import static org.openengsb.labs.paxexam.karaf.options.KarafDistributionOption.l
 import static org.ops4j.pax.exam.CoreOptions.scanFeatures;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.google.common.io.ByteStreams;
+import com.google.common.io.Closeables;
 import org.apache.karaf.features.FeaturesService;
 import org.jclouds.blobstore.BlobStore;
 import org.junit.After;
@@ -108,10 +113,16 @@ public class AwsS3LiveTest extends JcloudsLiveTestSupport {
             System.err.println(executeCommand("jclouds:blobstore-list"));
             System.err.println(executeCommand("jclouds:blobstore-create itest-container"));
 
-            System.err.println(executeCommand("jclouds:blobstore-write -u itest-container  " +
-                    "maven2/org/jclouds/api/byon/" +version+"/"+artifactId+"-"+version+".jar " +
-                    "mvn:"+groupId+"/"+artifactId+"/"+version));
-
+            URL artifactUrl = new URL("mvn:"+groupId+"/"+artifactId+"/"+version);
+            URL blobUrl = new URL("blob:aws-s3/itest-container/maven2/org/jclouds/api/byon/" +version+"/"+artifactId+"-"+version+".jar" );
+            InputStream is = artifactUrl.openConnection().getInputStream();
+            OutputStream os = blobUrl.openConnection().getOutputStream();
+            try {
+                ByteStreams.copy(is, os);
+            } finally {
+                Closeables.closeQuietly(is);
+                Closeables.closeQuietly(os);
+            }
             //Make sure that only S3 is available as a repo.
             System.err.println(executeCommands("config:edit org.ops4j.pax.url.mvn",
                     "config:propset org.ops4j.pax.url.mvn.localRepository " + System.getProperty("karaf.base") + File.separatorChar + "none",
