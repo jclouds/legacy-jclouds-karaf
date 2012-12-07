@@ -157,7 +157,6 @@
             <action class="org.jclouds.karaf.commands.compute.ComputeServiceListCommand">
                 <property name="computeServices" ref="computeServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
-                <property name="computeProviderOrApiRegistry" ref="computeProviderRegistry"/>
             </action>
         </command>
         <command name="jclouds/compute-service-create">
@@ -184,7 +183,6 @@
             <action class="org.jclouds.karaf.commands.blobstore.BlobStoreServiceListCommand">
                 <property name="blobStoreServices" ref="blobStoreServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
-                <property name="blobStoreProviderOrApiRegistry" ref="blobStoreProviderRegistry"/>
             </action>
         </command>
         <command name="jclouds/blobstore-service-create">
@@ -596,11 +594,5 @@
     <reference-list id="blobStoreServices" interface="org.jclouds.blobstore.BlobStore" availability="optional"/>
 
     <reference id="configAdmin" interface="org.osgi.service.cm.ConfigurationAdmin" availability="optional"/>
-
-    <reference id="blobStoreProviderRegistry" interface="org.jclouds.karaf.core.BlobStoreProviderOrApiRegistry"
-               availability="optional"/>
-
-    <reference id="computeProviderRegistry" interface="org.jclouds.karaf.core.ComputeProviderOrApiRegistry"
-               availability="optional"/>
 
 </blueprint>

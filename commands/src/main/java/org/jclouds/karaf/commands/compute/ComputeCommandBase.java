@@ -78,37 +78,37 @@ public abstract class ComputeCommandBase extends AbstractAction {
       }
    }
 
-   protected void printComputeProviders(Map<String, ProviderMetadata> providers, List<ComputeService> computeServices,
+   protected void printComputeProviders(Iterable<ProviderMetadata> providers, List<ComputeService> computeServices,
             String indent, PrintStream out) {
       out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
-      for (String provider : providers.keySet()) {
+      for (ProviderMetadata provider : providers) {
          StringBuilder sb = new StringBuilder();
          sb.append("[ ");
          for (ComputeService computeService : computeServices) {
             String contextName = (String) computeService.getContext().unwrap().getName();
-            if (computeService.getContext().unwrap().getId().equals(provider) && contextName != null) {
+            if (computeService.getContext().unwrap().getId().equals(provider.getId()) && contextName != null) {
                sb.append(contextName).append(" ");
             }
          }
          sb.append("]");
-         out.println(String.format(PROVIDERFORMAT, provider, "compute", sb.toString()));
+         out.println(String.format(PROVIDERFORMAT, provider.getId(), "compute", sb.toString()));
       }
    }
 
-   protected void printComputeApis(Map<String, ApiMetadata> apis, List<ComputeService> computeServices, String indent,
+   protected void printComputeApis(Iterable<ApiMetadata> apis, List<ComputeService> computeServices, String indent,
             PrintStream out) {
       out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
-      for (String api : apis.keySet()) {
+      for (ApiMetadata api : apis) {
         StringBuilder sb = new StringBuilder();
         sb.append("[ ");
          for (ComputeService computeService : computeServices) {
            String contextName = (String) computeService.getContext().unwrap().getName();
-            if (computeService.getContext().unwrap().getId().equals(api) && contextName != null) {
+            if (computeService.getContext().unwrap().getId().equals(api.getId()) && contextName != null) {
               sb.append(contextName).append(" ");
             }
          }
         sb.append("]");
-         out.println(String.format(PROVIDERFORMAT, api, "compute", sb.toString()));
+         out.println(String.format(PROVIDERFORMAT, api.getId(), "compute", sb.toString()));
       }
    }
 

@@ -19,50 +19,33 @@
 
 package org.jclouds.karaf.commands.compute;
 
+import com.google.common.reflect.TypeToken;
 import org.apache.felix.gogo.commands.Command;
-import org.jclouds.karaf.core.ComputeProviderOrApiRegistry;
+import org.jclouds.apis.Apis;
+import org.jclouds.compute.ComputeServiceContext;
+import org.jclouds.providers.Providers;
 
 @Command(scope = "jclouds", name = "compute-service-list", description = "Lists the Compute APIs and Providers", detailedDescription = "classpath:compute-service-list.txt")
 public class ComputeServiceListCommand extends ComputeCommandBase {
 
-   private ComputeProviderOrApiRegistry computeProviderOrApiRegistry;
-
-   @Override
-   protected Object doExecute() throws Exception {
-      try {
-         if (computeProviderOrApiRegistry.getInstalledApis() != null
-                  && !computeProviderOrApiRegistry.getInstalledApis().isEmpty()) {
+    @Override
+    protected Object doExecute() throws Exception {
+        try {
             System.out.println("Compute APIs:");
             System.out.println("-------------");
-            printComputeApis(computeProviderOrApiRegistry.getInstalledApis(), getComputeServices(), "", System.out);
-         } else {
-            System.out.println("No compute APIs found.");
-         }
+            printComputeApis(Apis.viewableAs(TypeToken.of(ComputeServiceContext.class)), getComputeServices(), "", System.out);
 
-         System.out.println();
-         System.out.println();
+            System.out.println();
+            System.out.println();
 
-         System.out.println("Compute Providers:");
-         System.out.println("------------------");
-         if (computeProviderOrApiRegistry.getInstalledProviders() != null
-                  && !computeProviderOrApiRegistry.getInstalledProviders().isEmpty()) {
-            printComputeProviders(computeProviderOrApiRegistry.getInstalledProviders(), getComputeServices(), "",
-                     System.out);
-         } else {
-            System.out.println("No compute providers found.");
-         }
+            System.out.println("Compute Providers:");
+            System.out.println("------------------");
+            printComputeProviders(Providers.viewableAs(TypeToken.of(ComputeServiceContext.class)), getComputeServices(), "",
+                    System.out);
 
-      } catch (Exception ex) {
-         // noop
-      }
-      return null;
-   }
-
-   public ComputeProviderOrApiRegistry getComputeProviderOrApiRegistry() {
-      return computeProviderOrApiRegistry;
-   }
-
-   public void setComputeProviderOrApiRegistry(ComputeProviderOrApiRegistry computeProviderOrApiRegistry) {
-      this.computeProviderOrApiRegistry = computeProviderOrApiRegistry;
-   }
+        } catch (Exception ex) {
+            // noop
+        }
+        return null;
+    }
 }

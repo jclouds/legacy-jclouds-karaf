@@ -22,6 +22,8 @@ package org.jclouds.karaf.services;
 import com.google.common.base.Strings;
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.karaf.core.Constants;
+import org.jclouds.osgi.ApiListener;
+import org.jclouds.osgi.ProviderListener;
 import org.jclouds.providers.ProviderMetadata;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
@@ -35,12 +37,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
-public abstract class ServiceFactorySupport implements ManagedServiceFactory {
+public abstract class ServiceFactorySupport implements ManagedServiceFactory, ProviderListener, ApiListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ComputeServiceFactory.class);
 
 
-  protected final Map<String, ServiceRegistration> registrations = new ConcurrentHashMap<String, ServiceRegistration>();
+    protected final Map<String, ServiceRegistration> registrations = new ConcurrentHashMap<String, ServiceRegistration>();
 
     protected final Map<String, Dictionary> pendingPids = new HashMap<String, Dictionary>();
     protected final Map<String, Dictionary> activePids = new HashMap<String, Dictionary>();
@@ -59,13 +61,20 @@ public abstract class ServiceFactorySupport implements ManagedServiceFactory {
         }
     }
 
-    public void providerInstalled(ProviderMetadata provider) {
+    public abstract boolean apply(ProviderMetadata provider);
+
+    public abstract boolean apply(ApiMetadata api);
+
+    public void added(ProviderMetadata provider) {
+        if (!apply(provider))  {
+            return;
+        }
         try {
             lock.tryLock();
             installedProviders.put(provider.getId(), provider);
             //Check if there is a pid that requires the installed provider.
             String pid = providerPids.get(provider.getId());
-            if (pid != null && pendingPids.containsKey(pid) ) {
+            if (pid != null && pendingPids.containsKey(pid)) {
                 Dictionary properties = pendingPids.get(pid);
                 try {
                     updated(pid, properties);
@@ -81,7 +90,10 @@ public abstract class ServiceFactorySupport implements ManagedServiceFactory {
     }
 
 
-    public void providerUninstalled(ProviderMetadata provider) {
+    public void removed(ProviderMetadata provider) {
+        if (!apply(provider))  {
+            return;
+        }
         try {
             lock.tryLock();
             String pid = providerPids.get(provider.getId());
@@ -99,7 +111,10 @@ public abstract class ServiceFactorySupport implements ManagedServiceFactory {
         }
     }
 
-    public void apiInstalled(ApiMetadata api) {
+    public void added(ApiMetadata api) {
+        if (!apply(api))  {
+            return;
+        }
         try {
             lock.tryLock();
             installedApis.put(api.getId(), api);
@@ -120,7 +135,10 @@ public abstract class ServiceFactorySupport implements ManagedServiceFactory {
         }
     }
 
-    public void apiUninstalled(ApiMetadata api) {
+    public void removed(ApiMetadata api) {
+        if (!apply(api))  {
+            return;
+        }
         try {
             lock.tryLock();
             String pid = apiPids.get(api.getId());
@@ -141,6 +159,7 @@ public abstract class ServiceFactorySupport implements ManagedServiceFactory {
 
     /**
      * Checks if configuration is valid for the specified {@link ProviderMetadata}.
+     *
      * @param providerMetadata
      * @param properties
      * @throws InvalidConfigurationException
@@ -157,6 +176,7 @@ public abstract class ServiceFactorySupport implements ManagedServiceFactory {
 
     /**
      * Checks if configuration is valid for the specified {@link ApiMetadata}
+     *
      * @param apiMetadata
      * @param properties
      * @throws InvalidConfigurationException

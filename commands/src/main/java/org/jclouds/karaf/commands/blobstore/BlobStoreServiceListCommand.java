@@ -19,50 +19,31 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
+import com.google.common.reflect.TypeToken;
 import org.apache.felix.gogo.commands.Command;
-import org.jclouds.karaf.core.BlobStoreProviderOrApiRegistry;
+import org.jclouds.apis.Apis;
+import org.jclouds.blobstore.BlobStoreContext;
+import org.jclouds.providers.Providers;
 
 @Command(scope = "jclouds", name = "blobstore-service-list", description = "List available BlobStore services.", detailedDescription = "classpath:blobstore-service-list.txt")
 public class BlobStoreServiceListCommand extends BlobStoreCommandBase {
 
-   private BlobStoreProviderOrApiRegistry blobStoreProviderOrApiRegistry;
 
-   @Override
-   protected Object doExecute() throws Exception {
-      try {
-         if (blobStoreProviderOrApiRegistry.getInstalledApis() != null
-                  && !blobStoreProviderOrApiRegistry.getInstalledApis().isEmpty()) {
+    @Override
+    protected Object doExecute() throws Exception {
+        try {
             System.out.println("BlobStore APIs:");
             System.out.println("---------------");
-            printBlobStoreApis(blobStoreProviderOrApiRegistry.getInstalledApis(), getBlobStoreServices(), "",
-                     System.out);
-         } else {
-            System.out.println("No blob store APIs found.");
-         }
+            printBlobStoreApis(Apis.viewableAs(TypeToken.of(BlobStoreContext.class)), getBlobStoreServices(), "", System.out);
+            System.out.println();
+            System.out.println();
 
-         System.out.println();
-         System.out.println();
-
-         System.out.println("BlobStore Providers:");
-         System.out.println("--------------------");
-         if (blobStoreProviderOrApiRegistry.getInstalledProviders() != null
-                  && !blobStoreProviderOrApiRegistry.getInstalledProviders().isEmpty()) {
-            printBlobStoreProviders(blobStoreProviderOrApiRegistry.getInstalledProviders(), getBlobStoreServices(), "",
-                     System.out);
-         } else {
-            System.out.println("No blob store providers found.");
-         }
-      } catch (Exception ex) {
-         // noop
-      }
-      return null;
-   }
-
-   public BlobStoreProviderOrApiRegistry getBlobStoreProviderOrApiRegistry() {
-      return blobStoreProviderOrApiRegistry;
-   }
-
-   public void setBlobStoreProviderOrApiRegistry(BlobStoreProviderOrApiRegistry blobStoreProviderOrApiRegistry) {
-      this.blobStoreProviderOrApiRegistry = blobStoreProviderOrApiRegistry;
-   }
+            System.out.println("BlobStore Providers:");
+            System.out.println("--------------------");
+            printBlobStoreProviders(Providers.viewableAs(TypeToken.of(BlobStoreContext.class)), getBlobStoreServices(), "", System.out);
+        } catch (Exception ex) {
+            // noop
+        }
+        return null;
+    }
 }
