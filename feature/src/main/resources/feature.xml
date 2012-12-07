@@ -274,7 +274,9 @@
     <feature name='jclouds-cloudloadbalancers-us' description='Cloud Load Balancers US' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
+        <feature version='${project.version}'>jclouds-api-rackspace-cloudidentity</feature>
         <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/openstack-keystone/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-loadbalancer/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
