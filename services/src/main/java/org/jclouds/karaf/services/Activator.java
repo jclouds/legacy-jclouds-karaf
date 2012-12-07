@@ -20,11 +20,8 @@
 package org.jclouds.karaf.services;
 
 import java.util.Hashtable;
-
-import org.jclouds.karaf.core.BlobStoreProviderOrApiListener;
-import org.jclouds.karaf.core.BlobStoreProviderOrApiRegistry;
-import org.jclouds.karaf.core.ComputeProviderOrApiListener;
-import org.jclouds.karaf.core.ComputeProviderOrApiRegistry;
+import org.jclouds.osgi.ApiListener;
+import org.jclouds.osgi.ProviderListener;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
@@ -65,7 +62,7 @@ public class Activator implements BundleActivator {
         Hashtable<String, Object> properties = new Hashtable<String, Object>();
         properties.put(Constants.SERVICE_PID, "org.jclouds.compute");
         computeFactory = new ComputeServiceFactory(context);
-        computeFactoryRegistration = context.registerService(new String[]{ManagedServiceFactory.class.getName(), ComputeProviderOrApiListener.class.getName(), ComputeProviderOrApiRegistry.class.getName()},
+        computeFactoryRegistration = context.registerService(new String[]{ManagedServiceFactory.class.getName(), ProviderListener.class.getName(), ApiListener.class.getName()},
                 computeFactory, properties);
     }
 
@@ -78,7 +75,7 @@ public class Activator implements BundleActivator {
         Hashtable<String, Object> properties = new Hashtable<String, Object>();
         properties.put(Constants.SERVICE_PID, "org.jclouds.blobstore");
         blobStoreFactory = new BlobStoreServiceFactory(context);
-        blobStoreFactoryRegistration = context.registerService(new String[]{ManagedServiceFactory.class.getName(), BlobStoreProviderOrApiListener.class.getName(), BlobStoreProviderOrApiRegistry.class.getName()},
+        blobStoreFactoryRegistration = context.registerService(new String[]{ManagedServiceFactory.class.getName(), ProviderListener.class.getName(), ApiListener.class.getName()},
                 blobStoreFactory, properties);
     }
 }

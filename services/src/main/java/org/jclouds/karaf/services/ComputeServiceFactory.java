@@ -21,18 +21,20 @@ package org.jclouds.karaf.services;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 import org.jclouds.ContextBuilder;
 import org.jclouds.apis.ApiMetadata;
+import org.jclouds.apis.ApiPredicates;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
-import org.jclouds.karaf.core.ComputeProviderOrApiListener;
-import org.jclouds.karaf.core.ComputeProviderOrApiRegistry;
 import org.jclouds.karaf.core.ComputeServiceEventProxy;
 import org.jclouds.karaf.core.Constants;
 import org.jclouds.karaf.core.CredentialStore;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
 import org.jclouds.providers.ProviderMetadata;
+import org.jclouds.providers.ProviderPredicates;
+import org.jclouds.providers.Providers;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -46,7 +48,7 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Properties;
 
-public class ComputeServiceFactory extends ServiceFactorySupport implements ComputeProviderOrApiListener, ComputeProviderOrApiRegistry {
+public class ComputeServiceFactory extends ServiceFactorySupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ComputeServiceFactory.class);
 
@@ -200,5 +202,15 @@ public class ComputeServiceFactory extends ServiceFactorySupport implements Comp
                 lock.unlock();
             }
         }
+    }
+
+    @Override
+    public boolean apply(ProviderMetadata provider) {
+        return ProviderPredicates.viewableAs(TypeToken.of(ComputeServiceContext.class)).apply(provider);
+    }
+
+    @Override
+    public boolean apply(ApiMetadata api) {
+        return ApiPredicates.viewableAs(TypeToken.of(ComputeServiceContext.class)).apply(api);
     }
 }

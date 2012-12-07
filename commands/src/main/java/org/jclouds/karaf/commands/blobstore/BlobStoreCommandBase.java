@@ -19,19 +19,9 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.base.Strings;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.InputSupplier;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.console.AbstractAction;
 import org.jclouds.apis.ApiMetadata;
@@ -48,9 +38,12 @@ import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Strings;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.InputSupplier;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.List;
 
 /**
  * @author iocanel
@@ -167,37 +160,37 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
       }
    }
 
-   protected void printBlobStoreProviders(Map<String, ProviderMetadata> providers, List<BlobStore> blobStores,
+   protected void printBlobStoreProviders(Iterable<ProviderMetadata> providers, List<BlobStore> blobStores,
             String indent, PrintStream out) {
       out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
-      for (String provider : providers.keySet()) {
+      for (ProviderMetadata provider : providers) {
         StringBuilder sb = new StringBuilder();
         sb.append("[ ");
          for (BlobStore blobStore : blobStores) {
            String contextName = (String) blobStore.getContext().unwrap().getName();
-            if (blobStore.getContext().unwrap().getId().equals(provider)) {
+            if (blobStore.getContext().unwrap().getId().equals(provider.getId())) {
                sb.append(contextName).append(" ");
             }
          }
          sb.append("]");
-         out.println(String.format(PROVIDERFORMAT, provider, "blobstore", sb.toString()));
+         out.println(String.format(PROVIDERFORMAT, provider.getId(), "blobstore", sb.toString()));
       }
    }
 
-   protected void printBlobStoreApis(Map<String, ApiMetadata> apis, List<BlobStore> blobStores, String indent,
+   protected void printBlobStoreApis(Iterable<ApiMetadata> apis, List<BlobStore> blobStores, String indent,
             PrintStream out) {
       out.println(String.format(PROVIDERFORMAT, "[id]", "[type]", "[service]"));
-      for (String provider : apis.keySet()) {
+      for (ApiMetadata api : apis) {
          StringBuilder sb = new StringBuilder();
          sb.append("[ ");
          for (BlobStore blobStore : blobStores) {
            String contextName = (String) blobStore.getContext().unwrap().getName();
-            if (blobStore.getContext().unwrap().getId().equals(provider)) {
+            if (blobStore.getContext().unwrap().getId().equals(api.getId())) {
               sb.append(contextName).append(" ");
             }
          }
          sb.append("]");
-         out.println(String.format(PROVIDERFORMAT, provider, "blobstore", sb.toString()));
+         out.println(String.format(PROVIDERFORMAT, api.getId(), "blobstore", sb.toString()));
       }
    }
 

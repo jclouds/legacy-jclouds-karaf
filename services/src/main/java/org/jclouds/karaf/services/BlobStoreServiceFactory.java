@@ -21,16 +21,18 @@ package org.jclouds.karaf.services;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Module;
 import org.jclouds.ContextBuilder;
 import org.jclouds.apis.ApiMetadata;
+import org.jclouds.apis.ApiPredicates;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
-import org.jclouds.karaf.core.BlobStoreProviderOrApiListener;
-import org.jclouds.karaf.core.BlobStoreProviderOrApiRegistry;
+import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.karaf.core.Constants;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
 import org.jclouds.providers.ProviderMetadata;
+import org.jclouds.providers.ProviderPredicates;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
@@ -41,7 +43,7 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Properties;
 
-public class BlobStoreServiceFactory extends ServiceFactorySupport implements BlobStoreProviderOrApiListener, BlobStoreProviderOrApiRegistry {
+public class BlobStoreServiceFactory extends ServiceFactorySupport  {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BlobStoreServiceFactory.class);
 
@@ -141,5 +143,15 @@ public class BlobStoreServiceFactory extends ServiceFactorySupport implements Bl
                 lock.unlock();
             }
         }
+    }
+
+    @Override
+    public boolean apply(ProviderMetadata provider) {
+        return ProviderPredicates.viewableAs(TypeToken.of(ComputeServiceContext.class)).apply(provider);
+    }
+
+    @Override
+    public boolean apply(ApiMetadata api) {
+        return ApiPredicates.viewableAs(TypeToken.of(ComputeServiceContext.class)).apply(api);
     }
 }
