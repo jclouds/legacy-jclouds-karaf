@@ -45,7 +45,7 @@
         <dependency>
             <groupId>org.jclouds.karaf</groupId>
             <artifactId>cache</artifactId>
-            <version>${jclouds.chef.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jclouds.api</groupId>
