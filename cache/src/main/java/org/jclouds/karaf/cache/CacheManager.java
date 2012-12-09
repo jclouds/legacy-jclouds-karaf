@@ -19,6 +19,9 @@
 
 package org.jclouds.karaf.cache;
 
+import org.jclouds.karaf.cache.tasks.UpdateCachesTask;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,7 +30,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.jclouds.karaf.cache.tasks.UpdateCachesTask;
+import static org.jclouds.karaf.utils.ServiceHelper.toId;
 
 public class CacheManager<T> implements Runnable {
 
@@ -52,5 +55,29 @@ public class CacheManager<T> implements Runnable {
         //Update all cacheables for all services.
         this.updatesCachesTask = new UpdateCachesTask(cacheables,services);
         this.updatesCachesTask.run();
+    }
+
+    public void bindService(T service) {
+        Map<String, T> map = new HashMap<String, T>();
+        map.put(toId(service), service);
+        services.putAll(map);
+        scheduledExecutorService.submit(new UpdateCachesTask(cacheables, map));
+    }
+
+    public void unbindService(T service) {
+        if (services != null && service != null) {
+            this.services.remove(toId(service));
+        }
+    }
+
+    public  void bindCachable(Cacheable<T> cacheable) {
+        this.cacheables.add(cacheable);
+        scheduledExecutorService.submit(new UpdateCachesTask(Arrays.asList(cacheable), services));
+    }
+
+    public void unbindCachable(Cacheable<T> cacheable) {
+        if (cacheables != null) {
+            this.cacheables.remove(cacheable);
+        }
     }
 }

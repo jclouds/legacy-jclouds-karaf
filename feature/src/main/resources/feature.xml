@@ -608,6 +608,14 @@
     </feature>
 
 
+    <feature name="jclouds-chef" description="JClouds Chef Services and Commands" version="${project.version}" resolver="(obr)">
+        <feature version='${project.version}'>jclouds-api-chef</feature>
+        <feature version='${project.version}'>jclouds-services</feature>
+        <feature version='${project.version}'>jclouds-commands</feature>
+        <bundle>mvn:org.jclouds.karaf.chef/cache/${project.version}</bundle>
+        <bundle>mvn:org.jclouds.karaf.chef/services/${project.version}</bundle>
+        <bundle>mvn:org.jclouds.karaf.chef/commands/${project.version}</bundle>
+    </feature>
 
      <feature name="jclouds-url-handler" description="Url Handler for JClouds Blobs" version="${project.version}" resolver="(obr)">
         <feature version='${project.version}'>jclouds</feature>

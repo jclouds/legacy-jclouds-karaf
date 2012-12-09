@@ -26,7 +26,7 @@ import org.apache.felix.gogo.commands.Command;
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
 @Command(scope = "jclouds", name = "group-runscript", description = "Executes a command or script to a group of nodes.")
-public class GroupRunScriptCommand extends NodeRunScriptSupport {
+public class GroupRunScriptCommand extends ComputeRunscriptBase {
 
    @Argument(index = 0, name = "group", description = "The group of nodes.", required = true, multiValued = false)
    private String group;

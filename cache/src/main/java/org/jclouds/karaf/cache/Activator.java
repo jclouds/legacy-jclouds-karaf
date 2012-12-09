@@ -20,8 +20,7 @@ package org.jclouds.karaf.cache;
 
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.compute.ComputeService;
-import org.jclouds.karaf.cache.blobstore.BlobCacheManager;
-import org.jclouds.karaf.cache.compute.ComputeCacheManager;
+import org.jclouds.karaf.cache.utils.CacheUtils;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
@@ -42,8 +41,8 @@ public class Activator implements BundleActivator {
 
      private ServiceRegistration cacheProviderRegistration;
 
-     private final ComputeCacheManager computeCacheManager = new ComputeCacheManager();
-     private final BlobCacheManager blobCacheManager = new BlobCacheManager();
+     private final CacheManager<ComputeService> computeCacheManager = new CacheManager<ComputeService>();
+     private final CacheManager<BlobStore> blobCacheManager = new CacheManager<BlobStore>();
 
 
 
@@ -67,10 +66,10 @@ public class Activator implements BundleActivator {
         CacheProvider cacheProvider = new BasicCacheProvider();
         cacheProviderRegistration = context.registerService(CacheProvider.class.getName(), cacheProvider, new Properties());
 
-        computeServiceTracker = createComputeServiceTracker(context, computeCacheManager);
-        computeCacheableTracker = createComputeCacheableTracker(context, computeCacheManager);
-        blobStoreTracker = createBlobStoreServiceTracker(context, blobCacheManager);
-        blobStoreCacheableTracker = createBlobStoreCacheableTracker(context, blobCacheManager);
+        computeServiceTracker = CacheUtils.createServiceCacheTracker(context, ComputeService.class, computeCacheManager);
+        computeCacheableTracker = CacheUtils.createCacheableTracker(context, "jclouds.computeservice",computeCacheManager);
+        blobStoreTracker = CacheUtils.createServiceCacheTracker(context, BlobStore.class, blobCacheManager);
+        blobStoreCacheableTracker = CacheUtils.createCacheableTracker(context, "jclouds.blobstore",blobCacheManager);
 
         computeServiceTracker.open();
         computeCacheableTracker.open();
@@ -120,118 +119,4 @@ public class Activator implements BundleActivator {
             blobStoreCacheableTracker.close();
         }
     }
-
-
-    /**
-     * Creates a {@link ServiceTracker} which binds {@link ComputeService} to {@link ComputeCacheManager}.
-     * @param context
-     * @param cacheManager
-     * @return
-     */
-    private ServiceTracker createComputeServiceTracker(final BundleContext context, final ComputeCacheManager cacheManager) {
-       return new ServiceTracker(context, ComputeService.class.getName(), null) {
-
-            @Override
-            public Object addingService(ServiceReference reference) {
-                Object service = super.addingService(reference);
-                if (ComputeService.class.isAssignableFrom(service.getClass())) {
-                    cacheManager.bindService((ComputeService) service);
-                }
-                return service;
-            }
-
-            @Override
-            public void removedService(ServiceReference reference, Object service) {
-                if (ComputeService.class.isAssignableFrom(service.getClass())) {
-                    cacheManager.unbindService((ComputeService) service);
-                }
-                super.removedService(reference, service);
-            }
-        };
-    }
-
-
-
-    /**
-     * Creates a {@link ServiceTracker} which binds {@link Cacheable} to {@link ComputeCacheManager}.
-     * @param context
-     * @param cacheManager
-     * @return
-     */
-    private ServiceTracker createComputeCacheableTracker(final BundleContext context, final ComputeCacheManager cacheManager) throws InvalidSyntaxException {
-        return new ServiceTracker(context, FrameworkUtil.createFilter("(&(cache-type=jclouds.computeservice)(objectClass=org.jclouds.karaf.cache.Cacheable))"), null) {
-            @Override
-            public Object addingService(ServiceReference reference) {
-                Object service = super.addingService(reference);
-                if (Cacheable.class.isAssignableFrom(service.getClass())) {
-                    cacheManager.bindCachable((Cacheable) service);
-                }
-                return service;
-            }
-
-            @Override
-            public void removedService(ServiceReference reference, Object service) {
-                if (Cacheable.class.isAssignableFrom(service.getClass())) {
-                    cacheManager.unbindCachable((Cacheable) service);
-                }
-                super.removedService(reference, service);
-            }
-        };
-    }
-
-    /**
-     * Creates a {@link ServiceTracker} which binds {@link ComputeService} to {@link ComputeCacheManager}.
-     * @param context
-     * @param blobCacheManager
-     * @return
-     */
-    private ServiceTracker createBlobStoreServiceTracker(final BundleContext context, final BlobCacheManager blobCacheManager) {
-        return new ServiceTracker(context, ComputeService.class.getName(), null) {
-
-            @Override
-            public Object addingService(ServiceReference reference) {
-                Object service = super.addingService(reference);
-                if (BlobStore.class.isAssignableFrom(service.getClass())) {
-                    blobCacheManager.bindService((BlobStore) service);
-                }
-                return service;
-            }
-
-            @Override
-            public void removedService(ServiceReference reference, Object service) {
-                if (BlobStore.class.isAssignableFrom(service.getClass())) {
-                    blobCacheManager.unbindService((BlobStore) service);
-                }
-                super.removedService(reference, service);
-            }
-        };
-    }
-
-    /**
-     * Creates a {@link ServiceTracker} which binds {@link Cacheable} to {@link BlobCacheManager}.
-     * @param context
-     * @param cacheManager
-     * @return
-     */
-    private ServiceTracker createBlobStoreCacheableTracker(final BundleContext context, final BlobCacheManager cacheManager) throws InvalidSyntaxException {
-        return new ServiceTracker(context, FrameworkUtil.createFilter("(&(cache-type=jclouds.blobstore)(objectClass=org.jclouds.karaf.cache.Cacheable))"), null) {
-            @Override
-            public Object addingService(ServiceReference reference) {
-                Object service = super.addingService(reference);
-                if (Cacheable.class.isAssignableFrom(service.getClass())) {
-                    cacheManager.bindCachable((Cacheable) service);
-                }
-                return service;
-            }
-
-            @Override
-            public void removedService(ServiceReference reference, Object service) {
-                if (Cacheable.class.isAssignableFrom(service.getClass())) {
-                    cacheManager.unbindCachable((Cacheable) service);
-                }
-                super.removedService(reference, service);
-            }
-        };
-    }
-
 }

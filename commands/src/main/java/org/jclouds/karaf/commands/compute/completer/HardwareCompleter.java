@@ -24,7 +24,8 @@ import java.util.Set;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.karaf.core.Constants;
-import static org.jclouds.karaf.utils.compute.ComputeHelper.findCacheKeysForService;
+import org.jclouds.karaf.utils.ServiceHelper;
+
 
 public class HardwareCompleter extends ComputeCompleterSupport {
 
@@ -38,7 +39,7 @@ public class HardwareCompleter extends ComputeCompleterSupport {
          Set<? extends Hardware> hardwares = computeService.listHardwareProfiles();
          if (hardwares != null) {
             for (Hardware hardware : hardwares) {
-              for (String cacheKey : findCacheKeysForService(computeService)) {
+              for (String cacheKey : ServiceHelper.findCacheKeysForService(computeService)) {
                 cache.put(cacheKey, hardware.getId());
               }
             }

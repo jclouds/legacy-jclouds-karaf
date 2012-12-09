@@ -39,12 +39,12 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
-                        <Bundle-Activator>org.jclouds.karaf.services.Activator</Bundle-Activator>
-                        <Export-Package />
+                        <Bundle-Activator>org.jclouds.karaf.services.internal.Activator</Bundle-Activator>
+                        <Export-Package>org.jclouds.karaf.services</Export-Package>
                         <Import-Package>
                             org.jclouds.ec2*;version=${jclouds.version};resolution:=optional,
                             *</Import-Package>
-                        <Private-Package>org.jclouds.karaf.services*</Private-Package>
+                        <Private-Package>org.jclouds.karaf.services.*</Private-Package>
                         <Export-Service>org.jclouds.compute.ComputeService,org.jclouds.blobstore.BlobStore</Export-Service>
                     </instructions>
                 </configuration>

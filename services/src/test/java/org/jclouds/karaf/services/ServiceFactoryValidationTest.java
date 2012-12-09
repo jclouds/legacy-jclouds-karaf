@@ -20,6 +20,7 @@ package org.jclouds.karaf.services;
 
 import com.google.common.base.Optional;
 import org.jclouds.apis.ApiMetadata;
+import org.jclouds.karaf.services.internal.ComputeServiceFactory;
 import org.jclouds.providers.ProviderMetadata;
 import org.junit.Test;
 

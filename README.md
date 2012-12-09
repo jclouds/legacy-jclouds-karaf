@@ -2,6 +2,8 @@
 
 This project currently hosts a Karaf feature repository for easy installation of jclouds inside Apache Karaf. It also provides Managed Service Factories for creating Compute and BlobStore services. Last but not least it provides a rich command set for using jclouds from the Karaf shell.
 
+There is also support for using chef via [jclouds-chef](https://github.com/jclouds/jclouds-chef/)  integration.
+
 Usage Instructions
 ===================
 The instructions will make use of Amazon EC2 and S3, but can be applied to any provider or api supported by jclouds.
@@ -141,6 +143,42 @@ You can copy a bundle to a blob and install it directly from there:
 
     karaf@root> features:install jclouds-url-handler
     karaf@root>osgi:install -s blob:/PROVIDER/CONTAINER/PATH_TO_BUNDLE
+
+Chef
+----
+You can install the chef api, with the following command:
+
+    karaf@root> features:install jclouds-chef-api
+
+Managed Service Factories and commands are also provided for Chef. The managed service factory allows you to create a reusable service just by passing the configuration. To install the managed serivce factories and the chef commands, you need to install the jclouds-chef feature:
+
+    karaf@root>features:install jclouds-chef
+
+Then you can create a chef service, using the chef:service-create command:
+
+    karaf@root>chef:service-create  --api chef --client-name CLIENT --validator-name VALIDATOR --client-key-file CLIENT.pem --validator-key-file VALIDATOR.pem --endpoint ENDPOINT
+
+**OPSCODE Chef Example:**
+The above command for opscode chef, with client iocanel and validator iocanel-validator, the command looks like:
+
+    karaf@root>chef:service-create  --api chef --client-name iocanel --validator-name iocanel-validator --client-key-file /Users/iocanel/.chef/iocanel.pem --validator-key-file /Users/iocanel/.chef/iocanel-validator.pem --endpoint https://api.opscode.com/organizations/iocanel
+
+Once the service has been create, you can list your cookbooks using:
+
+    karaf@root>chef:cookbook-list
+
+**Using the Chef Serivce with any Provider / Api:**
+Once you have created the chef service and have made sure a couple of cookbooks are uploaded. You can use chef with any other compute service in your system.
+In the exmaple above it will be used with EC2:
+
+    karaf@root>node-create --imageId eu-west-1/ami-c1aaabb5 --hardwareId m1.medium --adminAccess
+
+    [id]                 [location] [hardware] [group]   [status]
+    eu-west-1/i-bbb5eff0 eu-west-1c m1.medium  karafchef RUNNING
+
+    karaf@root>chef:node-bootstrap  eu-west-1/i-bbb5eff0 java::openjdk
+
+
 
 Using multiple serives per provider/api
 ---------------------------------------

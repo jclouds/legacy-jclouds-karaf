@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.jclouds.karaf.services;
+package org.jclouds.karaf.services.internal;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
@@ -26,16 +26,22 @@ import com.google.inject.Module;
 import org.jclouds.ContextBuilder;
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.apis.ApiPredicates;
-import org.jclouds.blobstore.BlobStore;
-import org.jclouds.blobstore.BlobStoreContext;
+import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
+import org.jclouds.karaf.core.ComputeServiceEventProxy;
 import org.jclouds.karaf.core.Constants;
+import org.jclouds.karaf.core.CredentialStore;
+import org.jclouds.karaf.services.InvalidConfigurationException;
+import org.jclouds.karaf.services.ServiceFactorySupport;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.ProviderPredicates;
+import org.jclouds.sshj.config.SshjSshClientModule;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.cm.ConfigurationException;
+import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,24 +49,47 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Properties;
 
-public class BlobStoreServiceFactory extends ServiceFactorySupport  {
+public class ComputeServiceFactory extends ServiceFactorySupport {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BlobStoreServiceFactory.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ComputeServiceFactory.class);
+
+    public static final String NODE_EVENT_SUPPORT = "eventsupport";
+    public static final String CREDENTIAL_STORE = "credential-store";
+    public static final String DEFAULT_CREDENTIAL_STORE_TYPE = "cadmin";
+    public static final String CREDENTIAL_STORE_FILTER = "(&(objectClass=org.jclouds.karaf.core.CredentialStore)(credential-store-type=%s))";
 
     private final BundleContext bundleContext;
 
-    public BlobStoreServiceFactory(BundleContext bundleContext) {
+
+    public ComputeServiceFactory(BundleContext bundleContext) {
         this.bundleContext = bundleContext;
     }
 
-    public String getName() {
-        return "BlobStore Service Factory";
+    private CredentialStore lookupStore(String type) {
+      ServiceTracker credentialStoreTracker = null;
+        try {
+            credentialStoreTracker = new ServiceTracker(bundleContext, bundleContext.createFilter(String.format(CREDENTIAL_STORE_FILTER, type)), null);
+            credentialStoreTracker.open();
+            return (CredentialStore) credentialStoreTracker.waitForService(10000);
+        } catch (InvalidSyntaxException e) {
+            LOGGER.error("Error looking up credential store.", e);
+        } catch (InterruptedException e) {
+            LOGGER.error("Timed out waiting for store.", e);
+        } finally {
+          if (credentialStoreTracker != null) {
+            credentialStoreTracker.close();
+          }
+        }
+        return null;
     }
 
-    public void updated(String pid, Dictionary properties) throws ConfigurationException {
+    public String getName() {
+        return "Compute Service Factory";
+    }
+
+    public synchronized void updated(String pid, Dictionary properties) throws ConfigurationException {
         ServiceRegistration newRegistration = null;
         try {
-            lock.tryLock();
             if (properties != null) {
                 Properties props = new Properties();
                 for (Enumeration e = properties.keys(); e.hasMoreElements(); ) {
@@ -68,12 +97,12 @@ public class BlobStoreServiceFactory extends ServiceFactorySupport  {
                     Object val = properties.get(key);
                     props.put(key, val);
                 }
+
                 String provider = (String) properties.get(Constants.PROVIDER);
                 String api = (String) properties.get(Constants.API);
 
                 ProviderMetadata providerMetadata = null;
                 ApiMetadata apiMetadata = null;
-
 
                 if (!Strings.isNullOrEmpty(provider) && installedProviders.containsKey(provider)) {
                     providerMetadata = installedProviders.get(provider);
@@ -93,54 +122,81 @@ public class BlobStoreServiceFactory extends ServiceFactorySupport  {
                     return;
                 }
 
-
                 //We are removing credentials as we don't want them to be visible in the service registration.
                 String id = (String) properties.get(Constants.NAME);
                 String identity = (String) properties.remove(Constants.IDENTITY);
                 String credential = (String) properties.remove(Constants.CREDENTIAL);
                 String endpoint = (String) properties.get(Constants.ENDPOINT);
+                String storeType = (String) properties.get(CREDENTIAL_STORE);
+                String eventSupport = (String) properties.get(NODE_EVENT_SUPPORT);
+                Boolean enableEventSupport = false;
 
-                BlobStoreContext context = null;
+                if (Strings.isNullOrEmpty(credential) && providerMetadata != null && !providerMetadata.getApiMetadata().getDefaultCredential().isPresent()) {
+                    LOGGER.warn("No credential specified and provider {}.", providerMetadata.getId());
+                    return;
+                }
+                if (Strings.isNullOrEmpty(credential) && apiMetadata != null && !apiMetadata.getDefaultCredential().isPresent()) {
+                    LOGGER.warn("No credential specified and api {}.", apiMetadata.getId());
+                    return;
+                }
+
+                if (storeType == null || storeType.isEmpty()) {
+                    storeType = DEFAULT_CREDENTIAL_STORE_TYPE;
+                }
+
+                if (eventSupport != null && !eventSupport.isEmpty()) {
+                    enableEventSupport = Boolean.parseBoolean(eventSupport);
+                }
+
+                CredentialStore credentialStore = lookupStore(storeType);
+
                 ContextBuilder builder = null;
                 if (providerMetadata != null) {
                     builder = ContextBuilder.newBuilder(providerMetadata);
                 } else if (apiMetadata != null) {
                     builder = ContextBuilder.newBuilder(apiMetadata);
-                } else {
-                    return;
                 }
 
                 if (!Strings.isNullOrEmpty(endpoint)) {
                     builder = builder.endpoint(endpoint);
                 }
-                context = builder.name(id).credentials(identity, credential)
-                        .modules(ImmutableSet.<Module>of(new Log4JLoggingModule()))
-                        .overrides(props)
-                        .build(BlobStoreContext.class);
 
-                BlobStore blobStore = context.getBlobStore();
+                builder = builder.name(id).modules(ImmutableSet.<Module>of(new Log4JLoggingModule(), new SshjSshClientModule()));
+
+                if (credentialStore != null) {
+                    builder = builder.modules(ImmutableSet.<Module>of(credentialStore));
+                }
+
+                builder = builder.name(id).credentials(identity, credential).overrides(props);
+
+                ComputeServiceContext context = builder.build(ComputeServiceContext.class);
+
+                ComputeService service = null;
+
+                if (enableEventSupport) {
+                    service = new ComputeServiceEventProxy(bundleContext, context.getComputeService());
+                } else {
+                    service = context.getComputeService();
+                }
+
                 newRegistration = bundleContext.registerService(
-                        BlobStore.class.getName(), blobStore, properties);
+                        ComputeService.class.getName(), service, properties);
 
-                //If all goes well move the pending pid to the active pids.
+                //If all goes well remove the pending pid.
                 if (pendingPids.containsKey(pid)) {
                     activePids.put(pid, pendingPids.remove(pid));
                 }
             }
         } catch (InvalidConfigurationException ex) {
             LOGGER.warn("Invalid configuration: {}", ex.getMessage());
-        }  catch (Exception ex) {
-            LOGGER.error("Error creating blobstore service.", ex);
+        } catch (Exception ex) {
+            LOGGER.error("Error creating compute service.", ex);
         } finally {
             ServiceRegistration oldRegistration = (newRegistration == null)
                     ? registrations.remove(pid)
                     : registrations.put(pid, newRegistration);
             if (oldRegistration != null) {
-                System.out.println("Unregistering BlobStore " + pid);
                 oldRegistration.unregister();
-            }
-            if (lock.isHeldByCurrentThread()) {
-                lock.unlock();
             }
         }
     }
