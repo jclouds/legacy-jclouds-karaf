@@ -155,7 +155,7 @@
         <feature version='${project.version}'>jclouds</feature>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.api/chef/${project.version}</bundle>
+        <bundle>mvn:org.jclouds.api/chef/${jclouds.chef.version}</bundle>
     </feature>
 
     <!-- Drivers -->
