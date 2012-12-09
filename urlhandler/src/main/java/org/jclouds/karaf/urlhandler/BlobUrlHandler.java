@@ -19,13 +19,23 @@
 
 package org.jclouds.karaf.urlhandler;
 
+import com.google.common.io.Closeables;
+import com.google.inject.Module;
+import org.jclouds.ContextBuilder;
+import org.jclouds.blobstore.BlobStore;
+import org.jclouds.blobstore.BlobStoreContext;
+import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.karaf.utils.ServiceHelper;
+import org.osgi.service.url.AbstractURLStreamHandlerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -36,15 +46,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import com.google.common.io.Closeables;
-import com.google.inject.Module;
-import org.jclouds.blobstore.BlobStore;
-import org.jclouds.blobstore.domain.Blob;
-import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
-import org.osgi.service.url.AbstractURLStreamHandlerService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class BlobUrlHandler extends AbstractURLStreamHandlerService {
 
@@ -119,14 +120,14 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
         @Override
         public InputStream getInputStream() throws IOException {
             try {
-                BlobStore blobStore = BlobStoreHelper.getBlobStore(id, providerName, blobStores);
+                BlobStore blobStore = ServiceHelper.getService(id, providerName, blobStores);
                 if (blobStore == null && url.getUserInfo() != null) {
                     String userInfo = url.getUserInfo();
                     String[] ui = userInfo.split(":");
                     if (ui != null && ui.length == 2) {
                         String identity = ui[0];
                         String credential = ui[1];
-                        blobStore = BlobStoreHelper.createBlobStore(providerName, identity, credential, new LinkedHashSet<Module>(), new Properties());
+                        blobStore = createBlobStore(providerName, identity, credential, new LinkedHashSet<Module>(), new Properties());
                         blobStores.add(blobStore);
                     }
                 }
@@ -150,7 +151,7 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
         @Override
         public OutputStream getOutputStream() throws IOException {
             try {
-                final BlobStore blobStore = BlobStoreHelper.getBlobStore(id, providerName, blobStores);
+                final BlobStore blobStore = ServiceHelper.getService(id, providerName, blobStores);
                 if (!blobStore.containerExists(containerName)) {
                     blobStore.createContainerInLocation(null, containerName);
                 }
@@ -188,6 +189,13 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
             }
             return map;
         }
+    }
+
+    private BlobStore createBlobStore(String providerOrApi, String identity, String credential, Iterable<? extends Module> modules, Properties props) {
+        ContextBuilder builder = ContextBuilder.newBuilder(providerOrApi).credentials(identity,credential).modules(modules).overrides(props);
+        BlobStoreContext context = builder.build(BlobStoreContext.class);
+        BlobStore blobStore = context.getBlobStore();
+        return blobStore;
     }
 
 

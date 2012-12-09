@@ -41,27 +41,29 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.karaf.utils.EnvHelper;
 
 import com.google.common.base.Predicate;
+import org.jclouds.scriptbuilder.domain.Statement;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
-public abstract class NodeRunScriptSupport extends ComputeCommandWithOptions {
+public abstract class RunScriptBase extends ComputeCommandWithOptions {
 
    @Option(name = "-u", aliases = "--user", description = "The user that will run the script.", required = false, multiValued = false)
-   private String user;
+   protected String user;
 
    @Option(name = "-p", aliases = "--password", description = "Optional password for the user to run the script.", required = false, multiValued = false)
-   private String password;
+   protected String password;
 
-   @Option(name = "-s", aliases = "--script-url", description = "The url script of the script to run.", required = false, multiValued = false)
-   private String scriptUrl;
-
-   @Option(name = "-d", aliases = "--direct", description = "A direct command passed to the node to run. Example: jclouds:xxxx-runscript -d uptime xxxx. ", required = false, multiValued = false)
-   private String directCommand;
 
    public abstract String getId();
 
    public abstract String getGroup();
+
+   public abstract String getScript();
+
+   public abstract Statement getStatement();
+
+   public abstract boolean runAsRoot();
 
    @Override
    protected Object doExecute() throws Exception {
@@ -98,10 +100,17 @@ public abstract class NodeRunScriptSupport extends ComputeCommandWithOptions {
             }
          }
 
-         Map<? extends NodeMetadata, ExecResponse> responseMap = service.runScriptOnNodesMatching(getNodeFilter(),
-                  getScript(), overrideLoginCredentials(credentials).runAsRoot(false));
+         Map<? extends NodeMetadata, ExecResponse> responseMap = null;
 
-         for (Map.Entry<? extends NodeMetadata, ExecResponse> entry : responseMap.entrySet()) {
+          if (getScript() != null) {
+              responseMap = service.runScriptOnNodesMatching(getNodeFilter(),
+                      getScript(), overrideLoginCredentials(credentials).runAsRoot(runAsRoot()));
+          } else if (getStatement() != null) {
+             responseMap = service.runScriptOnNodesMatching(getNodeFilter(),
+                      getStatement(), overrideLoginCredentials(credentials).runAsRoot(runAsRoot()));
+          }
+
+          for (Map.Entry<? extends NodeMetadata, ExecResponse> entry : responseMap.entrySet()) {
             ExecResponse response = entry.getValue();
             NodeMetadata node = entry.getKey();
             System.out.println("");
@@ -149,62 +158,16 @@ public abstract class NodeRunScriptSupport extends ComputeCommandWithOptions {
                   return false;
                }
 
-               if (getId() != null && !getId().isEmpty() && !input.getId().equals(getId())) {
+               if (getId() != null && !getId().isEmpty() && !getId().equals(input.getId())) {
                   applies = false;
                }
 
-               if (getGroup() != null && !getGroup().isEmpty() && !((NodeMetadata) input).getGroup().equals(getGroup())) {
+               if (getGroup() != null && !getGroup().isEmpty() && getGroup().equals(((NodeMetadata) input).getGroup())) {
                   applies = false;
                }
             }
             return applies;
          }
       };
-   }
-
-   /**
-    * Returns the script to run. If url is specified the script is read from the url.
-    */
-   private String getScript() {
-      if (directCommand != null) {
-         return directCommand;
-      }
-      if (scriptUrl != null) {
-         InputStream is = null;
-         DataInputStream in = null;
-         BufferedReader br = null;
-         StringBuilder builder = new StringBuilder();
-         try {
-            URL url = new URL(scriptUrl);
-            is = url.openStream();
-            in = new DataInputStream(is);
-            br = new BufferedReader(new InputStreamReader(in));
-            String line = null;
-
-            while ((line = br.readLine()) != null) {
-               builder.append(line).append("\n");
-            }
-
-            return builder.toString();
-         } catch (MalformedURLException e) {
-            System.err.println("The provided script url is invalid.");
-         } catch (IOException e) {
-            System.err.println("Cannot read script from url.");
-         } finally {
-            try {
-               br.close();
-            } catch (Exception ex) {
-            }
-            try {
-               in.close();
-            } catch (Exception ex) {
-            }
-            try {
-               is.close();
-            } catch (Exception ex) {
-            }
-         }
-      }
-      return "";
    }
 }

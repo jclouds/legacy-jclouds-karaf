@@ -19,12 +19,13 @@
 
 package org.jclouds.karaf.commands.compute.completer;
 
-import java.util.Set;
-
 import org.jclouds.compute.ComputeService;
 import org.jclouds.domain.Location;
 import org.jclouds.karaf.core.Constants;
-import static org.jclouds.karaf.utils.compute.ComputeHelper.findCacheKeysForService;
+import org.jclouds.karaf.utils.ServiceHelper;
+
+import java.util.Set;
+
 
 public class LocationCompleter extends ComputeCompleterSupport {
 
@@ -38,7 +39,7 @@ public class LocationCompleter extends ComputeCompleterSupport {
          Set<? extends Location> locations = computeService.listAssignableLocations();
          if (locations != null) {
             for (Location location : locations) {
-              for (String cacheKey : findCacheKeysForService(computeService)) {
+              for (String cacheKey : ServiceHelper.findCacheKeysForService(computeService)) {
                 cache.put(cacheKey, location.getId());
               }
             }

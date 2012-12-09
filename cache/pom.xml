@@ -33,6 +33,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.jclouds.karaf</groupId>
+            <artifactId>utils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
         </dependency>
@@ -66,7 +71,7 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
-                        <Export-Package>org.jclouds.karaf.cache;version=${project.version}</Export-Package>
+                        <Export-Package>org.jclouds.karaf.cache*;version=${project.version}</Export-Package>
                         <Export-Service>org.jclouds.karaf.cache.CacheProvider</Export-Service>
                         <Import-Package>
                             !org.jclouds.karaf.cache*,
@@ -74,10 +79,7 @@
                             *
                         </Import-Package>
                         <Private-Package>
-                            org.jclouds.karaf.cache.internal,
-                            org.jclouds.karaf.cache.tasks,
-                            org.jclouds.karaf.cache.blobstore,
-                            org.jclouds.karaf.cache.compute
+                            org.jclouds.karaf.utils
                         </Private-Package>
                         <Bundle-Activator>org.jclouds.karaf.cache.Activator</Bundle-Activator>
                     </instructions>

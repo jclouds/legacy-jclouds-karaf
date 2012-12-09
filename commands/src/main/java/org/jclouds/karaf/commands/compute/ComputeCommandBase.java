@@ -46,12 +46,12 @@ import org.jclouds.karaf.commands.table.internal.PropertyShellTableFactory;
 import org.jclouds.karaf.commands.table.ShellTable;
 import org.jclouds.karaf.commands.table.ShellTableFactory;
 import org.jclouds.karaf.core.Constants;
+import org.jclouds.karaf.utils.ServiceHelper;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.AuthorizationException;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 
-import static org.jclouds.karaf.utils.compute.ComputeHelper.findCacheKeysForService;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
@@ -73,7 +73,7 @@ public abstract class ComputeCommandBase extends AbstractAction {
          this.session = session;
          return doExecute();
       } catch (AuthorizationException ex) {
-         System.err.println("Authorization error. Please make sure you provided valid identity and credential.");
+         System.err.println(String.format("Authorization error: %s",ex.getMessage()));
          return null;
       }
    }
@@ -119,7 +119,7 @@ public abstract class ComputeCommandBase extends AbstractAction {
 
       for (ComputeMetadata metadata : nodes) {
          NodeMetadata node = (NodeMetadata) metadata;
-        for (String cacheKey : findCacheKeysForService(service)) {
+        for (String cacheKey : ServiceHelper.findCacheKeysForService(service)) {
           cacheProvider.getProviderCacheForType(Constants.GROUP).put(cacheKey, node.getGroup());
         }
       }
@@ -131,7 +131,7 @@ public abstract class ComputeCommandBase extends AbstractAction {
      table.display(out, true, true);
 
       for (Hardware hardware : hardwares) {
-         for (String cacheKey : findCacheKeysForService(service)) {
+         for (String cacheKey : ServiceHelper.findCacheKeysForService(service)) {
            cacheProvider.getProviderCacheForType(Constants.HARDWARE_CACHE).put(cacheKey, hardware.getId());
          }
       }
@@ -143,7 +143,7 @@ public abstract class ComputeCommandBase extends AbstractAction {
       table.display(out, true, true);
 
       for (Image image : images) {
-        for (String cacheKey : findCacheKeysForService(service)) {
+        for (String cacheKey : ServiceHelper.findCacheKeysForService(service)) {
          cacheProvider.getProviderCacheForType(Constants.IMAGE_CACHE).put(cacheKey, image.getId());
         }
       }
@@ -160,7 +160,7 @@ public abstract class ComputeCommandBase extends AbstractAction {
       for (Location loc : computeService.listAssignableLocations()) {
          for (Location p = loc; p != null; p = p.getParent()) {
             all.add(p);
-            for (String cacheKey : findCacheKeysForService(computeService)) {
+            for (String cacheKey : ServiceHelper.findCacheKeysForService(computeService)) {
             cacheProvider.getProviderCacheForType(Constants.LOCATION_CACHE).put(cacheKey, p.getId());
             }
          }

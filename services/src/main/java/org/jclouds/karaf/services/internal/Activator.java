@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.jclouds.karaf.services;
+package org.jclouds.karaf.services.internal;
 
 import java.util.Hashtable;
 import org.jclouds.osgi.ApiListener;

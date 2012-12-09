@@ -137,6 +137,7 @@
         <module>commands</module>
         <module>services</module>
         <module>urlhandler</module>
+        <module>chef</module>
         <module>feature</module>
         <module>itests</module>
     </modules>
@@ -157,6 +158,8 @@
         <httpcore.version>4.1</httpcore.version>
         <java-xmlbuilder.bundle.version>0.3_1</java-xmlbuilder.bundle.version>
         <javax.inject.bundle.version>1_1</javax.inject.bundle.version>
+        <jclouds.version>${project.version}</jclouds.version>
+        <jclouds.chef.version>${project.version}</jclouds.chef.version>
         <jclouds.version>1.5.3</jclouds.version>
         <jersey.version>1.11</jersey.version>
         <jersey.bundle.version>1.11_1</jersey.bundle.version>
@@ -415,6 +418,12 @@
                 <artifactId>nodepool</artifactId>
                 <version>${jclouds.version}</version>
              </dependency>
+            <dependency>
+                <groupId>org.jclouds.api</groupId>
+                <artifactId>chef</artifactId>
+                <version>${jclouds.chef.version}</version>
+            </dependency>
+
 
             <!-- Karaf Dependencies -->
             <dependency>

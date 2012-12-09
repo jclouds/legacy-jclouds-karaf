@@ -19,19 +19,19 @@
 
 package org.jclouds.karaf.commands.compute;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.base.Predicate;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.javax.annotation.Nullable;
-
-import com.google.common.base.Predicate;
 import org.jclouds.karaf.core.Constants;
-import static org.jclouds.karaf.utils.compute.ComputeHelper.findCacheKeysForService;
+import org.jclouds.karaf.utils.ServiceHelper;
+
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
  */
@@ -59,7 +59,7 @@ public class GroupDestroyCommand extends ComputeCommandWithOptions {
          });
 
          for (NodeMetadata node : nodeMetadatas) {
-           for (String cacheKey : findCacheKeysForService(service)) {
+           for (String cacheKey : ServiceHelper.findCacheKeysForService(service)) {
             cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).remove(cacheKey, node.getId());
             cacheProvider.getProviderCacheForType(Constants.INACTIVE_NODE_CACHE).remove(cacheKey, node.getId());
             cacheProvider.getProviderCacheForType(Constants.SUSPENDED_NODE_CACHE).remove(cacheKey, node.getId());

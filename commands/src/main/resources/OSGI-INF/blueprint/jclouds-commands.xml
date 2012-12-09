@@ -453,7 +453,11 @@
 
   <bean id="shellTableFactory" class="org.jclouds.karaf.commands.table.internal.ManagedShellTableFactory"/>
 
-  <service ref="shellTableFactory" interface="org.osgi.service.cm.ManagedService">
+  <service ref="shellTableFactory">
+      <interfaces>
+          <value>org.osgi.service.cm.ManagedService</value>
+          <value>org.jclouds.karaf.commands.table.ShellTableFactory</value>
+      </interfaces>
     <service-properties>
       <entry key="service.pid" value="org.jclouds.shell"/>
     </service-properties>

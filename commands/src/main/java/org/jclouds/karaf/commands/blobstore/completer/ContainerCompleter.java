@@ -20,7 +20,8 @@
 package org.jclouds.karaf.commands.blobstore.completer;
 
 import org.jclouds.blobstore.BlobStore;
-import static org.jclouds.karaf.utils.blobstore.BlobStoreHelper.findCacheKeysForService;
+import org.jclouds.karaf.utils.ServiceHelper;
+
 
 public class ContainerCompleter extends BlobStoreCompleterSupport {
 
@@ -30,14 +31,14 @@ public class ContainerCompleter extends BlobStoreCompleterSupport {
 
    @Override
    public void updateOnAdded(BlobStore blobStore) {
-     for (String cacheKey : findCacheKeysForService(blobStore)) {
+     for (String cacheKey : ServiceHelper.findCacheKeysForService(blobStore)) {
        cache.putAll(cacheKey, listContainers(blobStore));
      }
    }
 
    @Override
    public void updateOnRemoved(BlobStore blobStore) {
-     for (String cacheKey : findCacheKeysForService(blobStore)) {
+     for (String cacheKey : ServiceHelper.findCacheKeysForService(blobStore)) {
        cache.removeAll(blobStore.getContext().unwrap().getId());
      }
    }

@@ -19,22 +19,21 @@
 
 package org.jclouds.karaf.commands.compute;
 
-import java.util.Collections;
-import java.util.List;
-
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.Module;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.ContextBuilder;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.karaf.services.modules.PropertiesCredentialStore;
 import org.jclouds.karaf.utils.EnvHelper;
-import org.jclouds.karaf.utils.compute.ComputeHelper;
+import org.jclouds.karaf.utils.ServiceHelper;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
 import org.jclouds.sshj.config.SshjSshClientModule;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.Module;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
@@ -91,7 +90,7 @@ public abstract class ComputeCommandWithOptions extends ComputeCommandBase {
       String providerOrApiValue = !Strings.isNullOrEmpty(providerValue) ? providerValue : apiValue;
 
       try {
-         computeService = ComputeHelper.getComputeService(name, providerOrApiValue, computeServices);
+         computeService = ServiceHelper.getService(name, providerOrApiValue, computeServices);
       } catch (Throwable t) {
          if (contextNameProvided) {
            throw new RuntimeException("Could not find compute service with id:" + name);

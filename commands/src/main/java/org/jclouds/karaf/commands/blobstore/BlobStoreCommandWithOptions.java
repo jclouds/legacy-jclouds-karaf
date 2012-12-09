@@ -19,22 +19,21 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
-import java.util.Collections;
-import java.util.List;
-
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.Module;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.felix.service.command.CommandSession;
 import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.karaf.utils.EnvHelper;
-import org.jclouds.karaf.utils.blobstore.BlobStoreHelper;
+import org.jclouds.karaf.utils.ServiceHelper;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
 import org.jclouds.rest.AuthorizationException;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.Module;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author iocanel
@@ -100,7 +99,7 @@ public abstract class BlobStoreCommandWithOptions extends BlobStoreCommandBase {
       String providerOrApiValue = !Strings.isNullOrEmpty(providerValue) ? providerValue : apiValue;
 
       try {
-         blobStore = BlobStoreHelper.getBlobStore(name, providerOrApiValue, blobStoreServices);
+         blobStore = ServiceHelper.getService(name, providerOrApiValue, blobStoreServices);
       } catch (Throwable t) {
         if (contextNameProvided) {
           throw new RuntimeException("Could not find blobstore service with id:" + name);

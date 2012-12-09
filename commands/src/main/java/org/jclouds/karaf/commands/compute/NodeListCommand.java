@@ -19,19 +19,18 @@
 
 package org.jclouds.karaf.commands.compute;
 
-import java.util.Set;
-
+import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.javax.annotation.Nullable;
-
-import com.google.common.base.Predicate;
-import com.google.common.base.Strings;
 import org.jclouds.karaf.core.Constants;
-import org.jclouds.karaf.utils.compute.ComputeHelper;
+import org.jclouds.karaf.utils.ServiceHelper;
+
+import java.util.Set;
 
 /**
  * @author <a href="mailto:gnodet[at]gmail.com">Guillaume Nodet (gnodet)</a>
@@ -69,7 +68,7 @@ public class NodeListCommand extends ComputeCommandWithOptions {
       // Update Caches
       if (node instanceof NodeMetadata) {
         NodeMetadata metadata = (NodeMetadata) node;
-        for (String cacheKey : ComputeHelper.findCacheKeysForService(service)) {
+        for (String cacheKey : ServiceHelper.findCacheKeysForService(service)) {
           if (metadata.getStatus().equals(NodeMetadata.Status.RUNNING)) {
             cacheProvider.getProviderCacheForType(Constants.ACTIVE_NODE_CACHE).put(
                     cacheKey, node.getId());

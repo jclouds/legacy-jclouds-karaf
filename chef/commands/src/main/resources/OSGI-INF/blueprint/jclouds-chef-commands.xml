@@ -1,0 +1,165 @@
+<!--
+  Licensed to jclouds, Inc. (jclouds) under one or more
+  contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  jclouds licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+  -->
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0">
+
+
+    <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.1.0">
+        <command name="chef/service-list">
+            <action class="org.jclouds.karaf.chef.commands.ChefServiceListCommand">
+                <property name="chefServices" ref="chefServices"/>
+                <property name="cacheProvider" ref="cacheProvider"/>
+            </action>
+        </command>
+        <command name="chef/service-create">
+            <action class="org.jclouds.karaf.chef.commands.ChefServiceCreateCommand">
+                <property name="bundleContext" ref="blueprintBundleContext"/>
+                <property name="configAdmin" ref="configAdmin"/>
+            </action>
+            <optional-completers>
+                <entry key="--api" value-ref="availableChefApiCompleter"/>
+            </optional-completers>
+        </command>
+        <command name="chef/service-destroy">
+            <action class="org.jclouds.karaf.chef.commands.ChefServiceDestroyCommand">
+                <property name="configAdmin" ref="configAdmin"/>
+            </action>
+            <completers>
+                <ref component-id="chefContextNameCompleter"/>
+                <null/>
+            </completers>
+        </command>
+        <command name="chef/cookbook-list">
+            <action class="org.jclouds.karaf.chef.commands.ChefCookbookListCommand">
+                <property name="chefServices" ref="chefServices"/>
+                <property name="cacheProvider" ref="cacheProvider"/>
+                <property name="configAdmin" ref="configAdmin"/>
+                <property name="shellTableFactory" ref="shellTableFactory"/>
+            </action>
+            <completers>
+                <ref component-id="chefContextNameCompleter"/>
+                <null/>
+            </completers>
+        </command>
+        <command name="chef/node-bootstrap">
+            <action class="org.jclouds.karaf.chef.commands.ChefNodeBootstrap">
+                <property name="computeServices" ref="computeServices"/>
+                <property name="chefServices" ref="chefServices"/>
+                <property name="cacheProvider" ref="cacheProvider"/>
+            </action>
+            <completers>
+                <ref component-id="activeNodeCompleter"/>
+                <ref component-id="cookbookCompleter"/>
+                <null/>
+            </completers>
+            <optional-completers>
+                <entry key="--name" value-ref="computeContextNameCompleter"/>
+                <entry key="--provider" value-ref="computeProviderCompleter"/>
+                <entry key="--api" value-ref="computeApiCompleter"/>
+                <entry key="--chef-name" value-ref="chefContextNameCompleter"/>
+            </optional-completers>
+        </command>
+        <command name="chef/group-bootstrap">
+            <action class="org.jclouds.karaf.chef.commands.ChefGroupBootStrap">
+                <property name="computeServices" ref="computeServices"/>
+                <property name="chefServices" ref="chefServices"/>
+                <property name="cacheProvider" ref="cacheProvider"/>
+            </action>
+            <completers>
+                <ref component-id="groupCompleter"/>
+                <ref component-id="cookbookCompleter"/>
+                <null/>
+            </completers>
+            <optional-completers>
+                <entry key="--name" value-ref="computeContextNameCompleter"/>
+                <entry key="--provider" value-ref="computeProviderCompleter"/>
+                <entry key="--api" value-ref="computeApiCompleter"/>
+                <entry key="--chef-name" value-ref="chefContextNameCompleter"/>
+            </optional-completers>
+        </command>
+    </command-bundle>
+
+
+    <!-- Blob Completers -->
+    <bean id="chefContextNameCompleter" class="org.jclouds.karaf.chef.commands.completer.ChefContextNameCompleter">
+        <property name="chefServices" ref="chefServices"/>
+    </bean>
+
+    <bean id="chefApiCompleter"
+          class="org.jclouds.karaf.chef.commands.completer.ChefApiCompleter">
+        <argument>
+            <value>false</value>
+        </argument>
+        <property name="chefServices" ref="chefServices"/>
+    </bean>
+
+    <bean id="availableChefApiCompleter"
+          class="org.jclouds.karaf.chef.commands.completer.ChefApiCompleter">
+        <argument>
+            <value>true</value>
+        </argument>
+        <property name="chefServices" ref="chefServices"/>
+    </bean>
+
+    <bean id="cookbookCompleter"
+          class="org.jclouds.karaf.chef.commands.completer.CookbookCompleter" init-method="init">
+        <property name="cacheProvider" ref="cacheProvider"/>
+    </bean>
+
+
+    <reference id="shellTableFactory" interface="org.jclouds.karaf.commands.table.ShellTableFactory"/>
+
+    <service ref="chefContextNameCompleter" auto-export="interfaces">
+        <service-properties>
+            <entry key="completer-type" value="chef-service-id"/>
+        </service-properties>
+    </service>
+
+    <service ref="chefApiCompleter" auto-export="interfaces">
+        <service-properties>
+            <entry key="completer-type" value="chef-api"/>
+        </service-properties>
+    </service>
+
+    <service ref="availableChefApiCompleter" auto-export="interfaces">
+        <service-properties>
+            <entry key="completer-type" value="available-chef-api"/>
+        </service-properties>
+    </service>
+
+    <service ref="cookbookCompleter" auto-export="interfaces">
+        <service-properties>
+            <entry key="completer-type" value="chef-cookbook"/>
+            <entry key="cache-type" value="jclouds.chefservice"/>
+        </service-properties>
+    </service>
+
+    <reference id="cacheProvider" interface="org.jclouds.karaf.cache.CacheProvider"/>
+    <reference id="activeNodeCompleter" interface="org.apache.karaf.shell.console.Completer" filter="(completer-type=active-node)"/>
+    <reference id="groupCompleter" interface="org.apache.karaf.shell.console.Completer" filter="(completer-type=group)"/>
+    <reference id="computeProviderCompleter" interface="org.apache.karaf.shell.console.Completer" filter="(completer-type=compute-provider)"/>
+    <reference id="computeApiCompleter" interface="org.apache.karaf.shell.console.Completer" filter="(completer-type=compute-api)"/>
+    <reference id="computeContextNameCompleter" interface="org.apache.karaf.shell.console.Completer" filter="(completer-type=compute-service-id)"/>
+
+
+    <reference-list id="computeServices" interface="org.jclouds.compute.ComputeService" availability="optional"/>
+    <reference-list id="chefServices" interface="org.jclouds.chef.ChefService" availability="optional"/>
+    <reference id="configAdmin" interface="org.osgi.service.cm.ConfigurationAdmin" availability="optional"/>
+
+</blueprint>
