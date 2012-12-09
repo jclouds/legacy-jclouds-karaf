@@ -160,7 +160,7 @@
         <javax.inject.bundle.version>1_1</javax.inject.bundle.version>
         <jclouds.version>${project.version}</jclouds.version>
         <jclouds.chef.version>${project.version}</jclouds.chef.version>
-        <jclouds.version>1.5.3</jclouds.version>
+        <jclouds.version>1.5.4-SNAPSHOT</jclouds.version>
         <jersey.version>1.11</jersey.version>
         <jersey.bundle.version>1.11_1</jersey.bundle.version>
         <joda.version>2.1</joda.version>
