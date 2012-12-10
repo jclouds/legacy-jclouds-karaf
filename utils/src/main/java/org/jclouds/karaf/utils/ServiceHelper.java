@@ -37,6 +37,7 @@ public class ServiceHelper {
 
     /**
      * Returns the cache keys for a given Service.
+     *
      * @param service
      * @return
      */
@@ -55,6 +56,7 @@ public class ServiceHelper {
 
     /**
      * Chooses a {@link ComputeService} that matches the specified a service id or a provider / api.
+     *
      * @param id
      * @param providerOrApi
      * @param services
@@ -90,8 +92,7 @@ public class ServiceHelper {
         } else {
             if (services.size() == 0) {
                 throw new IllegalArgumentException("No providers are present.  Note: It takes a couple of seconds for the provider to initialize.");
-            }
-            else if (services.size() != 1) {
+            } else if (services.size() != 1) {
                 StringBuilder sb = new StringBuilder();
                 for (T svc : services) {
                     if (sb.length() > 0) {
@@ -108,36 +109,53 @@ public class ServiceHelper {
 
     /**
      * Extracts the Id of the Service.
+     *
      * @param service
      * @param <T>
      * @return
      */
     public static <T> String toId(T service) {
         String id = null;
-        Context context = toContext(service);
-        if (View.class.isAssignableFrom(context.getClass())) {
-            id = ((View)context).unwrap().getId();
-        } else {
-            id = context.getId();
+        try {
+            Context context = toContext(service);
+            if (View.class.isAssignableFrom(context.getClass())) {
+                id = ((View) context).unwrap().getId();
+            } else {
+                id = context.getId();
+            }
+        } catch (IllegalArgumentException ex) {
+            //Fallback to pure reflection
+            id = callMethod(service, "getId", String.class);
         }
         return id;
     }
 
     /**
      * Extracts the Name of the Service.
+     *
      * @param service
      * @param <T>
      * @return
      */
     public static <T> String toName(T service) {
-        String id = null;
-        Context context = toContext(service);
-        id = context.getName();
-        return id;
+        String name = null;
+        try {
+            Context context = toContext(service);
+            if (View.class.isAssignableFrom(context.getClass())) {
+                name = ((View) context).unwrap().getName();
+            } else {
+                name = context.getId();
+            }
+        } catch (IllegalArgumentException ex) {
+            //Fallback to pure reflection
+            name = callMethod(service, "getName", String.class);
+        }
+        return name;
     }
 
     /**
      * Extracts the {@link Context}.
+     *
      * @param service
      * @param <T>
      * @return
@@ -152,7 +170,7 @@ public class ServiceHelper {
             if (Context.class.isAssignableFrom(obj.getClass())) {
                 ctx = (Context) obj;
             } else if (View.class.isAssignableFrom(obj.getClass())) {
-                ctx = ((View)obj).unwrap();
+                ctx = ((View) obj).unwrap();
             } else {
                 throw new IllegalArgumentException("Service doesn't have a context.");
             }
@@ -164,5 +182,34 @@ public class ServiceHelper {
             throw new IllegalArgumentException(e);
         }
         return ctx;
+    }
+
+    /**
+     * Extracts the {@link Context}.
+     *
+     * @param service
+     * @param <T>
+     * @return
+     */
+    public static <S, T> T callMethod(S service, String methodNane, Class<T> returnType) {
+        T result = null;
+        Class c = service.getClass();
+        try {
+            //Ugly way to get the Context, but there doesn't seem to be a better one.
+            Method m = c.getMethod(methodNane);
+            Object obj = m.invoke(service);
+            if (returnType.isAssignableFrom(obj.getClass())) {
+                result = returnType.cast(obj);
+            } else {
+                throw new IllegalArgumentException("Service doesn't have a context.");
+            }
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException(e);
+        } catch (InvocationTargetException e) {
+            throw new IllegalArgumentException(e);
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return result;
     }
 }

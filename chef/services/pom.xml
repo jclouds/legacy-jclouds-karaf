@@ -62,6 +62,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.jclouds.karaf</groupId>
+            <artifactId>recipe</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.jclouds.karaf.chef</groupId>
             <artifactId>core</artifactId>
             <version>${project.version}</version>

@@ -140,6 +140,7 @@
         <module>chef</module>
         <module>feature</module>
         <module>itests</module>
+        <module>recipe</module>
     </modules>
 
     <properties>
@@ -390,6 +391,11 @@
             <dependency>
                 <groupId>org.jclouds</groupId>
                 <artifactId>jclouds-compute</artifactId>
+                <version>${jclouds.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jclouds</groupId>
+                <artifactId>jclouds-scriptbuilder</artifactId>
                 <version>${jclouds.version}</version>
             </dependency>
             <dependency>
