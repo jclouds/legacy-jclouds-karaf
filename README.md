@@ -171,13 +171,16 @@ Once the service has been create, you can list your cookbooks using:
 Once you have created the chef service and have made sure a couple of cookbooks are uploaded. You can use chef with any other compute service in your system.
 In the exmaple above it will be used with EC2:
 
-    karaf@root>node-create --imageId eu-west-1/ami-c1aaabb5 --hardwareId m1.medium --adminAccess
+    karaf@root>node-create --imageId eu-west-1/ami-c1aaabb5 --hardwareId m1.medium --adminAccess  karaf
 
     [id]                 [location] [hardware] [group]   [status]
     eu-west-1/i-bbb5eff0 eu-west-1c m1.medium  karafchef RUNNING
 
     karaf@root>chef:node-bootstrap  eu-west-1/i-bbb5eff0 java::openjdk
 
+The above can be also performed in a single step using the --recipe option:
+
+    karaf@root>node-create --imageId eu-west-1/ami-c1aaabb5 --hardwareId m1.medium --adminAccess --recipe chef/java::openjdk karaf
 
 
 Using multiple serives per provider/api
@@ -229,6 +232,8 @@ When it comes to creating a service, you usually need to specify a provider/api,
 specify them using the command options as shown above, or pull them from your environment, if the corresponding environmental variables are found.
 Supported variables:
 
+For Compute Services:
+
 * **JCLOUDS_COMPUTE_PROVIDER** The name of the compute provider.
 * **JCLOUDS_COMPUTE_API** The name of the compute api.
 * **JCLOUDS_COMPUTE_IDENTITY** The identiy for accessing the compute provider.
@@ -237,7 +242,25 @@ Supported variables:
 * **JCLOUDS_USER** The username of that will be used for accessing compute instances.
 * **JCLOUDS_PASSWORD** The password that will be used for accessing compute instances.
 
-The same pattern can be used for blobstore services to. Just replace COMPUTE with BLOBSTORE.
+For Blob Stores:
+
+* **JCLOUDS_BLOBSTORE_PROVIDER** The name of the blobstore provider.
+* **JCLOUDS_BLOBSTORE_API** The name of the blobstore api.
+* **JCLOUDS_BLOBSTORE_IDENTITY** The identiy for accessing the blobstore provider.
+* **JCLOUDS_BLOBSTORE_CREDENTIAL** The credential for accessing the blobstore provider.
+* **JCLOUDS_BLOBSTORE_ENDPOINT** The endpoint (This is usally needed when using blobstore apis).
+
+For Chef:
+
+* **JCLOUDS_CHEF_API** The name of the blobstore api.
+* **JCLOUDS_CHEF_CLIENT_NAME** The client name.
+* **JCLOUDS_CHEF_CLIENT_CREDENTIAL** The client credential.
+* **JCLOUDS_CHEF_CLIENT_KEY_FILE** The path of the client key file (can be used instead of the above).
+* **JCLOUDS_CHEF_VALIDATOR_NAME** The validator name.
+* **JCLOUDS_CHEF_VALIDATOR_CREDENTIAL** The validator credential.
+* **JCLOUDS_CHEF_VALIDATOR_KEY_FILE** The path of the validator key file (can be used instead of the above).
+* **JCLOUDS_CHEF_ENDPOINT** The endpoint (This is usally needed when using chef apis).
+
 
 Configuring command output
 --------------------------

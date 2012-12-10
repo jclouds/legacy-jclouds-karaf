@@ -3,11 +3,9 @@ package org.jclouds.karaf.cache;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.karaf.cache.utils.CacheUtils;
+import org.jclouds.karaf.recipe.RecipeProvider;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 
@@ -21,10 +19,14 @@ public class Activator implements BundleActivator {
      private ServiceTracker blobStoreTracker;
      private ServiceTracker blobStoreCacheableTracker;
 
+     private ServiceTracker recipeProviderTracker;
+     private ServiceTracker recipeCacheableTracker;
+
      private ServiceRegistration cacheProviderRegistration;
 
      private final CacheManager<ComputeService> computeCacheManager = new CacheManager<ComputeService>();
      private final CacheManager<BlobStore> blobCacheManager = new CacheManager<BlobStore>();
+     private final CacheManager<RecipeProvider> recipeCacheManager = new CacheManager<RecipeProvider>();
 
 
 
@@ -50,16 +52,25 @@ public class Activator implements BundleActivator {
 
         computeServiceTracker = CacheUtils.createServiceCacheTracker(context, ComputeService.class, computeCacheManager);
         computeCacheableTracker = CacheUtils.createCacheableTracker(context, "jclouds.computeservice",computeCacheManager);
+
         blobStoreTracker = CacheUtils.createServiceCacheTracker(context, BlobStore.class, blobCacheManager);
         blobStoreCacheableTracker = CacheUtils.createCacheableTracker(context, "jclouds.blobstore",blobCacheManager);
 
+        recipeProviderTracker = CacheUtils.createServiceCacheTracker(context, RecipeProvider.class, recipeCacheManager);
+        recipeCacheableTracker = CacheUtils.createCacheableTracker(context, "jclouds.recipeprovider", recipeCacheManager);
+
         computeServiceTracker.open();
         computeCacheableTracker.open();
+
         blobStoreTracker.open();
         blobStoreCacheableTracker.open();
 
+        recipeProviderTracker.open();
+        recipeCacheableTracker.open();
+
         computeCacheManager.init();
         blobCacheManager.init();
+        recipeCacheManager.init();
 
     }
 
@@ -84,6 +95,7 @@ public class Activator implements BundleActivator {
     public void stop(BundleContext context) throws Exception {
         computeCacheManager.destroy();
         blobCacheManager.destroy();
+        recipeCacheManager.destroy();
 
         if (cacheProviderRegistration != null) {
             cacheProviderRegistration.unregister();
@@ -99,6 +111,12 @@ public class Activator implements BundleActivator {
         }
         if (blobStoreCacheableTracker != null) {
             blobStoreCacheableTracker.close();
+        }
+        if (recipeProviderTracker != null) {
+            recipeProviderTracker.close();
+        }
+        if (recipeCacheableTracker != null) {
+            recipeCacheableTracker.close();
         }
     }
 }

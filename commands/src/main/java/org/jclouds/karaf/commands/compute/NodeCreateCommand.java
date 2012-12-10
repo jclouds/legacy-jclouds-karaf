@@ -19,6 +19,7 @@
 
 package org.jclouds.karaf.commands.compute;
 
+import com.google.common.collect.Lists;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
@@ -30,7 +31,11 @@ import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.ec2.compute.options.EC2TemplateOptions;
 import org.jclouds.karaf.core.Constants;
+import org.jclouds.karaf.recipe.RecipeManager;
+import org.jclouds.karaf.recipe.RecipeManagerImpl;
 import org.jclouds.karaf.utils.ServiceHelper;
+import org.jclouds.scriptbuilder.domain.Statement;
+import org.jclouds.scriptbuilder.domain.StatementList;
 import org.jclouds.scriptbuilder.statements.login.AdminAccess;
 
 import java.util.List;
@@ -77,11 +82,16 @@ public class NodeCreateCommand extends ComputeCommandWithOptions {
    @Option(name = "--locationId", multiValued = false, required = false, description = "Uses the location/region specified. You can see the available values with jclouds:location-list.")
    private String locationId;
 
+   @Option(name = "--recipe", multiValued = true, required = false, description = "The recipe to use to create the node. Can be used multiple times (e.g. --recipe chef/java::openjdk --recipe chef/mysql)")
+   private String[] recipes;
+
    @Argument(name = "group", index = 0, multiValued = false, required = true, description = "Node group.")
    private String group;
 
    @Argument(name = "number", index = 1, multiValued = false, required = false, description = "Number of nodes to create.")
    private Integer number = 1;
+
+   private RecipeManager recipeManager = new RecipeManagerImpl();
 
    @Override
    protected Object doExecute() throws Exception {
@@ -123,9 +133,16 @@ public class NodeCreateCommand extends ComputeCommandWithOptions {
       }
 
       TemplateOptions options = service.templateOptions();
+      List<Statement> statements = Lists.newLinkedList();
+
       if (adminAccess) {
-         options.runScript(AdminAccess.standard());
+         statements.add(AdminAccess.standard());
       }
+       if (recipes != null) {
+           for (String recipe : recipes) {
+               statements.add(recipeManager.createStatement(recipe, group));
+           }
+       }
       if (ec2SecurityGroups != null) {
          options.as(EC2TemplateOptions.class).securityGroups(ec2SecurityGroups);
       }
@@ -137,6 +154,10 @@ public class NodeCreateCommand extends ComputeCommandWithOptions {
       }
 
       Set<? extends NodeMetadata> metadatas = null;
+
+      if (!statements.isEmpty()) {
+          options.runScript(new StatementList(statements));
+      }
 
       try {
          metadatas = service.createNodesInGroup(group, number, builder.options(options).build());
@@ -160,4 +181,11 @@ public class NodeCreateCommand extends ComputeCommandWithOptions {
       return null;
    }
 
+    public RecipeManager getRecipeManager() {
+        return recipeManager;
+    }
+
+    public void setRecipeManager(RecipeManager recipeManager) {
+        this.recipeManager = recipeManager;
+    }
 }

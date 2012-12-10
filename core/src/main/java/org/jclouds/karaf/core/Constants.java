@@ -30,6 +30,7 @@ public class Constants {
   public static final String IMAGE_CACHE = "IMAGE_CACHE";
   public static final String LOCATION_CACHE = "LOCATION_CACHE";
   public static final String HARDWARE_CACHE = "HARDWARE_CACHE";
+  public static final String RECIPE_CACHE = "RECIPE_CACHE";
   public static final String GROUP = "GROUP";
 
   public static final String NAME = "name";
