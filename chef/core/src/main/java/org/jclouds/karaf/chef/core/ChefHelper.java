@@ -242,10 +242,10 @@ public class ChefHelper {
         String apiValue = ChefHelper.getChefApi(api);
         String clientNameValue = ChefHelper.getClientName(clientName);
         String clientCredentialValue = ChefHelper.getClientCredential(clientCredential);
-        String clientKeyFileValue = ChefHelper.getClientName(clientKeyFile);
-        String validatorNameValue = ChefHelper.getClientName(validatorName);
+        String clientKeyFileValue = ChefHelper.getClientKeyFile(clientKeyFile);
+        String validatorNameValue = ChefHelper.getValidatorName(validatorName);
         String validatorCredentialValue = ChefHelper.getValidatorCredential(validatorCredential);
-        String validatorKeyFileValue = ChefHelper.getClientName(validatorKeyFile);
+        String validatorKeyFileValue = ChefHelper.getValidatorKeyFile(validatorKeyFile);
         String endpointValue = ChefHelper.getChefEndpoint(endpoint);
         boolean contextNameProvided = !Strings.isNullOrEmpty(name);
 
@@ -253,6 +253,7 @@ public class ChefHelper {
                 && !Strings.isNullOrEmpty(validatorNameValue) && !Strings.isNullOrEmpty(validatorKeyFileValue);
 
         apiValue = !Strings.isNullOrEmpty(apiValue) ? apiValue : "chef";
+        name = !Strings.isNullOrEmpty(name) ? name : apiValue;
 
         try {
             chefService = ChefHelper.getChefService(name, apiValue, chefServices);
@@ -293,7 +294,7 @@ public class ChefHelper {
 
         if (chefService == null && canCreateService) {
             try {
-                chefService = ChefHelper.createChefService(Apis.withId(apiValue), name, clientNameValue, clientCredentialValue, clientKeyFile, validatorNameValue, validatorCredentialValue, validatorKeyFileValue, endpointValue);
+                chefService = ChefHelper.createChefService(Apis.withId(apiValue), name, clientNameValue, clientCredentialValue, clientKeyFileValue, validatorNameValue, validatorCredentialValue, validatorKeyFileValue, endpointValue);
             } catch (Exception ex) {
                 throw new RuntimeException("Failed to create service:" + ex.getMessage());
             }
