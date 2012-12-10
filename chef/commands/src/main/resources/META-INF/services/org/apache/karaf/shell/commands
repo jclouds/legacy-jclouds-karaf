@@ -1,0 +1,3 @@
+org.jclouds.karaf.chef.commands.ChefCookbookListCommand
+org.jclouds.karaf.chef.commands.ChefNodeBootstrap
+org.jclouds.karaf.chef.commands.ChefGroupBootStrap

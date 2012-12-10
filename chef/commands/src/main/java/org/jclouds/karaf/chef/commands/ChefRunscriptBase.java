@@ -33,15 +33,27 @@ public abstract class ChefRunscriptBase extends RunScriptBase {
     @Option(name = "--chef-serivce", description = "The name of the chef service.", required = false, multiValued = false)
     private String chefName;
 
+    @Option(name = "--client-name", description = "The name of the client.")
+    protected String clientName;
+
+    @Option(name = "--client-key-file", description = "The path to the client key file.")
+    protected String clientKeyFile;
+
+    @Option(name = "--validator-name", description = "The name of the validator.")
+    protected String validatorName;
+
+    @Option(name = "--validator-key-file", description = "The patht to the validator key file.")
+    protected String validatorKeyFile;
+
+    @Option(name = "--chef-endpoint", description = "The endpoint to use for a chef service.")
+    protected String chefEndpoint;
+
     protected List<ChefService> chefServices;
 
     protected ChefService getChefService() {
-        if ((name == null && api == null) && (chefServices != null && chefServices.size() == 1)) {
-            return chefServices.get(0);
-        }
-        ChefService chefService = chefService = ChefHelper.getChefService(chefName, chefApi, chefServices);
-        return chefService;
+        return ChefHelper.findOrCreateChefService(chefApi, chefName, clientName, null, clientKeyFile, validatorName, null, validatorKeyFile, endpoint, chefServices);
     }
+
     public List<ChefService> getChefServices() {
         return chefServices;
     }

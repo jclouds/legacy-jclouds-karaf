@@ -21,10 +21,12 @@ package org.jclouds.karaf.chef.core;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import com.google.inject.Module;
 import org.jclouds.ContextBuilder;
 import org.jclouds.apis.ApiMetadata;
+import org.jclouds.apis.Apis;
 import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.ChefService;
 import org.jclouds.chef.config.ChefProperties;
@@ -44,7 +46,7 @@ public class ChefHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChefHelper.class);
 
     public static final String JCLOUDS_CHEF_API = "JCLOUDS_CHEF_API";
-    public static final String JCLOUDS_CHEF_CLIENT_NAME = "JCLOUDS_COMPUTE_IDENTITY";
+    public static final String JCLOUDS_CHEF_CLIENT_NAME = "JCLOUDS_CHEF_CLIENT_NAME";
     public static final String JCLOUDS_CHEF_CLIENT_KEY_FILE = "JCLOUDS_CHEF_CLIENT_KEY_FILE";
     public static final String JCLOUDS_CHEF_CLIENT_CREDENTIAL = "JCLOUDS_CHEF_CLIENT_CREDENTIAL";
     public static final String JCLOUDS_CHEF_VALIDATOR_NAME = "JCLOUDS_CHEF_VALIDATOR_NAME";
@@ -85,7 +87,21 @@ public class ChefHelper {
     }
 
     /**
-     * Returns the client pem value and falls back to env if the specified value is null.
+     * Returns the validator credential value and falls back to env if the specified value is null.
+     *
+     * @param clientCredential
+     * @return
+     */
+    public static String getClientCredential(String clientCredential) {
+        if (clientCredential != null) {
+            return clientCredential;
+        } else {
+            return System.getenv(JCLOUDS_CHEF_CLIENT_CREDENTIAL);
+        }
+    }
+
+    /**
+     * Returns the client pem location value and falls back to env if the specified value is null.
      *
      * @param clientKeyFile
      * @return
@@ -113,7 +129,21 @@ public class ChefHelper {
     }
 
     /**
-     * Returns the validator pem value and falls back to env if the specified value is null.
+     * Returns the validator credential value and falls back to env if the specified value is null.
+     *
+     * @param validatorCredential
+     * @return
+     */
+    public static String getValidatorCredential(String validatorCredential) {
+        if (validatorCredential != null) {
+            return validatorCredential;
+        } else {
+            return System.getenv(JCLOUDS_CHEF_VALIDATOR_CREDENTIAL);
+        }
+    }
+
+    /**
+     * Returns the validator pem localtion value and falls back to env if the specified value is null.
      *
      * @param validatorKeyFile
      * @return
@@ -194,6 +224,83 @@ public class ChefHelper {
         }
     }
 
+    /**
+     * Creates a {@link ChefService} just by using Environmental variables.
+     *
+     * @return
+     */
+    public static ChefService createChefServiceFromEnvironment() {
+        return findOrCreateChefService(null, null, null, null, null, null, null, null, null, Lists.<ChefService>newArrayList());
+    }
+
+    public static ChefService findOrCreateChefService(String api, String name, String clientName, String clientCredential, String clientKeyFile, String validatorName, String validatorCredential, String validatorKeyFile, String endpoint, List<ChefService> chefServices) {
+        if ((name == null && api == null) && (chefServices != null && chefServices.size() == 1)) {
+            return chefServices.get(0);
+        }
+
+        ChefService chefService = null;
+        String apiValue = ChefHelper.getChefApi(api);
+        String clientNameValue = ChefHelper.getClientName(clientName);
+        String clientCredentialValue = ChefHelper.getClientCredential(clientCredential);
+        String clientKeyFileValue = ChefHelper.getClientName(clientKeyFile);
+        String validatorNameValue = ChefHelper.getClientName(validatorName);
+        String validatorCredentialValue = ChefHelper.getValidatorCredential(validatorCredential);
+        String validatorKeyFileValue = ChefHelper.getClientName(validatorKeyFile);
+        String endpointValue = ChefHelper.getChefEndpoint(endpoint);
+        boolean contextNameProvided = !Strings.isNullOrEmpty(name);
+
+        boolean canCreateService = (!Strings.isNullOrEmpty(clientNameValue) || !Strings.isNullOrEmpty(clientKeyFileValue))
+                && !Strings.isNullOrEmpty(validatorNameValue) && !Strings.isNullOrEmpty(validatorKeyFileValue);
+
+        apiValue = !Strings.isNullOrEmpty(apiValue) ? apiValue : "chef";
+
+        try {
+            chefService = ChefHelper.getChefService(name, apiValue, chefServices);
+        } catch (Throwable t) {
+            if (contextNameProvided) {
+                throw new RuntimeException("Could not find chef service with id:" + name);
+            } else if (!canCreateService) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("Insufficient information to create chef service:").append("\n");
+                if (apiValue == null) {
+                    sb.append(
+                            "Missing provider or api. Please specify either using the --api options, or the JCLOUDS_CHEF_API  environmental variables.")
+                            .append("\n");
+                }
+                if (clientNameValue == null) {
+                    sb.append(
+                            "Missing client name. Please specify either using the --client-name option, or the JCLOUDS_CHEF_CLIENT_NAME environmental variable.")
+                            .append("\n");
+                }
+                if (clientKeyFileValue == null) {
+                    sb.append(
+                            "Missing client credential. Please specify either using the --client-key-file option, or the JCLOUDS_CHEF_CLIENT_KEY_FILE environmental variable.")
+                            .append("\n");
+                }
+                if (validatorName == null) {
+                    sb.append(
+                            "Missing validator name. Please specify either using the --validator-name option, or the JCLOUDS_CHEF_VALIDATOR_NAME environmental variable.")
+                            .append("\n");
+                }
+                if (validatorKeyFile == null) {
+                    sb.append(
+                            "Missing validator credential. Please specify either using the --validator-key-file option, or the JCLOUDS_CHEF_VALIDATOR_KEY_FILE environmental variable.")
+                            .append("\n");
+                }
+                throw new RuntimeException(sb.toString());
+            }
+        }
+
+        if (chefService == null && canCreateService) {
+            try {
+                chefService = ChefHelper.createChefService(Apis.withId(apiValue), name, clientNameValue, clientCredentialValue, clientKeyFile, validatorNameValue, validatorCredentialValue, validatorKeyFileValue, endpointValue);
+            } catch (Exception ex) {
+                throw new RuntimeException("Failed to create service:" + ex.getMessage());
+            }
+        }
+        return chefService;
+    }
+
     public static ChefService createChefService(ApiMetadata apiMetadata, String name, String clientName, String clientCredential, String clientKeyFile, String validatorName, String validatorCredential, String validatorKeyFile, String endpoint) throws Exception {
         if (Strings.isNullOrEmpty(clientName) && apiMetadata != null && !apiMetadata.getDefaultCredential().isPresent()) {
             LOGGER.warn("No client specified for api {}.", apiMetadata.getId());
@@ -252,6 +359,7 @@ public class ChefHelper {
 
     /**
      * Returns credentials from a specified path.
+     *
      * @param path
      * @return
      * @throws Exception
