@@ -74,6 +74,7 @@
                         <Private-Package>${osgi.private}</Private-Package>
                         <Require-Bundle>${osgi.bundles}</Require-Bundle>
                         <Bundle-Activator>${osgi.activator}</Bundle-Activator>
+                        <Export-Service>${osgi.export.service}</Export-Service>
                     </instructions>
                     <supportedProjectTypes>
                         <supportedProjectType>jar</supportedProjectType>

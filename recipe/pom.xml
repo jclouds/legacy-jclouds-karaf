@@ -43,7 +43,9 @@
             *
         </osgi.import>
         <osgi.activator>org.jclouds.karaf.recipe.Activator</osgi.activator>
+        <osgi.export.service>org.jclouds.karaf.recipe.RecipeManager</osgi.export.service>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.osgi</groupId>
