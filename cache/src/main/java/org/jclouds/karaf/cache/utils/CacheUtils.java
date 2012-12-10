@@ -19,8 +19,6 @@
 
 package org.jclouds.karaf.cache.utils;
 
-import org.jclouds.blobstore.BlobStore;
-import org.jclouds.compute.ComputeService;
 import org.jclouds.karaf.cache.CacheManager;
 import org.jclouds.karaf.cache.Cacheable;
 import org.osgi.framework.BundleContext;
@@ -44,7 +42,7 @@ public class CacheUtils {
      * @return
      */
     public static <T> ServiceTracker createServiceCacheTracker(final BundleContext context, final Class<T> serviceClass, final CacheManager<T> cacheManager) {
-        return new ServiceTracker(context, ComputeService.class.getName(), null) {
+        return new ServiceTracker(context, serviceClass.getName(), null) {
 
             @Override
             public Object addingService(ServiceReference reference) {
