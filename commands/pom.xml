@@ -31,6 +31,57 @@
     <packaging>bundle</packaging>
     <name>JClouds :: Karaf :: Commands</name>
 
+    <properties>
+        <osgi.import>
+            javax.script,
+            org.codehaus.groovy.jsr223,
+            org.jclouds.karaf.cache*;version=${project.version},
+            org.jclouds.blobstore;version=${jclouds.version},
+            org.jclouds.compute;version=${jclouds.version},
+            org.jclouds.ec2*;version=${jclouds.version};resolution:=optional,
+            org.apache.felix.service.command,
+            org.apache.felix.gogo.commands,
+            org.apache.karaf.shell.console;version="[2.2,4)",
+            org.apache.karaf.shell.console.commands;version="[2.2,4)",
+            org.apache.karaf.shell.console.completer;version="[2.2,4)",
+            *
+        </osgi.import>
+        <osgi.export>
+            org.jclouds.karaf.commands*
+        </osgi.export>
+        <osgi.private>
+            org.jclouds.karaf.commands.table.internal,
+            org.jclouds.karaf.utils*,
+            org.jclouds.karaf.services.modules
+        </osgi.private>
+        <osgi.export.service>
+            org.jclouds.karaf.commands.table.ShellTableFactory,
+            org.apache.karaf.shell.console.Completer;completer-type=compute-service-id,
+            org.apache.karaf.shell.console.Completer;completer-type=compute-provider,
+            org.apache.karaf.shell.console.Completer;completer-type=available-compute-provider,
+            org.apache.karaf.shell.console.Completer;completer-type=compute-api,
+            org.apache.karaf.shell.console.Completer;completer-type=available-compute-api,
+            org.apache.karaf.shell.console.Completer;completer-type=active-node,
+            org.apache.karaf.shell.console.Completer;completer-type=inactive-node,
+            org.apache.karaf.shell.console.Completer;completer-type=group,
+            org.apache.karaf.shell.console.Completer;completer-type=suspended-node,
+            org.apache.karaf.shell.console.Completer;completer-type=image,
+            org.apache.karaf.shell.console.Completer;completer-type=location,
+            org.apache.karaf.shell.console.Completer;completer-type=hardware,
+            org.apache.karaf.shell.console.Completer;completer-type=osfamily,
+            org.apache.karaf.shell.console.Completer;completer-type=blobstore-service-id,
+            org.apache.karaf.shell.console.Completer;completer-type=blobstore-provider,
+            org.apache.karaf.shell.console.Completer;completer-type=available-blobstore-provider,
+            org.apache.karaf.shell.console.Completer;completer-type=blobstore-api,
+            org.apache.karaf.shell.console.Completer;completer-type=available-blobstore-api,
+            org.apache.karaf.shell.console.Completer;completer-type=blob,
+            org.apache.karaf.shell.console.Completer;completer-type=container,
+            org.apache.karaf.shell.console.Completer;completer-type=recipe
+        </osgi.export.service>
+    </properties>
+
+
+
     <dependencies>
         <!-- Internal Dependencies -->
         <dependency>
@@ -121,39 +172,4 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <configuration>
-                    <instructions>
-                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
-                        <Export-Package>org.jclouds.karaf.commands*</Export-Package>
-                        <Import-Package>
-                            javax.script,
-                            org.codehaus.groovy.jsr223,
-                            org.jclouds.karaf.cache*;version=${project.version},
-                            org.jclouds.blobstore;version=${jclouds.version},
-                            org.jclouds.compute;version=${jclouds.version},
-                            org.jclouds.ec2*;version=${jclouds.version};resolution:=optional,
-                            org.apache.felix.service.command,
-                            org.apache.felix.gogo.commands,
-                            org.apache.karaf.shell.console;version="[2.2,4)",
-                            org.apache.karaf.shell.console.commands;version="[2.2,4)",
-                            org.apache.karaf.shell.console.completer;version="[2.2,4)",
-                            *
-                        </Import-Package>
-                        <Private-Package>
-                          org.jclouds.karaf.commands.table.internal,
-                          org.jclouds.karaf.utils*,
-                          org.jclouds.karaf.services.modules
-                        </Private-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>
