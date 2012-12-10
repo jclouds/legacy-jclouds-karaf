@@ -23,7 +23,6 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.apis.Apis;
 import org.jclouds.chef.ChefService;
-import org.jclouds.compute.ComputeService;
 import org.jclouds.karaf.chef.core.ChefConstants;
 import org.jclouds.karaf.chef.core.ChefHelper;
 import org.jclouds.karaf.core.Constants;
@@ -62,8 +61,8 @@ public class ChefServiceCreateCommand extends ChefCommandWithOptions {
             System.out.println("Provider / api currently not installed. Service will be created once it does get installed.");
             return null;
         } else {
-            System.out.println(String.format("Waiting for compute service with name: %s.", name));
-            waitForComputeService(bundleContext, name, api);
+            System.out.println(String.format("Waiting for chef service with name: %s.", name));
+            waitForChefService(bundleContext, name, api);
         }
         return null;
     }
@@ -179,13 +178,13 @@ public class ChefServiceCreateCommand extends ChefCommandWithOptions {
     }
 
     /**
-     * Waits for the {@link ComputeService} registration.
+     * Waits for the {@link ChefService} registration.
      *
      * @param bundleContext
      * @param api
      * @return
      */
-    public synchronized ChefService waitForComputeService(BundleContext bundleContext, String name, String api) {
+    public synchronized ChefService waitForChefService(BundleContext bundleContext, String name, String api) {
         ChefService chefService = null;
         try {
             for (int r = 0; r < 6; r++) {
