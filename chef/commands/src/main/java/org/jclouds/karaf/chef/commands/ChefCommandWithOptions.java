@@ -69,68 +69,6 @@ public abstract class ChefCommandWithOptions extends ChefCommandBase {
     }
 
     protected ChefService getChefService() {
-        if ((name == null && api == null) && (chefServices != null && chefServices.size() == 1)) {
-            return chefServices.get(0);
-        }
-
-        ChefService chefService = null;
-        String apiValue = ChefHelper.getChefApi(api);
-        String clientNameValue = ChefHelper.getClientName(clientName);
-        String clientKeyFileValue = ChefHelper.getClientName(clientKeyFile);
-        String validatorNameValue = ChefHelper.getClientName(validatorName);
-        String validatorKeyFileValue = ChefHelper.getClientName(validatorKeyFile);
-        String endpointValue = ChefHelper.getChefEndpoint(endpoint);
-        boolean contextNameProvided = !Strings.isNullOrEmpty(name);
-
-        boolean canCreateService = (!Strings.isNullOrEmpty(clientNameValue) || !Strings.isNullOrEmpty(clientKeyFileValue))
-                && !Strings.isNullOrEmpty(validatorNameValue) && !Strings.isNullOrEmpty(validatorKeyFileValue);
-
-        apiValue = !Strings.isNullOrEmpty(apiValue) ? apiValue : "chef";
-
-        try {
-            chefService = ChefHelper.getChefService(name, apiValue, chefServices);
-        } catch (Throwable t) {
-            if (contextNameProvided) {
-                throw new RuntimeException("Could not find chef service with id:" + name);
-            } else if (!canCreateService) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("Insufficient information to create chef service:").append("\n");
-                if (apiValue == null) {
-                    sb.append(
-                            "Missing provider or api. Please specify either using the --api options, or the JCLOUDS_CHEF_API  environmental variables.")
-                            .append("\n");
-                }
-                if (clientNameValue == null) {
-                    sb.append(
-                            "Missing client name. Please specify either using the --client-name option, or the JCLOUDS_CHEF_CLIENT_NAME environmental variable.")
-                            .append("\n");
-                }
-                if (clientKeyFileValue == null) {
-                    sb.append(
-                            "Missing client credential. Please specify either using the --client-key-file option, or the JCLOUDS_CHEF_CLIENT_KEY_FILE environmental variable.")
-                            .append("\n");
-                }
-                if (validatorName == null) {
-                    sb.append(
-                            "Missing validator name. Please specify either using the --validator-name option, or the JCLOUDS_CHEF_VALIDATOR_NAME environmental variable.")
-                            .append("\n");
-                }
-                if (validatorKeyFile == null) {
-                    sb.append(
-                            "Missing validator credential. Please specify either using the --validator-key-file option, or the JCLOUDS_CHEF_VALIDATOR_KEY_FILE environmental variable.")
-                            .append("\n");
-                }
-                throw new RuntimeException(sb.toString());
-            }
-        }
-
-        if (chefService == null && canCreateService) {
-            try {
-                chefService = ChefHelper.createChefService(Apis.withId(apiValue), name, clientNameValue, null, clientKeyFile, validatorNameValue, null, validatorKeyFileValue, endpointValue);
-            } catch (Exception ex) {
-                throw new RuntimeException("Failed to create service:" + ex.getMessage());
-            }
-        }
-        return chefService;
+        return ChefHelper.findOrCreateChefService(api, name, clientName,null, clientKeyFile, validatorName, null, validatorKeyFile, endpoint, chefServices);
     }
 }
