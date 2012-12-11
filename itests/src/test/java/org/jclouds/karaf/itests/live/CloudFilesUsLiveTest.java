@@ -78,7 +78,7 @@ public class CloudFilesUsLiveTest extends JcloudsLiveTestSupport {
     }
 
     @Test
-    public void testCreateNodeLive() throws InterruptedException {
+    public void testBlobStoreReadWrite() throws InterruptedException {
         if (isBlobStoreLiveConfigured()) {
             createManagedBlobStoreService("cloudfiles-us");
             BlobStore blobStoreService = getOsgiService(BlobStore.class);
@@ -89,7 +89,7 @@ public class CloudFilesUsLiveTest extends JcloudsLiveTestSupport {
             System.err.println(executeCommand("jclouds:blobstore-create itest-container"));
 
             System.err.println(executeCommand("jclouds:blobstore-write itest-container  myfolder/myfile "+ featureURL ));
-            System.err.println(executeCommand("jclouds:blobstore-write itest-container testblob "+ System.getProperty("jclouds.featureURL")));
+            System.err.println(executeCommand("jclouds:blobstore-write --url-payload itest-container "+ System.getProperty("jclouds.featureURL")));
             System.err.println(executeCommand("jclouds:blobstore-read --display itest-container testblob "));
         }
     }
@@ -164,7 +164,7 @@ public class CloudFilesUsLiveTest extends JcloudsLiveTestSupport {
                 systemProperty("jclouds.karaf.version",MavenUtils.getArtifactVersion(JCLOUDS_KARAF_GROUP_ID, JCLOUDS_KARAF_ARTIFACT_ID)),
                 systemProperty("jclouds.version",MavenUtils.getArtifactVersion(JCLOUDS_GROUP_ID, JCLOUDS_ARTIFACT_ID)),
                 systemProperty("jclouds.featureURL",String.format(JCLOUDS_FEATURE_FORMAT, MavenUtils.getArtifactVersion(JCLOUDS_KARAF_GROUP_ID, JCLOUDS_KARAF_ARTIFACT_ID))),
-                scanFeatures(String.format(JCLOUDS_FEATURE_FORMAT, MavenUtils.getArtifactVersion(JCLOUDS_KARAF_GROUP_ID, JCLOUDS_KARAF_ARTIFACT_ID)),"jclouds", "jclouds-cloudfiles-us").start()
+                scanFeatures(String.format(JCLOUDS_FEATURE_FORMAT, MavenUtils.getArtifactVersion(JCLOUDS_KARAF_GROUP_ID, JCLOUDS_KARAF_ARTIFACT_ID)),"jclouds", "jclouds-commands", "jclouds-cloudfiles-us").start()
         };
     }
 }
