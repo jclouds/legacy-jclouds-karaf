@@ -19,7 +19,9 @@
 
 package org.jclouds.karaf.urlhandler;
 
+import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
+import com.google.common.io.Files;
 import com.google.inject.Module;
 import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.BlobStore;
@@ -30,6 +32,9 @@ import org.osgi.service.url.AbstractURLStreamHandlerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -44,10 +49,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class BlobUrlHandler extends AbstractURLStreamHandlerService {
+
+    private static final String BLOBSTORE_TMP_FOLDER = System.getProperty("karaf.data") + File.separatorChar + "blobstore";
 
     private final Logger logger = LoggerFactory.getLogger(BlobUrlHandler.class);
 
@@ -81,7 +89,7 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
 
     public class Connection extends URLConnection {
         final String id;
-        final String providerName;
+        final String providerOrApi;
         final String containerName;
         final String blobName;
         final URL url;
@@ -92,9 +100,9 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
             int index = 0;
             String[] parts = url.getPath().split("/");
             if (url.getHost() == null || url.getHost().trim().length() == 0) {
-                this.providerName = parts[index++];
+                this.providerOrApi = parts[index++];
             } else {
-                this.providerName = url.getHost();
+                this.providerOrApi = url.getHost();
             }
             this.containerName = parts[index++];
             StringBuilder builder = new StringBuilder();
@@ -120,19 +128,19 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
         @Override
         public InputStream getInputStream() throws IOException {
             try {
-                BlobStore blobStore = ServiceHelper.getService(id, providerName, blobStores);
+                BlobStore blobStore = ServiceHelper.getService(id, providerOrApi, blobStores);
                 if (blobStore == null && url.getUserInfo() != null) {
                     String userInfo = url.getUserInfo();
                     String[] ui = userInfo.split(":");
                     if (ui != null && ui.length == 2) {
                         String identity = ui[0];
                         String credential = ui[1];
-                        blobStore = createBlobStore(providerName, identity, credential, new LinkedHashSet<Module>(), new Properties());
+                        blobStore = createBlobStore(providerOrApi, identity, credential, new LinkedHashSet<Module>(), new Properties());
                         blobStores.add(blobStore);
                     }
                 }
                 if (blobStore == null) {
-                    throw new IOException("BlobStore service not available for provider " + providerName);
+                    throw new IOException("BlobStore service not available for provider " + providerOrApi);
                 }
                 if (!blobStore.containerExists(containerName)) {
                     throw new IOException("Container " + containerName + " does not exists");
@@ -151,22 +159,33 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
         @Override
         public OutputStream getOutputStream() throws IOException {
             try {
-                final BlobStore blobStore = ServiceHelper.getService(id, providerName, blobStores);
+                final BlobStore blobStore = ServiceHelper.getService(id, providerOrApi, blobStores);
                 if (!blobStore.containerExists(containerName)) {
                     blobStore.createContainerInLocation(null, containerName);
                 }
-                PipedOutputStream out = new PipedOutputStream();
-                final PipedInputStream is = new PipedInputStream(out);
-                //We want to read the blob from a different Thread to avoid deadlocking.
+
+                final CountDownLatch readLatch = new CountDownLatch(1);
+                final File tmpDir = Files.createTempDir();
+                final File tmpBlob = File.createTempFile("blob", null, tmpDir);
+
+                FileOutputStream out = new FileOutputStream(tmpBlob) {
+                    @Override
+                    public void close() throws IOException {
+                        readLatch.countDown();
+                    }
+                };
+
                 Runnable putBlob = new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            Blob blob = blobStore.getBlob(containerName, blobName);
-                            blob.setPayload(is);
+                            readLatch.await();
+                            Blob blob = blobStore.blobBuilder(blobName).payload(tmpBlob).build();
                             blobStore.putBlob(containerName, blob);
-                        } finally {
-                            Closeables.closeQuietly(is);
+                            tmpBlob.delete();
+                            tmpDir.delete();
+                        } catch (InterruptedException e) {
+                            logger.error("Interrupted while waiting on blob read.", e);
                         }
                     }
                 };
@@ -192,7 +211,7 @@ public class BlobUrlHandler extends AbstractURLStreamHandlerService {
     }
 
     private BlobStore createBlobStore(String providerOrApi, String identity, String credential, Iterable<? extends Module> modules, Properties props) {
-        ContextBuilder builder = ContextBuilder.newBuilder(providerOrApi).credentials(identity,credential).modules(modules).overrides(props);
+        ContextBuilder builder = ContextBuilder.newBuilder(providerOrApi).credentials(identity, credential).modules(modules).overrides(props);
         BlobStoreContext context = builder.build(BlobStoreContext.class);
         BlobStore blobStore = context.getBlobStore();
         return blobStore;

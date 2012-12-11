@@ -78,7 +78,7 @@ public class AwsS3LiveTest extends JcloudsLiveTestSupport {
     }
 
     @Test
-    public void testCreateNodeLive() throws InterruptedException {
+    public void testBlobStoreReadWrite() throws InterruptedException {
         if (isBlobStoreLiveConfigured()) {
             createManagedBlobStoreService("aws-s3");
             BlobStore blobStoreService = getOsgiService(BlobStore.class);
@@ -89,7 +89,7 @@ public class AwsS3LiveTest extends JcloudsLiveTestSupport {
             System.err.println(executeCommand("jclouds:blobstore-create itest-container"));
 
             System.err.println(executeCommand("jclouds:blobstore-write itest-container  myfolder/myfile "+ featureURL ));
-            System.err.println(executeCommand("jclouds:blobstore-write itest-container testblob "+ System.getProperty("jclouds.featureURL")));
+            System.err.println(executeCommand("jclouds:blobstore-write --url-payload itest-container testblob "+ System.getProperty("jclouds.featureURL")));
             System.err.println(executeCommand("jclouds:blobstore-read --display itest-container testblob "));
         }
     }
@@ -119,6 +119,7 @@ public class AwsS3LiveTest extends JcloudsLiveTestSupport {
             OutputStream os = blobUrl.openConnection().getOutputStream();
             try {
                 ByteStreams.copy(is, os);
+                os.flush();
             } finally {
                 Closeables.closeQuietly(is);
                 Closeables.closeQuietly(os);
@@ -163,7 +164,7 @@ public class AwsS3LiveTest extends JcloudsLiveTestSupport {
                 systemProperty("jclouds.karaf.version",MavenUtils.getArtifactVersion(JCLOUDS_KARAF_GROUP_ID, JCLOUDS_KARAF_ARTIFACT_ID)),
                 systemProperty("jclouds.version",MavenUtils.getArtifactVersion(JCLOUDS_GROUP_ID, JCLOUDS_ARTIFACT_ID)),
                 systemProperty("jclouds.featureURL",String.format(JCLOUDS_FEATURE_FORMAT, MavenUtils.getArtifactVersion(JCLOUDS_KARAF_GROUP_ID, JCLOUDS_KARAF_ARTIFACT_ID))),
-                scanFeatures(String.format(JCLOUDS_FEATURE_FORMAT, MavenUtils.getArtifactVersion(JCLOUDS_KARAF_GROUP_ID, JCLOUDS_KARAF_ARTIFACT_ID)),"jclouds", "jclouds-compute", "jclouds-aws-s3").start()
+                scanFeatures(String.format(JCLOUDS_FEATURE_FORMAT, MavenUtils.getArtifactVersion(JCLOUDS_KARAF_GROUP_ID, JCLOUDS_KARAF_ARTIFACT_ID)),"jclouds", "jclouds-commands", "jclouds-aws-s3").start()
         };
     }
 }

@@ -43,7 +43,10 @@
                             org.jclouds*;version=${jclouds.version};resolution:=optional,
                             *
                         </Import-Package>
-                        <Private-Package>org.jclouds.karaf.urlhandler*,org.jclouds.karaf.utils.blobstore</Private-Package>
+                        <Private-Package>
+                            org.jclouds.karaf.urlhandler*,
+                            org.jclouds.karaf.utils
+                        </Private-Package>
                     </instructions>
                 </configuration>
             </plugin>
