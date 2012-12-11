@@ -76,7 +76,7 @@ public abstract class ChefCommandBase extends AbstractAction {
                 }
             }
             sb.append("]");
-            out.println(String.format(PROVIDERFORMAT, api.getId(), "compute", sb.toString()));
+            out.println(String.format(PROVIDERFORMAT, api.getId(), "chef", sb.toString()));
         }
     }
 
