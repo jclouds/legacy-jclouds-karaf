@@ -148,11 +148,11 @@ public class BlobStoreServiceCreateCommand extends BlobStoreCommandWithOptions {
                      dictionary = new Properties();
                   }
 
-                  String providerValue = EnvHelper.getComputeProvider(provider);
-                  String apiValue = EnvHelper.getComputeApi(api);
-                  String identityValue = EnvHelper.getComputeIdentity(identity);
-                  String credentialValue = EnvHelper.getComputeCredential(credential);
-                  String endpointValue = EnvHelper.getComputeEndpoint(endpoint);
+                  String providerValue = EnvHelper.getBlobStoreProvider(provider);
+                  String apiValue = EnvHelper.getBlobStoreApi(api);
+                  String identityValue = EnvHelper.getBlobStoreIdentity(identity);
+                  String credentialValue = EnvHelper.getBlobStoreCredential(credential);
+                  String endpointValue = EnvHelper.getBlobStoreEndpoint(endpoint);
 
                  if (id != null) {
                    dictionary.put(Constants.NAME, id);
