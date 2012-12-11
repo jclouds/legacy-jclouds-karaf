@@ -28,7 +28,6 @@ import org.jclouds.apis.ApiMetadata;
 import org.jclouds.apis.ApiPredicates;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
-import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.karaf.core.Constants;
 import org.jclouds.karaf.services.InvalidConfigurationException;
 import org.jclouds.karaf.services.ServiceFactorySupport;
@@ -145,11 +144,11 @@ public class BlobStoreServiceFactory extends ServiceFactorySupport {
 
     @Override
     public boolean apply(ProviderMetadata provider) {
-        return ProviderPredicates.viewableAs(TypeToken.of(ComputeServiceContext.class)).apply(provider);
+        return ProviderPredicates.viewableAs(TypeToken.of(BlobStoreContext.class)).apply(provider);
     }
 
     @Override
     public boolean apply(ApiMetadata api) {
-        return ApiPredicates.viewableAs(TypeToken.of(ComputeServiceContext.class)).apply(api);
+        return ApiPredicates.viewableAs(TypeToken.of(BlobStoreContext.class)).apply(api);
     }
 }
