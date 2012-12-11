@@ -117,6 +117,13 @@
         <bundle>mvn:org.jclouds.api/openstack-nova/${jclouds.version}</bundle>
     </feature>
 
+    <feature name='jclouds-api-openstack-cinder' description='JClouds - API - OpenStack Cinder' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds-compute</feature>
+        <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/openstack-keystone/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.api/openstack-cinder/${jclouds.version}</bundle>
+    </feature>
+
     <feature name="jclouds-api-s3" description="S3 API" version="${project.version}" resolver="(obr)">
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
@@ -271,7 +278,7 @@
         <bundle>mvn:org.jclouds.provider/cloudfiles-us/${jclouds.version}</bundle>
     </feature>
 
-    <feature name='jclouds-cloudloadbalancers-us' description='Cloud Load Balancers US' version='${project.version}' resolver='(obr)'>
+    <feature name='jclouds-rackspace-cloudloadbalancers-us' description='Cloud Load Balancers US' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <feature version='${project.version}'>jclouds-api-rackspace-cloudidentity</feature>
@@ -280,8 +287,21 @@
         <bundle dependency='true'>mvn:org.jclouds/jclouds-loadbalancer/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.api/cloudloadbalancers/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.provider/cloudloadbalancers-us/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.api/rackspace-cloudloadbalancers/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/rackspace-cloudloadbalancers-us/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name='jclouds-rackspace-cloudloadbalancers-uk' description='Cloud Load Balancers UK' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds</feature>
+        <feature version='${project.version}'>jclouds-driver-log4j</feature>
+        <feature version='${project.version}'>jclouds-api-rackspace-cloudidentity</feature>
+        <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/openstack-keystone/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-loadbalancer/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.api/rackspace-cloudloadbalancers/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.provider/rackspace-cloudloadbalancers-uk/${jclouds.version}</bundle>
     </feature>
 
     <feature name='jclouds-cloudonestorage' description='Cloud One Storage' version='${project.version}' resolver='(obr)'>

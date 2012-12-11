@@ -72,8 +72,13 @@ public class RackspaceFeaturesInstallationTest extends JcloudsFeaturesTestSuppor
     }
 
     @Test
-    public void testCloudLoadBalancersFeature() throws Exception {
-        installAndCheckFeature("jclouds-cloudloadbalancers-us");
+    public void testCloudLoadBalancersUsFeature() throws Exception {
+        installAndCheckFeature("jclouds-rackspace-cloudloadbalancers-us");
+    }
+
+    @Test
+    public void testCloudLoadBalancersUkFeature() throws Exception {
+        installAndCheckFeature("jclouds-rackspace-cloudloadbalancers-uk");
     }
 
 }
