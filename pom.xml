@@ -200,6 +200,61 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Internal dependencies -->
+            <dependency>
+                <groupId>org.jclouds.karaf</groupId>
+                <artifactId>core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jclouds.karaf</groupId>
+                <artifactId>utils</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jclouds.karaf</groupId>
+                <artifactId>recipe</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jclouds.karaf</groupId>
+                <artifactId>cache</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jclouds.karaf</groupId>
+                <artifactId>services</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jclouds.karaf</groupId>
+                <artifactId>commands</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jclouds.karaf.chef</groupId>
+                <artifactId>core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jclouds.karaf.chef</groupId>
+                <artifactId>services</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jclouds.karaf.chef</groupId>
+                <artifactId>commands</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jclouds.karaf</groupId>
+                <artifactId>jclouds-karaf</artifactId>
+                <version>${project.version}</version>
+                <type>xml</type>
+                <classifier>features</classifier>
+            </dependency>
+
 
             <!-- OSGi dependencies -->
             <dependency>
@@ -218,6 +273,34 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.configadmin</artifactId>
                 <version>${configadmin.version}</version>
+            </dependency>
+
+            <!-- Pax Url -->
+            <dependency>
+                <groupId>org.ops4j.pax.url</groupId>
+                <artifactId>pax-url-mvn</artifactId>
+                <version>${pax-url-mvn.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.ops4j.pax.url</groupId>
+                <artifactId>pax-url-aether</artifactId>
+                <version>${pax-url-aether.version}</version>
+            </dependency>
+
+            <!-- Pax Exam Karaf -->
+            <dependency>
+                <groupId>org.openengsb.labs.paxexam.karaf</groupId>
+                <artifactId>paxexam-karaf-container</artifactId>
+                <version>${pax-exam-karaf.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>pax-exam-junit4</artifactId>
+                <version>${pax-exam.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <!-- Guice Dependencies -->
@@ -282,6 +365,12 @@
                 <groupId>org.apache.servicemix.specs</groupId>
                 <artifactId>org.apache.servicemix.specs.scripting-api-1.0</artifactId>
                 <version>${scripting.api.bundle.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.servicemix.specs</groupId>
+                <artifactId>org.apache.servicemix.specs.jsr250-1.0</artifactId>
+                <version>${sericemix.specs.jsr250.version}</version>
             </dependency>
 
             <dependency>
@@ -411,6 +500,11 @@
             </dependency>
             <dependency>
                 <groupId>org.jclouds.driver</groupId>
+                <artifactId>jclouds-slf4j</artifactId>
+                <version>${jclouds.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jclouds.driver</groupId>
                 <artifactId>jclouds-jsch</artifactId>
                 <version>${jclouds.version}</version>
             </dependency>
@@ -430,12 +524,18 @@
                 <version>${jclouds.chef.version}</version>
             </dependency>
 
-
             <!-- Karaf Dependencies -->
             <dependency>
                 <groupId>org.apache.karaf.shell</groupId>
                 <artifactId>org.apache.karaf.shell.console</artifactId>
                 <version>${karaf.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.karaf</groupId>
+                <artifactId>apache-karaf</artifactId>
+                <version>${karaf.version}</version>
+                <type>tar.gz</type>
             </dependency>
 
         </dependencies>

@@ -31,6 +31,19 @@
     <packaging>bundle</packaging>
     <name>JClouds :: Karaf :: Chef :: Cache</name>
 
+    <properties>
+        <osgi.export>org.jclouds.karaf.chef.cache;version=${project.version};-noimport:=true</osgi.export>
+        <osgi.export.service>org.jclouds.karaf.cache.CacheProvider</osgi.export.service>
+        <osgi.import>
+            org.jclouds.chef*;version=${jclouds.chef.version},
+            org.jclouds.karaf.cache*,
+            org.jclouds*;version=${jclouds.version},
+            *
+        </osgi.import>
+        <osgi.private>org.jclouds.karaf.cache.utils</osgi.private>
+        <osgi.activator>org.jclouds.karaf.chef.cache.Activator</osgi.activator>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.osgi</groupId>
@@ -43,12 +56,10 @@
         <dependency>
             <groupId>org.jclouds.karaf</groupId>
             <artifactId>cache</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jclouds.api</groupId>
             <artifactId>chef</artifactId>
-            <version>${jclouds.chef.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -59,33 +70,5 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <configuration>
-                    <instructions>
-                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
-                        <Export-Package>org.jclouds.karaf.chef.cache;version=${project.version};-noimport:=true</Export-Package>
-                        <Export-Service>org.jclouds.karaf.cache.CacheProvider</Export-Service>
-                        <Import-Package>
-                            org.jclouds.chef*;version=${jclouds.chef.version},
-                            org.jclouds.karaf.cache*,
-                            org.jclouds*;version=${jclouds.version},
-                            *
-                        </Import-Package>
-                        <Private-Package>
-                            org.jclouds.karaf.cache.utils
-                        </Private-Package>
-                        <Bundle-Activator>org.jclouds.karaf.chef.cache.Activator</Bundle-Activator>
-                    </instructions>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
-
 
 </project>
