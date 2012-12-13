@@ -34,42 +34,29 @@
     <packaging>bundle</packaging>
     <name>JClouds :: Karaf :: Chef :: Services</name>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <configuration>
-                    <instructions>
-                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
-                        <Bundle-Activator>org.jclouds.karaf.chef.services.Activator</Bundle-Activator>
-                        <Export-Package />
-                        <Import-Package>*</Import-Package>
-                        <Private-Package>
-                            org.jclouds.karaf.chef.core*,
-                            org.jclouds.karaf.chef.services*
-                        </Private-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <properties>
+        <osgi.import>*</osgi.import>
+        <osgi.private>
+            org.jclouds.karaf.chef.core*,
+            org.jclouds.karaf.chef.services*
+        </osgi.private>
+        <osgi.activator>
+            org.jclouds.karaf.chef.services.Activator
+        </osgi.activator>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.jclouds.karaf</groupId>
             <artifactId>services</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jclouds.karaf</groupId>
             <artifactId>recipe</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jclouds.karaf.chef</groupId>
             <artifactId>core</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jclouds</groupId>
@@ -78,7 +65,6 @@
         <dependency>
             <groupId>org.jclouds.api</groupId>
             <artifactId>chef</artifactId>
-            <version>${jclouds.chef.version}</version>
         </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
@@ -105,6 +91,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 
 </project>

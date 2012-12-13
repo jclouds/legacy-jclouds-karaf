@@ -80,41 +80,30 @@
         </osgi.export.service>
     </properties>
 
-
-
     <dependencies>
         <!-- Internal Dependencies -->
         <dependency>
             <groupId>org.jclouds.karaf</groupId>
             <artifactId>cache</artifactId>
-            <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.jclouds.karaf</groupId>
             <artifactId>core</artifactId>
-            <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.jclouds.karaf</groupId>
             <artifactId>recipe</artifactId>
-            <version>${project.version}</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.jclouds.karaf</groupId>
             <artifactId>utils</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.jclouds.karaf</groupId>
             <artifactId>services</artifactId>
-            <version>${project.version}</version>
         </dependency>
-
+        <!-- Jclouds Dependencies -->
         <dependency>
             <groupId>org.jclouds</groupId>
             <artifactId>jclouds-core</artifactId>

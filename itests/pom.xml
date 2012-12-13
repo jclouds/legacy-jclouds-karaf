@@ -39,19 +39,16 @@
         <dependency>
             <groupId>org.ops4j.pax.url</groupId>
             <artifactId>pax-url-mvn</artifactId>
-            <version>${pax-url-mvn.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.ops4j.pax.url</groupId>
             <artifactId>pax-url-aether</artifactId>
-            <version>${pax-url-aether.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.karaf</groupId>
             <artifactId>apache-karaf</artifactId>
-            <version>${karaf.version}</version>
             <type>tar.gz</type>
         </dependency>
 
@@ -66,13 +63,11 @@
         <dependency>
             <groupId>org.apache.servicemix.specs</groupId>
             <artifactId>org.apache.servicemix.specs.jsr250-1.0</artifactId>
-            <version>${sericemix.specs.jsr250.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.jclouds.karaf</groupId>
             <artifactId>jclouds-karaf</artifactId>
-            <version>${project.version}</version>
             <type>xml</type>
             <classifier>features</classifier>
         </dependency>
@@ -80,42 +75,36 @@
         <dependency>
             <groupId>org.jclouds.karaf</groupId>
             <artifactId>core</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.jclouds</groupId>
             <artifactId>jclouds-core</artifactId>
-            <version>${jclouds.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.jclouds.driver</groupId>
             <artifactId>jclouds-log4j</artifactId>
-            <version>${jclouds.version}</version>
             <scope>test</scope>
         </dependency>
 
          <dependency>
             <groupId>org.jclouds</groupId>
             <artifactId>jclouds-compute</artifactId>
-            <version>${jclouds.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.jclouds</groupId>
             <artifactId>jclouds-blobstore</artifactId>
-            <version>${jclouds.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
            <groupId>org.jclouds.api</groupId>
            <artifactId>ec2</artifactId>
-           <version>${jclouds.version}</version>
            <scope>test</scope>
        </dependency>
 
@@ -123,14 +112,12 @@
         <dependency>
             <groupId>org.openengsb.labs.paxexam.karaf</groupId>
             <artifactId>paxexam-karaf-container</artifactId>
-            <version>${pax-exam-karaf.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.ops4j.pax.exam</groupId>
             <artifactId>pax-exam-junit4</artifactId>
-            <version>${pax-exam.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -145,7 +132,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
