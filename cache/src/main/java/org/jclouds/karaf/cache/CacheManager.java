@@ -70,12 +70,12 @@ public class CacheManager<T> implements Runnable {
         }
     }
 
-    public  void bindCachable(Cacheable<T> cacheable) {
+    public void bindCacheable(Cacheable<T> cacheable) {
         this.cacheables.add(cacheable);
         scheduledExecutorService.submit(new UpdateCachesTask(Arrays.asList(cacheable), services));
     }
 
-    public void unbindCachable(Cacheable<T> cacheable) {
+    public void unbindCacheable(Cacheable<T> cacheable) {
         if (cacheables != null) {
             this.cacheables.remove(cacheable);
         }

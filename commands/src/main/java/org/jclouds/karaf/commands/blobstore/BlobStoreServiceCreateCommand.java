@@ -69,7 +69,7 @@ public class BlobStoreServiceCreateCommand extends BlobStoreCommandWithOptions {
                   .println("Provider / api currently not installed. Service will be created once it does get installed.");
          return null;
       } else {
-        System.out.println(String.format("Waiting for blostore service with name: %s.", name));
+        System.out.println(String.format("Waiting for blobstore service with name: %s.", name));
         waitForBlobStore(bundleContext, name, provider, api);
       }
       return null;

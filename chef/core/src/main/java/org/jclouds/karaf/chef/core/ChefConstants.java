@@ -23,10 +23,10 @@ public class ChefConstants {
 
     public static final String NAME = "name";
     public static final String API = "api";
-    public static final String ENDPOINT = "endpint";
+    public static final String ENDPOINT = "endpoint";
     public static final String VALIDATOR_NAME = "validator.name";
-    public static final String VALDIATOR_KEY_FILE = "validator.keyFile";
-    public static final String VALDIATOR_CREDENTIAL = "validator.credential";
+    public static final String VALIDATOR_KEY_FILE = "validator.keyFile";
+    public static final String VALIDATOR_CREDENTIAL = "validator.credential";
     public static final String CLIENT_NAME = "client.name";
     public static final String CLIENT_KEY_FILE = "client.keyFile";
     public static final String CLIENT_CREDENTIAL = "client.credential";

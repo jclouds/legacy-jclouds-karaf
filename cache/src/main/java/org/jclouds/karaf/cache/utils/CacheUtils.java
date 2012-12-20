@@ -75,7 +75,7 @@ public class CacheUtils {
             public Object addingService(ServiceReference reference) {
                 Object service = super.addingService(reference);
                 if (Cacheable.class.isAssignableFrom(service.getClass())) {
-                    cacheManager.bindCachable((Cacheable) service);
+                    cacheManager.bindCacheable((Cacheable) service);
                 }
                 return service;
             }
@@ -83,7 +83,7 @@ public class CacheUtils {
             @Override
             public void removedService(ServiceReference reference, Object service) {
                 if (Cacheable.class.isAssignableFrom(service.getClass())) {
-                    cacheManager.unbindCachable((Cacheable) service);
+                    cacheManager.unbindCacheable((Cacheable) service);
                 }
                 super.removedService(reference, service);
             }

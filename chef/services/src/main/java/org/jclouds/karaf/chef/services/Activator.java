@@ -45,7 +45,7 @@ public class Activator implements BundleActivator {
 
     public void start(final BundleContext context) throws Exception {
         registerChefServiceFactory(context);
-        //We use the system bundle context to avoid issues with InvlidBundleContext.
+        //We use the system bundle context to avoid issues with InvalidBundleContext.
         chefServiceTracker = new ServiceTracker(context.getBundle(0).getBundleContext(), ChefService.class.getName(), null) {
             @Override
             public Object addingService(ServiceReference reference) {

@@ -45,7 +45,7 @@ public class BasicShellTableFactory implements ShellTableFactory {
       String headersValue = String.valueOf(properties.get(type + "." + HEADERS_KEY));
       String expressionsValue = String.valueOf(properties.get(type + "." + EXPRESSIONS_KEY));
       String alignValue = String.valueOf(properties.get(type + "." + ALIGN_KEY));
-      String shortByValue = String.valueOf(properties.get(type + "." + SHORTBY_KEY));
+      String sortByValue = String.valueOf(properties.get(type + "." + SORTBY_KEY));
       Boolean ascendingValue = Boolean.parseBoolean(String.valueOf(properties.get(type + "." + ASCENDING_KEY)));
 
       List<String> headers =  Arrays.asList(headersValue.split(delimiter));
@@ -57,7 +57,7 @@ public class BasicShellTableFactory implements ShellTableFactory {
       shellTable.setHeaders(headers);
       shellTable.setDisplayExpression(expressions);
       shellTable.setAlignments(alignments);
-      shellTable.setSortBy(shortByValue);
+      shellTable.setSortBy(sortByValue);
       shellTable.setAscending(ascendingValue);
       return shellTable;
   }

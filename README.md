@@ -54,7 +54,7 @@ To see the list of installed providers and apis or remove the service for one of
 
 **Using the Karaf config commands**
 
-To create a compute service using the Karaf's integration with the configuration admin all that needs to be done is to create a configuration with fabctory pid: org.jclouds.compute.
+To create a compute service using the Karaf's integration with the configuration admin all that needs to be done is to create a configuration with factory pid: org.jclouds.compute.
 
     karaf@root> config:edit  org.jclouds.compute-ec2
     karaf@root> config:propset provider aws-ec2
@@ -133,7 +133,7 @@ You can bypass this by specifying the <i>--store-url</i> and store the url as a 
 
 BlobStore URL Handler
 ---------------------
-The commands above are usefull when using the shell, but most of the time you will want the use of blobstore to be transparent.
+The commands above are useful when using the shell, but most of the time you will want the use of blobstore to be transparent.
 Jclouds Karaf also provides a url handler which will allow you to use blobstore by using URLs of the following format:
 
 <b>blob:/PROVIDER/CONTAINER/BLOB</b>
@@ -150,7 +150,7 @@ You can install the chef api, with the following command:
 
     karaf@root> features:install jclouds-chef-api
 
-Managed Service Factories and commands are also provided for Chef. The managed service factory allows you to create a reusable service just by passing the configuration. To install the managed serivce factories and the chef commands, you need to install the jclouds-chef feature:
+Managed Service Factories and commands are also provided for Chef. The managed service factory allows you to create a reusable service just by passing the configuration. To install the managed service factories and the chef commands, you need to install the jclouds-chef feature:
 
     karaf@root>features:install jclouds-chef
 
@@ -167,9 +167,9 @@ Once the service has been create, you can list your cookbooks using:
 
     karaf@root>chef:cookbook-list
 
-**Using the Chef Serivce with any Provider / Api:**
+**Using the Chef Service with any Provider / Api:**
 Once you have created the chef service and have made sure a couple of cookbooks are uploaded. You can use chef with any other compute service in your system.
-In the exmaple above it will be used with EC2:
+In the example above it will be used with EC2:
 
     karaf@root>node-create --imageId eu-west-1/ami-c1aaabb5 --hardwareId m1.medium --adminAccess  karaf
 
@@ -183,11 +183,11 @@ The above can be also performed in a single step using the --recipe option:
     karaf@root>node-create --imageId eu-west-1/ami-c1aaabb5 --hardwareId m1.medium --adminAccess --recipe chef/java::openjdk karaf
 
 
-Using multiple serives per provider/api
----------------------------------------
+Using multiple services per provider/api
+----------------------------------------
 
-As of jclouds-karaf 1.5.0 you are able to register multiple compute and blobstore services per provider or api. The commands will allow you to specify which serivce to use (just specifying provider/api isn't enough since we have multiple services).
-To "name" the service, you can use the --id option in the serivce create commands. If no id is specified the provider/api name will be used instead.
+As of jclouds-karaf 1.5.0 you are able to register multiple compute and blobstore services per provider or api. The commands will allow you to specify which service to use (just specifying provider/api isn't enough since we have multiple services).
+To "name" the service, you can use the --id option in the service create commands. If no id is specified the provider/api name will be used instead.
 
 For compute services:
 
@@ -195,7 +195,7 @@ For compute services:
     jclouds:node-list --id aws1
 
 
-This can be very usefull when you want to configure either different accounts per provider/api or use different configuration options. A small example:
+This can be very useful when you want to configure either different accounts per provider/api or use different configuration options. A small example:
 
     jclouds:compute-service-create --id aws-eu-west-1 --provider aws-ec2 --add-option jclouds.regions=eu-west-1
     jclouds:compute-service-create --id aws-us-east-1 --provider aws-ec2 --add-option jclouds.regions=us-east-1
@@ -236,9 +236,9 @@ For Compute Services:
 
 * **JCLOUDS_COMPUTE_PROVIDER** The name of the compute provider.
 * **JCLOUDS_COMPUTE_API** The name of the compute api.
-* **JCLOUDS_COMPUTE_IDENTITY** The identiy for accessing the compute provider.
+* **JCLOUDS_COMPUTE_IDENTITY** The identity for accessing the compute provider.
 * **JCLOUDS_COMPUTE_CREDENTIAL** The credential for accessing the compute provider.
-* **JCLOUDS_COMPUTE_ENDPOINT** The endpoint (This is usally needed when using compute apis).
+* **JCLOUDS_COMPUTE_ENDPOINT** The endpoint (This is usually needed when using compute apis).
 * **JCLOUDS_USER** The username of that will be used for accessing compute instances.
 * **JCLOUDS_PASSWORD** The password that will be used for accessing compute instances.
 
@@ -246,9 +246,9 @@ For Blob Stores:
 
 * **JCLOUDS_BLOBSTORE_PROVIDER** The name of the blobstore provider.
 * **JCLOUDS_BLOBSTORE_API** The name of the blobstore api.
-* **JCLOUDS_BLOBSTORE_IDENTITY** The identiy for accessing the blobstore provider.
+* **JCLOUDS_BLOBSTORE_IDENTITY** The identity for accessing the blobstore provider.
 * **JCLOUDS_BLOBSTORE_CREDENTIAL** The credential for accessing the blobstore provider.
-* **JCLOUDS_BLOBSTORE_ENDPOINT** The endpoint (This is usally needed when using blobstore apis).
+* **JCLOUDS_BLOBSTORE_ENDPOINT** The endpoint (This is usually needed when using blobstore apis).
 
 For Chef:
 
@@ -259,7 +259,7 @@ For Chef:
 * **JCLOUDS_CHEF_VALIDATOR_NAME** The validator name.
 * **JCLOUDS_CHEF_VALIDATOR_CREDENTIAL** The validator credential.
 * **JCLOUDS_CHEF_VALIDATOR_KEY_FILE** The path of the validator key file (can be used instead of the above).
-* **JCLOUDS_CHEF_ENDPOINT** The endpoint (This is usally needed when using chef apis).
+* **JCLOUDS_CHEF_ENDPOINT** The endpoint (This is usually needed when using chef apis).
 
 
 Configuring command output
@@ -277,7 +277,7 @@ The suffix defines the configuration topic. For example hardware.headers defines
 In the following commands the hardware category will be used as example.
 
 **Defining the command headers**
-To specify the headers of a command we need to place to specify the headers configuration as a semicoln separated list.
+To specify the headers of a command we need to place to specify the headers configuration as a semicolon separated list.
 For hardware:
 
 
@@ -286,7 +286,7 @@ For hardware:
 
 **Defining the display data**
 Display data are configured as a comma separated list of expressions (using the scripting engine of your choice, default is groovy). The expressions will be evaluated on the object of interest (in our example the hardware object).
-To display the id field of the hardware object the expression to use is hardware.id. The reason for choosing groovy (as a default) for retrieving the data and not a simple expression language is that groovy is powerfull and can be used for more complex expressions.
+To display the id field of the hardware object the expression to use is hardware.id. The reason for choosing groovy (as a default) for retrieving the data and not a simple expression language is that groovy is powerful and can be used for more complex expressions.
 For example the Hardware object contains a collection of Processors and each processor has a filed of cores. To display the sum of cores among processors, we can use the following expression: hardware.processors.sum{it.cores}.
 
 You can change the scripting engine:
@@ -303,14 +303,14 @@ The configuration above will display the hardware id in the first column, the ha
 
 **Defining the sort order**
 To specify the sort column, the sortBy option can be used to point to the header of the column of interest.
-For example hardware hardware.shortby=[cpu].
+For example hardware hardware.sortby=[cpu].
 
-**Changing the delimeter**
+**Changing the delimiter**
 Most of the configuration options for the shell table are passed as delimited strings. What happens when you want to change the delimiter?
-By default the delimeter is the semicoln symbol, but for each command category you can specify the delimiter. For example:
+By default the delimiter is the semicolon symbol, but for each command category you can specify the delimiter. For example:
 
 
-    hardware.delimeter=,
+    hardware.delimiter=,
     hardware.headers=[id],[ram],[cpu],[cores]
 
 
