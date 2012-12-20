@@ -191,12 +191,12 @@ public class ServiceHelper {
      * @param <T>
      * @return
      */
-    public static <S, T> T callMethod(S service, String methodNane, Class<T> returnType) {
+    public static <S, T> T callMethod(S service, String methodName, Class<T> returnType) {
         T result = null;
         Class c = service.getClass();
         try {
             //Ugly way to get the Context, but there doesn't seem to be a better one.
-            Method m = c.getMethod(methodNane);
+            Method m = c.getMethod(methodName);
             Object obj = m.invoke(service);
             if (returnType.isAssignableFrom(obj.getClass())) {
                 result = returnType.cast(obj);

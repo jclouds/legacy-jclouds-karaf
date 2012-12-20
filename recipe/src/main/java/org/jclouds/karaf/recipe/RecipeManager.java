@@ -28,7 +28,7 @@ import org.jclouds.scriptbuilder.domain.Statement;
 public interface RecipeManager {
 
     /**
-     * Returns the recipe that corresponds to the spcecified coords.
+     * Returns the recipe that corresponds to the specified coords.
      * @param coords
      * @return
      */

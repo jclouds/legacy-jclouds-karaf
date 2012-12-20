@@ -29,7 +29,7 @@ public interface ShellTableFactory {
   String HEADERS_KEY = "headers";
   String ALIGN_KEY = "alignments";
   String EXPRESSIONS_KEY = "expressions";
-  String SHORTBY_KEY = "shortby";
+  String SORTBY_KEY = "sortby";
   String ASCENDING_KEY = "ascending";
 
   ShellTable build(String type);

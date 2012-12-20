@@ -143,7 +143,7 @@ public class ChefHelper {
     }
 
     /**
-     * Returns the validator pem localtion value and falls back to env if the specified value is null.
+     * Returns the validator pem location value and falls back to env if the specified value is null.
      *
      * @param validatorKeyFile
      * @return

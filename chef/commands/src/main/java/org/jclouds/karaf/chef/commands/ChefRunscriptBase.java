@@ -42,7 +42,7 @@ public abstract class ChefRunscriptBase extends RunScriptBase {
     @Option(name = "--validator-name", description = "The name of the validator.")
     protected String validatorName;
 
-    @Option(name = "--validator-key-file", description = "The patht to the validator key file.")
+    @Option(name = "--validator-key-file", description = "The path to the validator key file.")
     protected String validatorKeyFile;
 
     @Option(name = "--chef-endpoint", description = "The endpoint to use for a chef service.")

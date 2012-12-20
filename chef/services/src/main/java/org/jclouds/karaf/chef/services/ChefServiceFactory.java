@@ -89,8 +89,8 @@ public class ChefServiceFactory extends ServiceFactorySupport {
                 String clientKeyFile = (String) properties.get(ChefConstants.CLIENT_KEY_FILE);
                 String clientCredential = (String) properties.get(ChefConstants.CLIENT_CREDENTIAL);
                 String validatorName = (String) properties.get(ChefConstants.VALIDATOR_NAME);
-                String validatorKeyFile = (String) properties.get(ChefConstants.VALDIATOR_KEY_FILE);
-                String validatorCredential = (String) properties.get(ChefConstants.VALDIATOR_CREDENTIAL);
+                String validatorKeyFile = (String) properties.get(ChefConstants.VALIDATOR_KEY_FILE);
+                String validatorCredential = (String) properties.get(ChefConstants.VALIDATOR_CREDENTIAL);
                 String endpoint = (String) properties.get(ChefConstants.ENDPOINT);
 
                 ChefService service = ChefHelper.createChefService(apiMetadata, id, clientName, clientCredential, clientKeyFile, validatorName, validatorCredential, validatorKeyFile, endpoint);
