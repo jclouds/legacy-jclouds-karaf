@@ -2,24 +2,24 @@
 
 This project currently hosts a Karaf feature repository for easy installation of jclouds inside Apache Karaf. It also provides Managed Service Factories for creating Compute and BlobStore services. Last but not least it provides a rich command set for using jclouds from the Karaf shell.
 
-There is also support for using chef via [jclouds-chef](https://github.com/jclouds/jclouds-chef/)  integration.
+There is also support for using chef via [jclouds-chef](https://github.com/jclouds/jclouds-chef/) integration.
 
 Usage Instructions
-===================
+==================
 The instructions will make use of Amazon EC2 and S3, but can be applied to any provider or api supported by jclouds.
 
 On Karaf 2.2.5 or later:
 
 Install jclouds AWS Modules
-----------------------------
+---------------------------
 Install the feature and a provider for blobstore and compute service:
-   
+
     karaf@root> features:addurl mvn:org.jclouds.karaf/jclouds-karaf/1.5.0/xml/features
     karaf@root> features:install jclouds-aws-s3
     karaf@root> features:install jclouds-aws-ec2
 
 Install Karaf Commands:
-    
+
     karaf@root> features:install jclouds-commands
 
 To see the list of available jclouds modules for Karaf
@@ -64,19 +64,19 @@ To create a compute service using the Karaf's integration with the configuration
     karaf@root> config:update
 
 Use the compute service commands
-    
+
     karaf@root> jclouds:node-create --imageId YOUR_IMAGE_ID --locationId YOUR_LOCATION_ID GROUPNAME
     karaf@root> jclouds:node-list.
 
 If you don't want/need to specify specific image, you specify the os family and the os version
 
     karaf@root> jclouds:node-create --os-family OS_FAMILY --os-version OS_VERSION --locationId YOUR_LOCATION_ID GROUPNAME
-    
-<b>Note:<b> You can supply additional options to select hardware etc.    
+
+<b>Note:</b> You can supply additional options to select hardware etc.
 
 
 Run a script to a single node or a group of nodes:
-    
+
     karaf@root> jclouds:group-runscript --script-url URL_OF_THE_SCRIPT GROUPNAME.
     karaf@root> jclouds:node-runscript --script-url URL_OF_THE_SCRIPT NODEID.
 
@@ -94,7 +94,7 @@ Shutdown all your nodes or the nodes of a specific group:
 
 
 BlobStore
-----------
+---------
 There are currently two ways of creating a service for blobstore service:
 
 * **Using the jclouds:blobstore-service-create-command**
@@ -264,7 +264,7 @@ For Chef:
 
 Configuring command output
 --------------------------
-As of jclouds-karaf version 1.5.0-beta.11_1 jclouds-karaf commands support output customization. The customization features are:
+As of jclouds-karaf version 1.5.0-beta.11 jclouds-karaf commands support output customization. The customization features are:
 
 * **Width calculation** The commands calculate the required column width and adjust the format accordingly.
 * **Configurable columns** Can add remove columns using configuration.
@@ -316,7 +316,7 @@ By default the delimiter is the semicolon symbol, but for each command category 
 
 Using jclouds-karaf with the OBR features of Karaf
 --------------------------------------------------
-There are cases were there are small discrepancies between the jclouds-karaf required bundles and the ones that are used in your project. Even though inside OSGi you can have multiple versions of a bundle, it often doesn't make sense for micro versions. 
+There are cases were there are small discrepancies between the jclouds-karaf required bundles and the ones that are used in your project. Even though inside OSGi you can have multiple versions of a bundle, it often doesn't make sense for micro versions.
 
 To avoid that you can install the obr feature of Karaf before installing jclouds-karaf. The obr feature among others provides the obr resolver, which will try to check if osgi package requirements are satisfied by existing bundles, before installing new bundles.
 
