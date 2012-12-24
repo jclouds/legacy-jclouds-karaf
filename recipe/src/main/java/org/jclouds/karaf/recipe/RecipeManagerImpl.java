@@ -41,7 +41,7 @@ public class RecipeManagerImpl implements RecipeManager {
                 return provider.createStatement(recipe, group);
             }
         } else {
-            throw new IllegalArgumentException("Recipe coords should have the follwing format <recipe provider>/<recipe>");
+            throw new IllegalArgumentException("Recipe coords should have the following format <recipe provider>/<recipe>");
         }
     }
 

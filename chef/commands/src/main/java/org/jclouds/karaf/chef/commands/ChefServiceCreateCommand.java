@@ -159,7 +159,7 @@ public class ChefServiceCreateCommand extends ChefCommandWithOptions {
                             dictionary.put(ChefConstants.VALIDATOR_NAME, validatorNameValue);
                         }
                         if (validatorKeyFileValue != null) {
-                            dictionary.put(ChefConstants.VALDIATOR_KEY_FILE, validatorKeyFileValue);
+                            dictionary.put(ChefConstants.VALIDATOR_KEY_FILE, validatorKeyFileValue);
                         }
 
                         for (Map.Entry<String, String> entry : props.entrySet()) {
