@@ -20,7 +20,6 @@
 package org.jclouds.karaf.commands.blobstore;
 
 import com.google.common.base.Strings;
-import com.google.common.io.ByteStreams;
 import com.google.common.io.InputSupplier;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.console.AbstractAction;
@@ -141,9 +140,9 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
     * @param blobStore
     * @param bucket
     * @param blobName
-    * @param is
+    * @param blob
     */
-   public void write(BlobStore blobStore, String bucket, String blobName, InputStream is) {
+   public void write(BlobStore blobStore, String bucket, String blobName, Blob blob) {
       try {
          if (blobName.contains("/")) {
             String directory = BlobStoreUtils.parseDirectoryFromPath(blobName);
@@ -152,9 +151,7 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
             }
          }
 
-         Blob blob = blobStore.blobBuilder(blobName).payload(ByteStreams.toByteArray(is)).build();
          blobStore.putBlob(bucket, blob);
-         is.close();
       } catch (Exception ex) {
          LOGGER.warn("Error closing input stream.", ex);
       }

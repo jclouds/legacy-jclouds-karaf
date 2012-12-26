@@ -19,17 +19,18 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.FileInputStream;
+import java.io.File;
 import java.net.URL;
 
+import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
 
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.blobstore.BlobStore;
+import org.jclouds.blobstore.domain.BlobBuilder;
 
 /**
  * @author: iocanel
@@ -62,19 +63,21 @@ public class BlobWriteCommand extends BlobStoreCommandWithOptions {
          return null;
       }
 
-      InputStream input;
+      BlobBuilder builder = blobStore.blobBuilder(blobName);
       if (stringPayload) {
-         input = new ByteArrayInputStream(payload.getBytes());  // use default Charset
+         builder = builder.payload(payload.getBytes());  // use default Charset
       } else if (urlPayload) {
-         input = new URL(payload).openStream();
+         InputStream input = new URL(payload).openStream();
+         try {
+            builder = builder.payload(ByteStreams.toByteArray(input));
+         } finally {
+            input.close();
+         }
       } else {
-         input = new FileInputStream(payload);
+         builder = builder.payload(new File(payload));
       }
-      try {
-         write(blobStore, containerName, blobName, input);
-      } finally {
-         Closeables.closeQuietly(input);
-      }
+
+      write(blobStore, containerName, blobName, builder.build());
 
       cacheProvider.getProviderCacheForType("container").put(blobStore.getContext().unwrap().getId(), containerName);
       cacheProvider.getProviderCacheForType("blob").put(blobStore.getContext().unwrap().getId(), blobName);
