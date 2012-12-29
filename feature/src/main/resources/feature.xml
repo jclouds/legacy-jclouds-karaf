@@ -33,7 +33,7 @@
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.oauth-commons/${net.oauth.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jersey-core/${jersey.bundle.version}</bundle>
         <bundle dependency='true'>mvn:com.google.code.gson/gson/${gson.version}</bundle>
-        <bundle dependency='true'>mvn:org.bouncycastle/bcprov-jdk15/${bcprov.version}</bundle>
+        <bundle dependency='true'>mvn:org.bouncycastle/bcpkix-jdk15on/${bcpkix.version}</bundle>
         <bundle>mvn:org.jclouds/jclouds-core/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds/jclouds-blobstore/${jclouds.version}</bundle>
     </feature>
@@ -197,7 +197,7 @@
 
     <feature name='jclouds-driver-bouncycastle' description='JClouds - Drivers - Bouncycastle' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
-        <bundle>mvn:org.bouncycastle/bcprov-jdk15/${bcprov.version}</bundle>
+        <bundle>mvn:org.bouncycastle/bcpkix-jdk15on/${bcpkix.version}</bundle>
     </feature>
 
     <feature name='jclouds-aws-cloudwatch' description='Amazon Web Service - Cloudwatch' version='${project.version}' resolver='(obr)'>
