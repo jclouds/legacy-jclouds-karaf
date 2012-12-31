@@ -146,7 +146,7 @@
 
     <properties>
         <aopalliance.bundle.version>1.0_5</aopalliance.bundle.version>
-        <bcprov.version>1.46</bcprov.version>
+        <bcprov.version>1.47</bcprov.version>
         <commons-io.bundle.version>1.4_2</commons-io.bundle.version>
         <configadmin.version>1.2.8</configadmin.version>
         <easymock.version>3.0</easymock.version>
@@ -333,13 +333,7 @@
 
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15</artifactId>
-                <version>${bcprov.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk16</artifactId>
+                <artifactId>bcprov-jdk15on</artifactId>
                 <version>${bcprov.version}</version>
             </dependency>
 
