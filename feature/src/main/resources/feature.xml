@@ -59,15 +59,6 @@
         <bundle>mvn:org.jclouds.api/filesystem/${jclouds.version}</bundle>
     </feature>
 
-    <feature name='jclouds-api-eucalyptus' description='JClouds - API - Eucalyptus' version='${project.version}' resolver='(obr)'>
-        <feature version='${project.version}'>jclouds</feature>
-        <feature version='${project.version}'>jclouds-driver-sshj</feature>
-        <feature version='${project.version}'>jclouds-driver-log4j</feature>
-        <bundle>mvn:org.jclouds.api/ec2/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.api/eucalyptus/${jclouds.version}</bundle>
-    </feature>
-
     <feature name='jclouds-api-elasticstack' description='JClouds - API - Elasticstack' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-jsch</feature>
@@ -97,14 +88,6 @@
         <bundle dependency='true'>mvn:org.jclouds.api/openstack-keystone/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.api/swift/${jclouds.version}</bundle>
-    </feature>
-
-    <feature name='jclouds-api-nova' description='JClouds - API - Nova' version='${project.version}' resolver='(obr)'>
-        <feature version='${project.version}'>jclouds-compute</feature>
-        <feature version='${project.version}'>jclouds-driver-sshj</feature>
-        <feature version='${project.version}'>jclouds-driver-log4j</feature>
-        <bundle dependency='true'>mvn:org.jclouds.common/openstack-common/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.api/nova/${jclouds.version}</bundle>
     </feature>
 
     <feature name='jclouds-api-openstack-nova' description='JClouds - API - OpenStack Nova' version='${project.version}' resolver='(obr)'>
@@ -410,21 +393,6 @@
         <bundle>mvn:org.jclouds.provider/elastichosts-tor-p/${jclouds.version}</bundle>
     </feature>
 
-    <feature name='jclouds-eucalyptus-s3' description='Eucalyptus Partner - S3' version='${project.version}' resolver='(obr)'>
-        <feature version='${project.version}'>jclouds</feature>
-        <feature version='${project.version}'>jclouds-driver-log4j</feature>
-        <feature version='${project.version}'>jclouds-api-s3</feature>
-        <bundle dependency='true'>mvn:org.jclouds.api/walrus/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.provider/eucalyptus-partnercloud-s3/${jclouds.version}</bundle>
-    </feature>
-
-    <feature name='jclouds-eucalyptus-ec2' description='Eucalyptus Partner - EC2' version='${project.version}' resolver='(obr)'>
-        <feature version='${project.version}'>jclouds</feature>
-        <feature version='${project.version}'>jclouds-api-eucalyptus</feature>
-        <feature version='${project.version}'>jclouds-api-ec2</feature>
-        <bundle>mvn:org.jclouds.provider/eucalyptus-partnercloud-ec2/${jclouds.version}</bundle>
-    </feature>
-
     <feature name='jclouds-gogrid' description='GoGrid' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-compute</feature>
@@ -496,14 +464,6 @@
         <bundle>mvn:org.jclouds.provider/openhosting-east1/${jclouds.version}</bundle>
     </feature>
 
-     <feature name='jclouds-rimuhosting' description='ComputeService implementation of RimuHosting datacenters' version='${project.version}' resolver='(obr)'>
-        <feature version='${project.version}'>jclouds</feature>
-        <feature version='${project.version}'>jclouds-compute</feature>
-        <feature version='${project.version}'>jclouds-driver-sshj</feature>
-        <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
-        <bundle>mvn:org.jclouds.provider/rimuhosting/${jclouds.version}</bundle>
-    </feature>
-
     <feature name='jclouds-serverlove-z1-man' description='Serverlove implementation targeted to Manchester' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-compute</feature>
@@ -525,14 +485,6 @@
         <feature version='${project.version}'>jclouds-compute</feature>
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
         <bundle>mvn:org.jclouds.provider/softlayer/${jclouds.version}</bundle>
-    </feature>
-
-    <feature name='jclouds-slicehost' description='ComputeService implementation of Slicehost datacenters' version='${project.version}' resolver='(obr)'>
-        <feature version='${project.version}'>jclouds</feature>
-        <feature version='${project.version}'>jclouds-compute</feature>
-        <feature version='${project.version}'>jclouds-driver-sshj</feature>
-        <bundle dependency='true'>mvn:org.jclouds.api/elasticstack/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.provider/slicehost/${jclouds.version}</bundle>
     </feature>
 
     <feature name='jclouds-synaptic-storage' description='Synaptic Storage as a Service' version='${project.version}' resolver='(obr)'>
