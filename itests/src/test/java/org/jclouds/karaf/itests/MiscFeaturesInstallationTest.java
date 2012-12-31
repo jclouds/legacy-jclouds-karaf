@@ -48,16 +48,6 @@ public class MiscFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
     }
 
     @Test
-    public void testEucalyptusEc2Feature() throws Exception {
-        installAndCheckFeature("jclouds-eucalyptus-ec2");
-    }
-
-    @Test
-    public void testEucalyptusS3Feature() throws Exception {
-        installAndCheckFeature("jclouds-eucalyptus-s3");
-    }
-
-    @Test
     public void testBlueLockFeature() throws Exception {
         installAndCheckFeature("jclouds-bluelock-vcloud-zone01");
     }
@@ -97,11 +87,6 @@ public class MiscFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
     @Test
     public void testOpenHostingEast1Feature() throws Exception {
         installAndCheckFeature("jclouds-openhosting-east1");
-    }
-
-    @Test
-    public void testRimuHostingFeature() throws Exception {
-        installAndCheckFeature("jclouds-rimuhosting");
     }
 
     @Test

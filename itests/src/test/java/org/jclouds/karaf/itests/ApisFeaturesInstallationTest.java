@@ -52,11 +52,6 @@ public class ApisFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
     }
 
     @Test
-    public void testEucalyptusFeature() throws Exception {
-        installAndCheckFeature("jclouds-api-eucalyptus");
-    }
-
-    @Test
     public void testOpenstackNova() throws Exception {
         installAndCheckFeature("jclouds-api-openstack-nova");
     }
@@ -65,13 +60,14 @@ public class ApisFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
     public void testOpenstackCinder() throws Exception {
         installAndCheckFeature("jclouds-api-openstack-cinder");
     }
+
     @Test
     public void testCloudStackFeature() throws Exception {
         installAndCheckFeature("jclouds-api-cloudstack");
     }
 
     @Test
-         public void testRackspaceCloudIdentityFeature() throws Exception {
+    public void testRackspaceCloudIdentityFeature() throws Exception {
         installAndCheckFeature("jclouds-api-rackspace-cloudidentity");
     }
 
