@@ -448,6 +448,11 @@ public class ComputeServiceEventProxy implements ComputeService {
         return computeService.runScriptOnNode(id, runScript, options);
     }
 
+    @Override
+    public ListenableFuture<ExecResponse> submitScriptOnNode(String s, String s2, RunScriptOptions runScriptOptions) {
+        return computeService.submitScriptOnNode(s, s2, runScriptOptions);
+    }
+
     /**
      * Run the script on a specific node in the background, typically as {@code nohup}
      *
@@ -501,7 +506,7 @@ public class ComputeServiceEventProxy implements ComputeService {
      */
     @Override
     public Image getImage(String id) {
-       return computeService.getImage(id);
+        return computeService.getImage(id);
     }
 
     /**

@@ -21,14 +21,9 @@ package org.jclouds.karaf.recipe;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import org.jclouds.providers.ProviderMetadata;
-import org.jclouds.providers.ProviderPredicates;
-import org.jclouds.providers.ProviderRegistry;
 
 import java.util.NoSuchElementException;
 import java.util.ServiceLoader;
-
-import static com.google.common.collect.Iterables.find;
 
 public class RecipeProviders {
 
