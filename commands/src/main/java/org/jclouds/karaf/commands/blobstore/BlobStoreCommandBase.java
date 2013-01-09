@@ -142,19 +142,15 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
     * @param blobName
     * @param blob
     */
-   public void write(BlobStore blobStore, String bucket, String blobName, Blob blob) {
-      try {
-         if (blobName.contains("/")) {
-            String directory = BlobStoreUtils.parseDirectoryFromPath(blobName);
-            if (!Strings.isNullOrEmpty(directory)) {
-               blobStore.createDirectory(bucket, directory);
-            }
+   public void write(BlobStore blobStore, String bucket, String blobName, Blob blob) throws Exception {
+      if (blobName.contains("/")) {
+         String directory = BlobStoreUtils.parseDirectoryFromPath(blobName);
+         if (!Strings.isNullOrEmpty(directory)) {
+            blobStore.createDirectory(bucket, directory);
          }
-
-         blobStore.putBlob(bucket, blob);
-      } catch (Exception ex) {
-         LOGGER.warn("Error closing input stream.", ex);
       }
+
+      blobStore.putBlob(bucket, blob);
    }
 
    protected void printBlobStoreProviders(Iterable<ProviderMetadata> providers, List<BlobStore> blobStores,
