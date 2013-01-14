@@ -24,6 +24,7 @@ import static junit.framework.Assert.assertNotNull;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.ExamReactorStrategy;
@@ -100,6 +101,7 @@ public class ObrResolverTest extends JcloudsFeaturesTestSupport {
      * This test checks that when the obr resolver is installed, we don't have multiple jersey bundles.
      * @throws Exception
      */
+    @Ignore("This test is no longer applicable")
     @Test
     public void testJerseyResolution() throws Exception {
         installAndCheckFeature("obr");
