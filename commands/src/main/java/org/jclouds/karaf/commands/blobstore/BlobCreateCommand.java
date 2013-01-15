@@ -23,7 +23,9 @@ import java.util.List;
 
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.apache.felix.gogo.commands.Option;
 import org.jclouds.blobstore.BlobStore;
+import org.jclouds.domain.Location;
 
 /**
  * @author: iocanel
@@ -34,6 +36,9 @@ public class BlobCreateCommand extends BlobStoreCommandWithOptions {
    @Argument(index = 0, name = "containerNames", description = "The name of the container", required = true, multiValued = true)
    List<String> containerNames;
 
+   @Option(name = "-l", aliases = "--location", description = "Location to create container in", required = false, multiValued = false)
+   String locationString;
+
    @Override
    protected Object doExecute() throws Exception {
       BlobStore blobStore = null;
@@ -43,8 +48,22 @@ public class BlobCreateCommand extends BlobStoreCommandWithOptions {
          System.err.println(t.getMessage());
          return null;
       }
+
+      Location location = null;
+      if (!locationString.isEmpty()) {
+         for (Location loc : blobStore.listAssignableLocations()) {
+            if (loc.getId().equalsIgnoreCase(locationString)) {
+               location = loc;
+               break;
+            }
+         }
+         if (location == null) {
+            throw new IllegalArgumentException("unknown location: " + locationString);
+         }
+      }
+
       for (String container : containerNames) {
-         blobStore.createContainerInLocation(null, container);
+         blobStore.createContainerInLocation(location, container);
       }
       return null;
    }
