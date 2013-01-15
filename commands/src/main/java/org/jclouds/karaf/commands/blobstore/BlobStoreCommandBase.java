@@ -31,7 +31,6 @@ import org.jclouds.karaf.cache.BasicCacheProvider;
 import org.jclouds.karaf.cache.CacheProvider;
 import org.jclouds.karaf.core.Constants;
 import org.jclouds.providers.ProviderMetadata;
-import org.jclouds.rest.AuthorizationException;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
@@ -60,13 +59,8 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
 
    @Override
    public Object execute(CommandSession session) throws Exception {
-      try {
-         this.session = session;
-         return doExecute();
-      } catch (AuthorizationException ex) {
-         System.err.println("Authorization error. Please make sure you provided valid identity and credential.");
-         return null;
-      }
+      this.session = session;
+      return doExecute();
    }
 
    public void setBlobStoreServices(List<BlobStore> services) {
