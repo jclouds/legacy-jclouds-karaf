@@ -63,7 +63,10 @@ public class BlobCreateCommand extends BlobStoreCommandWithOptions {
       }
 
       for (String container : containerNames) {
-         blobStore.createContainerInLocation(location, container);
+         boolean created = blobStore.createContainerInLocation(location, container);
+         if (!created) {
+            throw new Exception("Could not create container: " + container);
+         }
       }
       return null;
    }
