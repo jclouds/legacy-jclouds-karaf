@@ -161,7 +161,7 @@
         <java-xmlbuilder.bundle.version>0.3_1</java-xmlbuilder.bundle.version>
         <javax.inject.bundle.version>1_1</javax.inject.bundle.version>
         <jclouds.version>1.5.5</jclouds.version>
-        <jclouds.chef.version>1.5.4</jclouds.chef.version>
+        <jclouds.chef.version>1.5.5</jclouds.chef.version>
         <jersey.version>1.11</jersey.version>
         <jersey.bundle.version>1.11_1</jersey.bundle.version>
         <joda.version>2.1</joda.version>
