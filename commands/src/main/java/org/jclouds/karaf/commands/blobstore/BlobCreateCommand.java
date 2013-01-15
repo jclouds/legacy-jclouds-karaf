@@ -37,7 +37,7 @@ public class BlobCreateCommand extends BlobStoreCommandWithOptions {
    List<String> containerNames;
 
    @Option(name = "-l", aliases = "--location", description = "Location to create container in", required = false, multiValued = false)
-   String locationString;
+   String locationString = "";
 
    @Override
    protected Object doExecute() throws Exception {
