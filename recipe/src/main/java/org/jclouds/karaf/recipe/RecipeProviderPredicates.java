@@ -19,13 +19,15 @@
 
 package org.jclouds.karaf.recipe;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Strings.emptyToNull;
+
 import com.google.common.base.Predicate;
-import org.jclouds.util.Preconditions2;
 
 public class RecipeProviderPredicates {
 
     public static Predicate<RecipeProvider> id(final String id) {
-        Preconditions2.checkNotEmpty(id, "id must be defined");
+        checkNotNull(emptyToNull(id), "id must be defined");
         return new Predicate<RecipeProvider>() {
             /**
              * {@inheritDoc}
