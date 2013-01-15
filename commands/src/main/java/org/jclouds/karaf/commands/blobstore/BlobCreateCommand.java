@@ -37,7 +37,7 @@ public class BlobCreateCommand extends BlobStoreCommandWithOptions {
    List<String> containerNames;
 
    @Option(name = "-l", aliases = "--location", description = "Location to create container in", required = false, multiValued = false)
-   String locationString;
+   String locationString = "";
 
    @Override
    protected Object doExecute() throws Exception {
@@ -63,7 +63,10 @@ public class BlobCreateCommand extends BlobStoreCommandWithOptions {
       }
 
       for (String container : containerNames) {
-         blobStore.createContainerInLocation(location, container);
+         boolean created = blobStore.createContainerInLocation(location, container);
+         if (!created) {
+            throw new Exception("Could not create container: " + container);
+         }
       }
       return null;
    }
