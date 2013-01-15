@@ -322,6 +322,7 @@
                 <entry key="--name" value-ref="blobStoreContextNameCompleter"/>
                 <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
                 <entry key="--api" value-ref="blobStoreApiCompleter"/>
+                <entry key="--location" value-ref="locationCompleter"/>
             </optional-completers>
         </command>
         <command name="jclouds/blobstore-delete">
