@@ -20,6 +20,7 @@
 package org.jclouds.karaf.commands.blobstore;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.felix.gogo.commands.Argument;
@@ -68,9 +69,10 @@ public class BlobReadCommand extends BlobStoreCommandWithOptions {
          System.err.flush();
       } else {
          File file = new File(fileName);
-         if (!file.exists() && file.createNewFile()) {
-            Files.copy(supplier, file);
+         if (!file.exists() && !file.createNewFile()) {
+            throw new IOException("Could not create: " + file);
          }
+         Files.copy(supplier, file);
       }
 
       return null;
