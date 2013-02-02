@@ -73,7 +73,7 @@ public class AwsS3LiveTest extends JcloudsLiveTestSupport {
     @After
     public void tearDown() {
         if (isBlobStoreLiveConfigured()) {
-            System.err.println(executeCommand("jclouds:blobstore-delete itest-container"));
+            System.err.println(executeCommand("jclouds:blobstore-delete-container itest-container"));
         }
     }
 
