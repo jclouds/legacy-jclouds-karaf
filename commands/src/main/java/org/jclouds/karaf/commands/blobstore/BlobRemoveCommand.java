@@ -51,11 +51,9 @@ public class BlobRemoveCommand extends BlobStoreCommandWithOptions {
          return null;
       }
       for (String blobName : blobNames) {
-         if (blobStore.blobExists(container, blobName)) {
-            blobStore.removeBlob(container, blobName);
-            cacheProvider.getProviderCacheForType("blob").remove(blobStore.getContext().unwrap().getId(),
-                     blobName);
-         }
+         blobStore.removeBlob(container, blobName);
+         cacheProvider.getProviderCacheForType("blob").remove(blobStore.getContext().unwrap().getId(),
+                  blobName);
       }
       return null;
    }
