@@ -19,7 +19,13 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
+import java.util.Collection;
+
+import com.google.common.collect.Lists;
+
+import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.apache.felix.gogo.commands.Option;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
@@ -30,6 +36,12 @@ import org.jclouds.blobstore.options.ListContainerOptions;
  */
 @Command(scope = "jclouds", name = "blobstore-list", description = "Lists all containers")
 public class BlobListCommand extends BlobStoreCommandWithOptions {
+
+   @Argument(index = 0, name = "containerNames", description = "The name of the container", required = false, multiValued = true)
+   final Collection<String> containerNames = Lists.newArrayList();
+
+   @Option(name = "-a", aliases = "--all", description = "List all containers", required = false)
+   boolean listAllContainers = false;
 
    private static final String LISTFORMAT = "%-40s %-40s";
 
@@ -43,17 +55,26 @@ public class BlobListCommand extends BlobStoreCommandWithOptions {
          return null;
       }
       System.out.println(String.format(LISTFORMAT, "[Container]", "[Blob]"));
-      for (StorageMetadata containerMetadata : blobStore.list()) {
-         String containerName = containerMetadata.getName();
 
-         cacheProvider.getProviderCacheForType("container").put(containerMetadata.getProviderId(), containerName);
+      if (listAllContainers) {
+         containerNames.clear();
+         for (StorageMetadata containerMetadata : blobStore.list()) {
+            String containerName = containerMetadata.getName();
+            containerNames.add(containerName);
+            cacheProvider.getProviderCacheForType("container").put(containerMetadata.getProviderId(), containerName);
+         }
+      } else if (containerNames.isEmpty()) {
+         throw new IllegalArgumentException("Must specify container names or --all");
+      }
+
+      for (String containerName : containerNames) {
          PageSet<? extends StorageMetadata> blobStoreMetadatas = blobStore.list(containerName,
                   ListContainerOptions.Builder.recursive());
 
          if (blobStoreMetadatas == null || !blobStoreMetadatas.isEmpty()) {
             for (StorageMetadata blobMetadata : blobStoreMetadatas) {
                String blobName = blobMetadata.getName();
-               cacheProvider.getProviderCacheForType("blob").put(containerMetadata.getProviderId(), blobName);
+               cacheProvider.getProviderCacheForType("blob").put(blobMetadata.getProviderId(), blobName);
                System.out.println(String.format(LISTFORMAT, containerName, blobName));
                containerName = "";
             }
