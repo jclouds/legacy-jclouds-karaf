@@ -28,13 +28,18 @@ import org.apache.felix.gogo.commands.Option;
 import org.jclouds.blobstore.BlobStore;
 
 /**
- * @author: iocanel
+ * Remove blobs.
+ *
+ * @author Andrew Gaul
  */
-@Command(scope = "jclouds", name = "blobstore-delete-container", description = "Deletes a container")
-public class BlobDeleteCommand extends BlobStoreCommandWithOptions {
+@Command(scope = "jclouds", name = "blobstore-remove", description = "Removes blobs")
+public class BlobRemoveCommand extends BlobStoreCommandWithOptions {
 
-   @Argument(index = 0, name = "containerNames", description = "The name of the container", required = true, multiValued = true)
-   List<String> containerNames = new LinkedList<String>();
+   @Argument(index = 0, name = "container", description = "The name of the container", required = true)
+   String container;
+
+   @Argument(index = 1, name = "blobNames", description = "The names of the blobs", required = true, multiValued = true)
+   List<String> blobNames = new LinkedList<String>();
 
    @Override
    protected Object doExecute() throws Exception {
@@ -45,11 +50,14 @@ public class BlobDeleteCommand extends BlobStoreCommandWithOptions {
          System.err.println(t.getMessage());
          return null;
       }
-      for (String container : containerNames) {
-         blobStore.deleteContainer(container);
-         cacheProvider.getProviderCacheForType("container").remove(blobStore.getContext().unwrap().getId(),
-                  container);
+      for (String blobName : blobNames) {
+         if (blobStore.blobExists(container, blobName)) {
+            blobStore.removeBlob(container, blobName);
+            cacheProvider.getProviderCacheForType("blob").remove(blobStore.getContext().unwrap().getId(),
+                     blobName);
+         }
       }
       return null;
    }
 }
+
