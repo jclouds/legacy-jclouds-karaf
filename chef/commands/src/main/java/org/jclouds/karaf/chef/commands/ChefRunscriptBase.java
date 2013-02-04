@@ -30,7 +30,8 @@ public abstract class ChefRunscriptBase extends RunScriptBase {
 
     @Option(name = "--chef-api", description = "The name of the chef api.", required = false, multiValued = false)
     private String chefApi;
-    @Option(name = "--chef-serivce", description = "The name of the chef service.", required = false, multiValued = false)
+
+    @Option(name = "--chef-service", description = "The name of the chef service.", required = false, multiValued = false)
     private String chefName;
 
     @Option(name = "--client-name", description = "The name of the client.")
