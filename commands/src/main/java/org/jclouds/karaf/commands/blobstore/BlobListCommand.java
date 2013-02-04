@@ -19,6 +19,7 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
+import java.io.PrintStream;
 import java.util.Collection;
 
 import com.google.common.collect.Lists;
@@ -43,7 +44,7 @@ public class BlobListCommand extends BlobStoreCommandWithOptions {
    @Option(name = "-a", aliases = "--all", description = "List all containers", required = false)
    boolean listAllContainers = false;
 
-   private static final String LISTFORMAT = "%-40s %-40s";
+   private static final PrintStream out = System.out;
 
    @Override
    protected Object doExecute() throws Exception {
@@ -54,7 +55,6 @@ public class BlobListCommand extends BlobStoreCommandWithOptions {
          System.err.println(t.getMessage());
          return null;
       }
-      System.out.println(String.format(LISTFORMAT, "[Container]", "[Blob]"));
 
       if (listAllContainers) {
          containerNames.clear();
@@ -68,7 +68,9 @@ public class BlobListCommand extends BlobStoreCommandWithOptions {
       }
 
       for (String containerName : containerNames) {
-         boolean firstBlob = true;
+         out.println(containerName + ":");
+         out.println();
+
          ListContainerOptions options = ListContainerOptions.Builder.recursive();
 
          while (true) {
@@ -77,22 +79,18 @@ public class BlobListCommand extends BlobStoreCommandWithOptions {
             for (StorageMetadata blobMetadata : blobStoreMetadatas) {
                String blobName = blobMetadata.getName();
                cacheProvider.getProviderCacheForType("blob").put(blobMetadata.getProviderId(), blobName);
-               System.out.println(String.format(LISTFORMAT, firstBlob ? containerName : "", blobName));
-               firstBlob = false;
+               out.println("    " + blobName);
             }
 
             String marker = blobStoreMetadatas.getNextMarker();
             if (marker == null) {
-               if (firstBlob) {
-                  System.out.println(String.format(LISTFORMAT, containerName, "<empty>"));
-               }
                break;
             }
 
             options = options.afterMarker(marker);
          }
 
-         System.out.println(String.format(LISTFORMAT, "", ""));
+         out.println();
       }
       return null;
    }
