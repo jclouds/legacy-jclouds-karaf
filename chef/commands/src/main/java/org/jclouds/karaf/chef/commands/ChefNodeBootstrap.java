@@ -31,8 +31,7 @@ import java.util.List;
 @Command(scope = "chef", name = "node-bootstrap", description = "Bootstraps a node.")
 public class ChefNodeBootstrap extends ChefRunscriptBase {
 
-
-    @Option(name = "--chef-serivce", description = "The name of the chef service.", required = false, multiValued = false)
+    @Option(name = "--chef-service", description = "The name of the chef service.", required = false, multiValued = false)
     private String chefName;
 
     @Argument(index = 0, name = "id", description = "The id of the node.", required = true, multiValued = false)
