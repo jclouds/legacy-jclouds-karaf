@@ -68,21 +68,31 @@ public class BlobListCommand extends BlobStoreCommandWithOptions {
       }
 
       for (String containerName : containerNames) {
-         PageSet<? extends StorageMetadata> blobStoreMetadatas = blobStore.list(containerName,
-                  ListContainerOptions.Builder.recursive());
+         boolean firstBlob = true;
+         ListContainerOptions options = ListContainerOptions.Builder.recursive();
 
-         if (blobStoreMetadatas == null || !blobStoreMetadatas.isEmpty()) {
+         while (true) {
+            PageSet<? extends StorageMetadata> blobStoreMetadatas = blobStore.list(containerName, options);
+
             for (StorageMetadata blobMetadata : blobStoreMetadatas) {
                String blobName = blobMetadata.getName();
                cacheProvider.getProviderCacheForType("blob").put(blobMetadata.getProviderId(), blobName);
-               System.out.println(String.format(LISTFORMAT, containerName, blobName));
-               containerName = "";
+               System.out.println(String.format(LISTFORMAT, firstBlob ? containerName : "", blobName));
+               firstBlob = false;
             }
-            System.out.println(String.format(LISTFORMAT, "", ""));
-         } else {
-            System.out.println(String.format(LISTFORMAT, containerName, "<empty>"));
-            System.out.println(String.format(LISTFORMAT, "", ""));
+
+            String marker = blobStoreMetadatas.getNextMarker();
+            if (marker == null) {
+               if (firstBlob) {
+                  System.out.println(String.format(LISTFORMAT, containerName, "<empty>"));
+               }
+               break;
+            }
+
+            options = options.afterMarker(marker);
          }
+
+         System.out.println(String.format(LISTFORMAT, "", ""));
       }
       return null;
    }
