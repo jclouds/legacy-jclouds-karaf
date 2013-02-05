@@ -37,6 +37,7 @@ import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -129,7 +130,7 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
          throws Exception {
       Blob blob = blobStore.getBlob(containerName, blobName);
       if (blob == null) {
-         throw new Exception("Blob " + blobName + " does not exist in container " + containerName + ".");
+         throw new FileNotFoundException("Blob " + blobName + " does not exist in container " + containerName + ".");
       }
       return blob.getPayload();
    }
