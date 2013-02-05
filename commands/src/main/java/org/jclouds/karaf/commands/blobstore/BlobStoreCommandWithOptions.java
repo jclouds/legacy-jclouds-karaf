@@ -30,7 +30,6 @@ import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.karaf.utils.EnvHelper;
 import org.jclouds.karaf.utils.ServiceHelper;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
-import org.jclouds.rest.AuthorizationException;
 
 import java.util.Collections;
 import java.util.List;
@@ -60,13 +59,8 @@ public abstract class BlobStoreCommandWithOptions extends BlobStoreCommandBase {
 
    @Override
    public Object execute(CommandSession session) throws Exception {
-      try {
-         this.session = session;
-         return doExecute();
-      } catch (AuthorizationException ex) {
-         System.err.println("Authorization error. Please make sure you provided valid identity and credential.");
-         return null;
-      }
+      this.session = session;
+      return doExecute();
    }
 
    protected List<BlobStore> getBlobStoreServices() {
