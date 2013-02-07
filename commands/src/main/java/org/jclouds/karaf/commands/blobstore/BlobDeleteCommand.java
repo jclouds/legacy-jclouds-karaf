@@ -38,13 +38,8 @@ public class BlobDeleteCommand extends BlobStoreCommandWithOptions {
 
    @Override
    protected Object doExecute() throws Exception {
-      BlobStore blobStore = null;
-      try {
-         blobStore = getBlobStore();
-      } catch (Throwable t) {
-         System.err.println(t.getMessage());
-         return null;
-      }
+      BlobStore blobStore = getBlobStore();
+
       for (String container : containerNames) {
          blobStore.deleteContainer(container);
          cacheProvider.getProviderCacheForType("container").remove(blobStore.getContext().unwrap().getId(),

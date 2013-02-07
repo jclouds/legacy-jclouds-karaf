@@ -43,13 +43,7 @@ public class BlobRemoveCommand extends BlobStoreCommandWithOptions {
 
    @Override
    protected Object doExecute() throws Exception {
-      BlobStore blobStore = null;
-      try {
-         blobStore = getBlobStore();
-      } catch (Throwable t) {
-         System.err.println(t.getMessage());
-         return null;
-      }
+      BlobStore blobStore = getBlobStore();
       for (String blobName : blobNames) {
          if (blobStore.blobExists(container, blobName)) {
             blobStore.removeBlob(container, blobName);

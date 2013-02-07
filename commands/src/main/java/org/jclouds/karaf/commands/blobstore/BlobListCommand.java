@@ -48,13 +48,7 @@ public class BlobListCommand extends BlobStoreCommandWithOptions {
 
    @Override
    protected Object doExecute() throws Exception {
-      BlobStore blobStore = null;
-      try {
-         blobStore = getBlobStore();
-      } catch (Throwable t) {
-         System.err.println(t.getMessage());
-         return null;
-      }
+      BlobStore blobStore = getBlobStore();
 
       if (listAllContainers) {
          containerNames.clear();
