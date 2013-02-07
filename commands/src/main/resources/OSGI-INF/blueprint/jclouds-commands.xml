@@ -313,7 +313,7 @@
                 <entry key="--api" value-ref="blobStoreApiCompleter"/>
             </optional-completers>
         </command>
-        <command name="jclouds/blobstore-create">
+        <command name="jclouds/blobstore-create-container">
             <action class="org.jclouds.karaf.commands.blobstore.BlobCreateCommand">
                 <property name="blobStoreServices" ref="blobStoreServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
