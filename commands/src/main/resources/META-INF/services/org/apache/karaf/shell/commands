@@ -12,6 +12,7 @@ org.jclouds.karaf.commands.compute.NodeResumeCommand
 org.jclouds.karaf.commands.compute.NodeRunScriptCommand
 org.jclouds.karaf.commands.compute.GroupDestroyCommand
 org.jclouds.karaf.commands.compute.GroupRunScriptCommand
+org.jclouds.karaf.commands.blobstore.BlobClearCommand
 org.jclouds.karaf.commands.blobstore.BlobCreateCommand
 org.jclouds.karaf.commands.blobstore.BlobDeleteCommand
 org.jclouds.karaf.commands.blobstore.BlobRemoveCommand

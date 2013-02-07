@@ -324,6 +324,20 @@
                 <entry key="--api" value-ref="blobStoreApiCompleter"/>
             </optional-completers>
         </command>
+        <command name="jclouds/blobstore-clear-container">
+            <action class="org.jclouds.karaf.commands.blobstore.BlobClearCommand">
+                <property name="blobStoreServices" ref="blobStoreServices"/>
+                <property name="cacheProvider" ref="cacheProvider"/>
+            </action>
+            <completers>
+                <ref component-id="containerCompleter"/>
+            </completers>
+            <optional-completers>
+                <entry key="--name" value-ref="blobStoreContextNameCompleter"/>
+                <entry key="--provider" value-ref="blobStoreProviderCompleter"/>
+                <entry key="--api" value-ref="blobStoreApiCompleter"/>
+            </optional-completers>
+        </command>
         <command name="jclouds/blobstore-container-exists">
             <action class="org.jclouds.karaf.commands.blobstore.ContainerExistsCommand">
                 <property name="blobStoreServices" ref="blobStoreServices"/>
