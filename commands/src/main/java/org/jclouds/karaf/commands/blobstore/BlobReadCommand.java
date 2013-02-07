@@ -20,6 +20,7 @@
 package org.jclouds.karaf.commands.blobstore;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -52,6 +53,9 @@ public class BlobReadCommand extends BlobStoreCommandWithOptions {
    @Option(name = "-d", aliases = "--display", description = "Display the content to the console", required = false, multiValued = false)
    boolean display;
 
+   @Option(name = "-e", aliases = "--exists", description = "Test whether a blob exists", required = false, multiValued = false)
+   boolean exists;
+
    @Override
    protected Object doExecute() throws Exception {
       BlobStore blobStore = null;
@@ -60,6 +64,13 @@ public class BlobReadCommand extends BlobStoreCommandWithOptions {
       } catch (Throwable t) {
          System.err.println(t.getMessage());
          return null;
+      }
+
+      if (exists) {
+          if (!blobStore.blobExists(containerName, blobName)) {
+              throw new FileNotFoundException("Blob does not exist: " + blobName);
+          }
+          return null;
       }
 
       InputSupplier<InputStream> supplier = getBlobInputStream(blobStore, containerName, blobName);
