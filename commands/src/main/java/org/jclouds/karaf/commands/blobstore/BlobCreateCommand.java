@@ -41,13 +41,7 @@ public class BlobCreateCommand extends BlobStoreCommandWithOptions {
 
    @Override
    protected Object doExecute() throws Exception {
-      BlobStore blobStore = null;
-      try {
-         blobStore = getBlobStore();
-      } catch (Throwable t) {
-         System.err.println(t.getMessage());
-         return null;
-      }
+      BlobStore blobStore = getBlobStore();
 
       Location location = null;
       if (!locationString.isEmpty()) {
