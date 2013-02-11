@@ -153,15 +153,15 @@
         <felix.configadmin.version>1.2.8</felix.configadmin.version>
         <groovy.version>1.8.6</groovy.version>
         <gson.version>2.2</gson.version>
-        <guava.version>13.0</guava.version>
+        <guava.version>13.0.1</guava.version>
         <guava.test.version>10.0</guava.test.version>
         <guice.version>3.0</guice.version>
         <httpclient.version>4.1.1</httpclient.version>
         <httpcore.version>4.1</httpcore.version>
         <java-xmlbuilder.bundle.version>0.3_1</java-xmlbuilder.bundle.version>
         <javax.inject.bundle.version>1_1</javax.inject.bundle.version>
-        <jclouds.version>1.5.5</jclouds.version>
-        <jclouds.chef.version>1.5.5</jclouds.chef.version>
+        <jclouds.version>1.5.7</jclouds.version>
+        <jclouds.chef.version>1.5.7</jclouds.chef.version>
         <jersey.version>1.11</jersey.version>
         <jersey.bundle.version>1.11_1</jersey.bundle.version>
         <joda.version>2.1</joda.version>
