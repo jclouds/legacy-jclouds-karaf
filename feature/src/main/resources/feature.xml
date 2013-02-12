@@ -110,7 +110,7 @@
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.java-xmlbuilder/${java-xmlbuilder.bundle.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
+        <bundle dependency='true'>mvn:org.jclouds.api/sts/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.api/s3/${jclouds.version}</bundle>
     </feature>
 
@@ -120,7 +120,7 @@
         <feature version='${project.version}'>jclouds-driver-sshj</feature>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.api/sts/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.api/ec2/${jclouds.version}</bundle>
     </feature>
 
@@ -188,7 +188,7 @@
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <bundle>mvn:org.jclouds.api/cloudwatch/${jclouds.version}</bundle>
-        <bundle>mvn:org.jclouds.common/aws-common/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.api/sts/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/aws-cloudwatch/${jclouds.version}</bundle>
     </feature>
 
