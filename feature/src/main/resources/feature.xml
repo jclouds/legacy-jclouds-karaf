@@ -180,7 +180,8 @@
 
     <feature name='jclouds-driver-bouncycastle' description='JClouds - Drivers - Bouncycastle' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
-        <bundle>mvn:org.bouncycastle/bcprov-jdk15on/${bcprov.version}</bundle>
+        <bundle dependency='true'>mvn:org.bouncycastle/bcprov-jdk15on/${bcprov.version}</bundle>
+        <bundle>mvn:org.jclouds.driver/jclouds-bouncycastle/${jclouds.version}</bundle>
     </feature>
 
     <feature name='jclouds-aws-cloudwatch' description='Amazon Web Service - Cloudwatch' version='${project.version}' resolver='(obr)'>
@@ -204,13 +205,13 @@
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-driver-log4j</feature>
         <feature version='${project.version}'>jclouds-api-s3</feature>
+        <feature version='${project.version}'>jclouds-driver-bouncycastle</feature>
         <bundle dependency='true'>mvn:io.netty/netty/${netty.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.httpcomponents/httpcore-osgi/${httpcore.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.httpcomponents/httpclient-osgi/${httpclient.version}</bundle>
         <bundle dependency='true'>mvn:joda-time/joda-time/${joda.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-joda/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-netty/${jclouds.version}</bundle>
-        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-bouncycastle/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-enterprise/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-apachehc/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds.provider/aws-s3/${jclouds.version}</bundle>
