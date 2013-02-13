@@ -68,7 +68,7 @@ public class BlobWriteCommand extends BlobStoreCommandWithOptions {
             input.close();
          }
       } else {
-         builder = builder.payload(new File(payload));
+         builder = builder.payload(new File(payload)).calculateMD5();
       }
 
       write(blobStore, containerName, blobName, builder.build());
