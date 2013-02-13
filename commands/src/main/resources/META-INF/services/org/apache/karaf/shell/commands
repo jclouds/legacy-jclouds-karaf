@@ -17,6 +17,7 @@ org.jclouds.karaf.commands.blobstore.BlobCreateCommand
 org.jclouds.karaf.commands.blobstore.BlobDeleteCommand
 org.jclouds.karaf.commands.blobstore.BlobRemoveCommand
 org.jclouds.karaf.commands.blobstore.BlobListCommand
+org.jclouds.karaf.commands.blobstore.BlobMetadataCommand
 org.jclouds.karaf.commands.blobstore.BlobReadCommand
 org.jclouds.karaf.commands.blobstore.BlobWriteCommand
 org.jclouds.karaf.commands.blobstore.ContainerExistsCommand
