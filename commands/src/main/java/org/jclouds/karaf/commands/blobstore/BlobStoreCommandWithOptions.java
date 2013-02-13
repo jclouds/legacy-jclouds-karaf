@@ -124,12 +124,12 @@ public abstract class BlobStoreCommandWithOptions extends BlobStoreCommandBase {
                      .credentials(identityValue, credentialValue)
                      .modules(ImmutableSet.<Module> of(new Log4JLoggingModule()));
             if (!Strings.isNullOrEmpty(endpointValue)) {
-               builder = builder.endpoint(endpoint);
+               builder = builder.endpoint(endpointValue);
             }
             BlobStoreContext context = builder.build(BlobStoreContext.class);
             blobStore = context.getBlobStore();
          } catch (Exception ex) {
-            throw new RuntimeException("Failed to create service:" + ex.getMessage());
+            throw new RuntimeException("Failed to create service: " + ex.getMessage(), ex);
          }
       }
       return blobStore;
