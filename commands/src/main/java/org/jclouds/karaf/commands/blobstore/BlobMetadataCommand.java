@@ -25,12 +25,12 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.google.common.io.BaseEncoding;
 
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.crypto.CryptoStreams;
 import org.jclouds.io.ContentMetadata;
 
 /**
@@ -67,8 +67,7 @@ public class BlobMetadataCommand extends BlobStoreCommandWithOptions {
          printMetadata("Content-Language", contentMetdata.getContentLanguage());
          byte[] contentMD5 = contentMetdata.getContentMD5();
          if (contentMD5 != null) {
-            printMetadata("Content-MD5",
-                  BaseEncoding.base16().lowerCase().encode(contentMD5));
+            printMetadata("Content-MD5", CryptoStreams.hex(contentMD5));
          }
          printMetadata("Content-Type", contentMetdata.getContentType());
          printMetadata("Expires", contentMetdata.getExpires());
