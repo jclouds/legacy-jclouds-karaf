@@ -20,12 +20,14 @@
 package org.jclouds.karaf.itests.live;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
+import com.google.common.io.CharStreams;
 import org.jclouds.karaf.itests.JcloudsFeaturesTestSupport;
 
 public class JcloudsLiveTestSupport extends JcloudsFeaturesTestSupport {
@@ -92,7 +94,12 @@ public class JcloudsLiveTestSupport extends JcloudsFeaturesTestSupport {
         URL url = new URL("http://checkip.amazonaws.com/");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.connect();
-        return IOUtils.toString(connection.getInputStream()).trim() + "/32";
+        InputStream in = connection.getInputStream();
+        try {
+            return CharStreams.toString(new InputStreamReader(in)).trim() + "/32";
+        } finally {
+            in.close();
+        }
     }
 
 }
