@@ -21,3 +21,4 @@ org.jclouds.karaf.commands.blobstore.BlobMetadataCommand
 org.jclouds.karaf.commands.blobstore.BlobReadCommand
 org.jclouds.karaf.commands.blobstore.BlobWriteCommand
 org.jclouds.karaf.commands.blobstore.ContainerExistsCommand
+org.jclouds.karaf.commands.blobstore.ContainerListCommand
