@@ -33,9 +33,11 @@ import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.options.ListContainerOptions;
 
 /**
+ * List blobs in a container.
+ *
  * @author: iocanel
  */
-@Command(scope = "jclouds", name = "blobstore-list", description = "Lists all containers")
+@Command(scope = "jclouds", name = "blobstore-list", description = "Lists blobs in a container")
 public class BlobListCommand extends BlobStoreCommandWithOptions {
 
    @Argument(index = 0, name = "containerNames", description = "The name of the container", required = false, multiValued = true)
