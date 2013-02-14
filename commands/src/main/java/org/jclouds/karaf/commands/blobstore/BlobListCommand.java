@@ -26,6 +26,7 @@ import com.google.common.collect.Lists;
 
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.apache.felix.gogo.commands.CommandException;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.PageSet;
@@ -60,7 +61,7 @@ public class BlobListCommand extends BlobStoreCommandWithOptions {
             cacheProvider.getProviderCacheForType("container").put(containerMetadata.getProviderId(), containerName);
          }
       } else if (containerNames.isEmpty()) {
-         throw new IllegalArgumentException("Must specify container names or --all");
+         throw new CommandException("Must specify container names or --all");
       }
 
       for (String containerName : containerNames) {
