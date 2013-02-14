@@ -102,17 +102,17 @@ public abstract class BlobStoreCommandWithOptions extends BlobStoreCommandBase {
             sb.append("Insufficient information to create blobstore service:").append("\n");
             if (providerOrApiValue == null) {
                sb.append(
-                        "Missing provider or api. Please specify either using the --provider / --api options, or the JCLOUDS_BLOBSTORE_PROVIDER / JCLOUDS_BLOBSTORE_API environmental variables.")
+                        "Missing provider or api. Please specify either using the --provider / --api options, or the JCLOUDS_BLOBSTORE_PROVIDER / JCLOUDS_BLOBSTORE_API environment variables.")
                         .append("\n");
             }
             if (identityValue == null) {
                sb.append(
-                        "Missing identity. Please specify either using the --identity option, or the JCLOUDS_BLOBSTORE_IDENTITY environmental variable.")
+                        "Missing identity. Please specify either using the --identity option, or the JCLOUDS_BLOBSTORE_IDENTITY environment variable.")
                         .append("\n");
             }
             if (credentialValue == null) {
                sb.append(
-                        "Missing credential. Please specify either using the --credential option, or the JCLOUDS_BLOBSTORE_CREDENTIAL environmental variable.")
+                        "Missing credential. Please specify either using the --credential option, or the JCLOUDS_BLOBSTORE_CREDENTIAL environment variable.")
                         .append("\n");
             }
             throw new RuntimeException(sb.toString());
