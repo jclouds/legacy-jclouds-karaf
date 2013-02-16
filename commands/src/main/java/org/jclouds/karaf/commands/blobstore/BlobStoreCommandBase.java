@@ -25,6 +25,7 @@ import org.apache.felix.service.command.CommandSession;
 import org.apache.karaf.shell.console.AbstractAction;
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.blobstore.BlobStore;
+import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.util.BlobStoreUtils;
 import org.jclouds.karaf.cache.BasicCacheProvider;
@@ -124,6 +125,9 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
          throws Exception {
       Blob blob = blobStore.getBlob(containerName, blobName);
       if (blob == null) {
+         if (!blobStore.containerExists(containerName)) {
+            throw new ContainerNotFoundException(containerName, "while getting blob");
+         }
          throw new FileNotFoundException("Blob " + blobName + " does not exist in container " + containerName + ".");
       }
       return blob.getPayload();
