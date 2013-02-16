@@ -21,30 +21,46 @@ package org.jclouds.karaf.commands.blobstore;
 
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.blobstore.BlobStore;
+import org.jclouds.domain.Location;
 
 /**
- * Clear a container.
- *
- * @author: Andrew Gaul
+ * @author: iocanel
  */
-@Command(scope = "jclouds", name = "blobstore-clear-container", description = "Clears a container")
-public class BlobClearCommand extends BlobStoreCommandWithOptions {
+@Command(scope = "jclouds", name = "blobstore-container-create", description = "Creates a container")
+public class ContainerCreateCommand extends BlobStoreCommandWithOptions {
 
    @Argument(index = 0, name = "containerNames", description = "The name of the container", required = true, multiValued = true)
-   List<String> containerNames = Lists.newLinkedList();
+   List<String> containerNames;
+
+   @Option(name = "-l", aliases = "--location", description = "Location to create container in", required = false, multiValued = false)
+   String locationString = "";
 
    @Override
    protected Object doExecute() throws Exception {
       BlobStore blobStore = getBlobStore();
 
+      Location location = null;
+      if (!locationString.isEmpty()) {
+         for (Location loc : blobStore.listAssignableLocations()) {
+            if (loc.getId().equalsIgnoreCase(locationString)) {
+               location = loc;
+               break;
+            }
+         }
+         if (location == null) {
+            throw new IllegalArgumentException("unknown location: " + locationString);
+         }
+      }
+
       for (String container : containerNames) {
-         blobStore.clearContainer(container);
+         boolean created = blobStore.createContainerInLocation(location, container);
+         if (!created) {
+            throw new Exception("Could not create container: " + container);
+         }
       }
       return null;
    }
