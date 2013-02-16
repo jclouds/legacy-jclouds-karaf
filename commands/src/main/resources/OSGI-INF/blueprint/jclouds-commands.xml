@@ -324,8 +324,8 @@
                 <entry key="--api" value-ref="blobStoreApiCompleter"/>
             </optional-completers>
         </command>
-        <command name="jclouds/blobstore-clear-container">
-            <action class="org.jclouds.karaf.commands.blobstore.BlobClearCommand">
+        <command name="jclouds/blobstore-container-clear">
+            <action class="org.jclouds.karaf.commands.blobstore.ContainerClearCommand">
                 <property name="blobStoreServices" ref="blobStoreServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
@@ -338,7 +338,7 @@
                 <entry key="--api" value-ref="blobStoreApiCompleter"/>
             </optional-completers>
         </command>
-        <command name="jclouds/blobstore-list-containers">
+        <command name="jclouds/blobstore-container-list">
             <action class="org.jclouds.karaf.commands.blobstore.ContainerListCommand">
                 <property name="blobStoreServices" ref="blobStoreServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
@@ -380,8 +380,8 @@
                 <entry key="--api" value-ref="blobStoreApiCompleter"/>
             </optional-completers>
         </command>
-        <command name="jclouds/blobstore-create-container">
-            <action class="org.jclouds.karaf.commands.blobstore.BlobCreateCommand">
+        <command name="jclouds/blobstore-container-create">
+            <action class="org.jclouds.karaf.commands.blobstore.ContainerCreateCommand">
                 <property name="blobStoreServices" ref="blobStoreServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>
@@ -392,8 +392,8 @@
                 <entry key="--location" value-ref="locationCompleter"/>
             </optional-completers>
         </command>
-        <command name="jclouds/blobstore-delete-container">
-            <action class="org.jclouds.karaf.commands.blobstore.BlobDeleteCommand">
+        <command name="jclouds/blobstore-container-delete">
+            <action class="org.jclouds.karaf.commands.blobstore.ContainerDeleteCommand">
                 <property name="blobStoreServices" ref="blobStoreServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
             </action>

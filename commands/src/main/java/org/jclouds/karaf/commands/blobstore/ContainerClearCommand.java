@@ -19,8 +19,9 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
-import java.util.LinkedList;
 import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
@@ -28,22 +29,22 @@ import org.apache.felix.gogo.commands.Option;
 import org.jclouds.blobstore.BlobStore;
 
 /**
- * @author: iocanel
+ * Clear a container.
+ *
+ * @author: Andrew Gaul
  */
-@Command(scope = "jclouds", name = "blobstore-delete-container", description = "Deletes a container")
-public class BlobDeleteCommand extends BlobStoreCommandWithOptions {
+@Command(scope = "jclouds", name = "blobstore-container-clear", description = "Clears a container")
+public class ContainerClearCommand extends BlobStoreCommandWithOptions {
 
    @Argument(index = 0, name = "containerNames", description = "The name of the container", required = true, multiValued = true)
-   List<String> containerNames = new LinkedList<String>();
+   List<String> containerNames = Lists.newLinkedList();
 
    @Override
    protected Object doExecute() throws Exception {
       BlobStore blobStore = getBlobStore();
 
       for (String container : containerNames) {
-         blobStore.deleteContainer(container);
-         cacheProvider.getProviderCacheForType("container").remove(blobStore.getContext().unwrap().getId(),
-                  container);
+         blobStore.clearContainer(container);
       }
       return null;
    }
