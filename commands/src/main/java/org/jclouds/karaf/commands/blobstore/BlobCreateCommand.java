@@ -59,6 +59,10 @@ public class BlobCreateCommand extends BlobStoreCommandWithOptions {
       for (String container : containerNames) {
          boolean created = blobStore.createContainerInLocation(location, container);
          if (!created) {
+            if (blobStore.containerExists(container)) {
+               throw new Exception("Container already exists: " + container);
+            }
+
             throw new Exception("Could not create container: " + container);
          }
       }
