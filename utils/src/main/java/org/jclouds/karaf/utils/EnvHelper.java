@@ -19,6 +19,15 @@
 
 package org.jclouds.karaf.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Properties;
+
+import org.jclouds.Constants;
+
 public class EnvHelper {
 
     public static final String JCLOUDS_COMPUTE_PROVIDER = "JCLOUDS_COMPUTE_PROVIDER";
@@ -48,11 +57,8 @@ public class EnvHelper {
      * @return
      */
     public static String getComputeProvider(String provider) {
-        if (provider != null) {
-            return provider;
-        } else {
-            return System.getenv(JCLOUDS_COMPUTE_PROVIDER);
-        }
+        return getValueOrPropertyOrEnvironmentVariable(
+            provider, Constants.PROPERTY_PROVIDER, JCLOUDS_COMPUTE_PROVIDER);
     }
 
     /**
@@ -61,11 +67,8 @@ public class EnvHelper {
      * @return
      */
     public static String getComputeApi(String api) {
-        if (api != null) {
-            return api;
-        } else {
-            return System.getenv(JCLOUDS_COMPUTE_API);
-        }
+        return getValueOrPropertyOrEnvironmentVariable(
+            api, Constants.PROPERTY_API, JCLOUDS_COMPUTE_API);
     }
 
     /**
@@ -75,11 +78,8 @@ public class EnvHelper {
      * @return
      */
     public static String getComputeIdentity(String identity) {
-        if (identity != null) {
-            return identity;
-        } else {
-            return System.getenv(JCLOUDS_COMPUTE_IDENTITY);
-        }
+        return getValueOrPropertyOrEnvironmentVariable(
+            identity, Constants.PROPERTY_IDENTITY, JCLOUDS_COMPUTE_IDENTITY);
     }
 
     /**
@@ -89,11 +89,8 @@ public class EnvHelper {
      * @return
      */
     public static String getComputeCredential(String credential) {
-        if (credential != null) {
-            return credential;
-        } else {
-            return System.getenv(JCLOUDS_COMPUTE_CREDENTIAL);
-        }
+        return getValueOrPropertyOrEnvironmentVariable(
+            credential, Constants.PROPERTY_CREDENTIAL, JCLOUDS_COMPUTE_CREDENTIAL);
     }
 
     /**
@@ -103,11 +100,8 @@ public class EnvHelper {
      * @return
      */
     public static String getComputeEndpoint(String endpoint) {
-        if (endpoint != null) {
-            return endpoint;
-        } else {
-            return System.getenv(JCLOUDS_COMPUTE_ENDPOINT);
-        }
+        return getValueOrPropertyOrEnvironmentVariable(
+            endpoint, Constants.PROPERTY_ENDPOINT, JCLOUDS_COMPUTE_ENDPOINT);
     }
 
     /**
@@ -117,11 +111,8 @@ public class EnvHelper {
      * @return
      */
     public static String getBlobStoreProvider(String provider) {
-        if (provider != null) {
-            return provider;
-        } else {
-            return System.getenv(JCLOUDS_BLOBSTORE_PROVIDER);
-        }
+        return getValueOrPropertyOrEnvironmentVariable(
+            provider, Constants.PROPERTY_PROVIDER, JCLOUDS_BLOBSTORE_PROVIDER);
     }
 
     /**
@@ -130,11 +121,8 @@ public class EnvHelper {
      * @return
      */
     public static String getBlobStoreApi(String api) {
-        if (api != null) {
-            return api;
-        } else {
-            return System.getenv(JCLOUDS_BLOBSTORE_API);
-        }
+        return getValueOrPropertyOrEnvironmentVariable(
+            api, Constants.PROPERTY_API, JCLOUDS_BLOBSTORE_API);
     }
 
     /**
@@ -144,11 +132,8 @@ public class EnvHelper {
      * @return
      */
     public static String getBlobStoreIdentity(String identity) {
-        if (identity != null) {
-            return identity;
-        } else {
-            return System.getenv(JCLOUDS_BLOBSTORE_IDENTITY);
-        }
+        return getValueOrPropertyOrEnvironmentVariable(
+            identity, Constants.PROPERTY_IDENTITY, JCLOUDS_BLOBSTORE_IDENTITY);
     }
 
     /**
@@ -158,11 +143,8 @@ public class EnvHelper {
      * @return
      */
     public static String getBlobStoreCredential(String credential) {
-        if (credential != null) {
-            return credential;
-        } else {
-            return System.getenv(JCLOUDS_BLOBSTORE_CREDENTIAL);
-        }
+        return getValueOrPropertyOrEnvironmentVariable(
+            credential, Constants.PROPERTY_CREDENTIAL, JCLOUDS_BLOBSTORE_CREDENTIAL);
     }
 
     /**
@@ -172,11 +154,8 @@ public class EnvHelper {
      * @return
      */
     public static String getBlobStoreEndpoint(String endpoint) {
-        if (endpoint != null) {
-            return endpoint;
-        } else {
-            return System.getenv(JCLOUDS_BLOBSTORE_ENDPOINT);
-        }
+        return getValueOrPropertyOrEnvironmentVariable(
+            endpoint, Constants.PROPERTY_ENDPOINT, JCLOUDS_BLOBSTORE_ENDPOINT);
     }
 
     /**
@@ -185,12 +164,12 @@ public class EnvHelper {
      * @param user
      * @return
      */
+    // TODO: which property to use?
     public static String getUser(String user) {
-        if (user != null) {
-            return user;
-        } else {
-            return System.getenv(JCLOUDS_USER);
+        if (user == null) {
+            user = System.getenv(JCLOUDS_USER);
         }
+        return user;
     }
 
     /**
@@ -199,12 +178,40 @@ public class EnvHelper {
      * @param password
      * @return
      */
+    // TODO: which property to use?
     public static String getPassword(String password) {
-        if (password != null) {
-            return password;
-        } else {
-            return System.getenv(JCLOUDS_PASSWORD);
+        if (password == null) {
+            password = System.getenv(JCLOUDS_PASSWORD);
+        }
+        return password;
+    }
+
+    public static void loadProperties(File fileName) throws IOException {
+        Properties properties = new Properties();
+        InputStream is = new FileInputStream(fileName);
+        try {
+            properties.load(is);
+        } finally {
+            is.close();
+        }
+        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+            String key = (String) entry.getKey();
+            if (System.getProperty(key) != null) {
+                // allow system properties to override properties file
+                continue;
+            }
+            System.setProperty(key, (String) entry.getValue());
         }
     }
 
+    private static String getValueOrPropertyOrEnvironmentVariable(
+            String value, String propertyName, String environmentName) {
+        if (value == null) {
+            value = System.getProperty(propertyName);
+        }
+        if (value == null) {
+            value = System.getenv(environmentName);
+        }
+        return value;
+    }
 }
