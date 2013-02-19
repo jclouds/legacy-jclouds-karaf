@@ -21,6 +21,8 @@ package org.jclouds.karaf.commands.blobstore;
 
 import java.io.PrintStream;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import com.google.common.collect.Lists;
 
@@ -72,10 +74,16 @@ public class BlobListCommand extends BlobStoreCommandWithOptions {
 
          while (true) {
             PageSet<? extends StorageMetadata> blobStoreMetadatas = blobStore.list(containerName, options);
+            List<String> blobNames = Lists.newArrayList();
 
             for (StorageMetadata blobMetadata : blobStoreMetadatas) {
                String blobName = blobMetadata.getName();
                cacheProvider.getProviderCacheForType("blob").put(blobMetadata.getProviderId(), blobName);
+               blobNames.add(blobName);
+            }
+
+            Collections.sort(blobNames);
+            for (String blobName : blobNames) {
                out.println("    " + blobName);
             }
 
