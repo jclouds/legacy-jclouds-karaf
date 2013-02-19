@@ -19,6 +19,11 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
+import java.util.Collections;
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
 import org.apache.felix.gogo.commands.Command;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.StorageMetadata;
@@ -34,9 +39,15 @@ public class ContainerListCommand extends BlobStoreCommandWithOptions {
    @Override
    protected Object doExecute() throws Exception {
       BlobStore blobStore = getBlobStore();
+      List<String> containerNames = Lists.newArrayList();
 
       for (StorageMetadata containerMetadata : blobStore.list()) {
-         System.out.println(containerMetadata.getName());
+         containerNames.add(containerMetadata.getName());
+      }
+
+      Collections.sort(containerNames);
+      for (String containerName : containerNames) {
+         System.out.println(containerName);
       }
 
       return null;
