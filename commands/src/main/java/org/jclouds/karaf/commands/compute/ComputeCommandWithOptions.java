@@ -23,6 +23,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 import org.apache.felix.gogo.commands.Option;
+import org.jclouds.Constants;
 import org.jclouds.ContextBuilder;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
@@ -32,6 +33,8 @@ import org.jclouds.karaf.utils.ServiceHelper;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
 import org.jclouds.sshj.config.SshjSshClientModule;
 
+import java.io.IOException;
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -58,6 +61,9 @@ public abstract class ComputeCommandWithOptions extends ComputeCommandBase {
    @Option(name = "--endpoint", description = "The endpoint to use for a compute service.")
    protected String endpoint;
 
+   @Option(name = "--properties", description = "File with properties.")
+   protected String propertiesFile;
+
    @Override
    public List<ComputeService> getComputeServices() {
       if (provider == null && api == null) {
@@ -72,12 +78,15 @@ public abstract class ComputeCommandWithOptions extends ComputeCommandBase {
       }
    }
 
-   protected ComputeService getComputeService() {
+   protected ComputeService getComputeService() throws IOException {
       if ((name == null && provider == null && api == null) &&(computeServices != null && computeServices.size() == 1)) {
          return computeServices.get(0);
       }
 
       ComputeService computeService = null;
+      if (propertiesFile != null) {
+         EnvHelper.loadProperties(new File(propertiesFile));
+      }
       String providerValue = EnvHelper.getComputeProvider(provider);
       String apiValue = EnvHelper.getComputeApi(api);
       String identityValue = EnvHelper.getComputeIdentity(identity);
@@ -96,21 +105,30 @@ public abstract class ComputeCommandWithOptions extends ComputeCommandBase {
            throw new RuntimeException("Could not find compute service with id:" + name);
          } else if (!canCreateService) {
             StringBuilder sb = new StringBuilder();
-            sb.append("Insufficient information to create compute service:").append("\n");
+            sb.append("Insufficient information to create compute service:\n");
             if (providerOrApiValue == null) {
-               sb.append(
-                        "Missing provider or api. Please specify either using the --provider / --api options, or the JCLOUDS_COMPUTE_PROVIDER / JCLOUDS_COMPUTE_API environmental variables.")
-                        .append("\n");
+               sb.append("Missing provider or api." +
+                     " Please specify the --provider / --api" +
+                     " options, set the " + Constants.PROPERTY_PROVIDER +
+                     " / " + Constants.PROPERTY_API + " properties" +
+                     ", or set the JCLOUDS_COMPUTE_PROVIDER /" +
+                     " JCLOUDS_COMPUTE_API environment variables.\n");
             }
             if (identityValue == null) {
-               sb.append(
-                        "Missing identity. Please specify either using the --identity option, or the JCLOUDS_COMPUTE_IDENTITY environmental variable.")
-                        .append("\n");
+               sb.append("Missing identity." +
+                     " Please specify the --identity option" +
+                     ", set the " + Constants.PROPERTY_IDENTITY +
+                     " property, or set the " +
+                     EnvHelper.JCLOUDS_COMPUTE_IDENTITY +
+                     " environment variable.\n");
             }
             if (credentialValue == null) {
-               sb.append(
-                        "Missing credential. Please specify either using the --credential option, or the JCLOUDS_COMPUTE_CREDENTIAL environmental variable.")
-                        .append("\n");
+               sb.append("Missing credential." +
+                     " Please specify the --credential option" +
+                     ", set the " + Constants.PROPERTY_CREDENTIAL +
+                     " property, or set the " +
+                     EnvHelper.JCLOUDS_COMPUTE_CREDENTIAL +
+                     " environment variable.\n");
             }
             throw new RuntimeException(sb.toString());
          }

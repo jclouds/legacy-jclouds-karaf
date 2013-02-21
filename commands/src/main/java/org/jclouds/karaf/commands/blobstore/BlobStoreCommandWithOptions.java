@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.felix.service.command.CommandSession;
+import org.jclouds.Constants;
 import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
@@ -31,6 +32,8 @@ import org.jclouds.karaf.utils.EnvHelper;
 import org.jclouds.karaf.utils.ServiceHelper;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
 
+import java.io.IOException;
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -57,6 +60,9 @@ public abstract class BlobStoreCommandWithOptions extends BlobStoreCommandBase {
    @Option(name = "--endpoint", description = "The endpoint to use for a blob store.")
    protected String endpoint;
 
+   @Option(name = "--properties", description = "File with properties.")
+   protected String propertiesFile;
+
    @Override
    public Object execute(CommandSession session) throws Exception {
       this.session = session;
@@ -75,12 +81,15 @@ public abstract class BlobStoreCommandWithOptions extends BlobStoreCommandBase {
       }
    }
 
-   protected BlobStore getBlobStore() {
+   protected BlobStore getBlobStore() throws IOException {
       if ((name == null && provider == null && api == null) && (blobStoreServices != null && blobStoreServices.size() == 1)) {
          return blobStoreServices.get(0);
       }
 
       BlobStore blobStore = null;
+      if (propertiesFile != null) {
+         EnvHelper.loadProperties(new File(propertiesFile));
+      }
       String providerValue = EnvHelper.getBlobStoreProvider(provider);
       String apiValue = EnvHelper.getBlobStoreApi(api);
       String identityValue = EnvHelper.getBlobStoreIdentity(identity);
@@ -99,21 +108,30 @@ public abstract class BlobStoreCommandWithOptions extends BlobStoreCommandBase {
           throw new RuntimeException("Could not find blobstore service with id:" + name);
         } else if (!canCreateService) {
             StringBuilder sb = new StringBuilder();
-            sb.append("Insufficient information to create blobstore service:").append("\n");
+            sb.append("Insufficient information to create blobstore service:\n");
             if (providerOrApiValue == null) {
-               sb.append(
-                        "Missing provider or api. Please specify either using the --provider / --api options, or the JCLOUDS_BLOBSTORE_PROVIDER / JCLOUDS_BLOBSTORE_API environmental variables.")
-                        .append("\n");
+               sb.append("Missing provider or api." +
+                     " Please specify the --provider / --api" +
+                     " options, set the " + Constants.PROPERTY_PROVIDER +
+                     " / " + Constants.PROPERTY_API + " properties" +
+                     ", or set the JCLOUDS_BLOBSTORE_PROVIDER /" +
+                     " JCLOUDS_BLOBSTORE_API environment variables.\n");
             }
             if (identityValue == null) {
-               sb.append(
-                        "Missing identity. Please specify either using the --identity option, or the JCLOUDS_BLOBSTORE_IDENTITY environmental variable.")
-                        .append("\n");
+               sb.append("Missing identity." +
+                     " Please specify the --identity option" +
+                     ", set the " + Constants.PROPERTY_IDENTITY +
+                     " property, or set the " +
+                     EnvHelper.JCLOUDS_BLOBSTORE_IDENTITY +
+                     " environment variable.\n");
             }
             if (credentialValue == null) {
-               sb.append(
-                        "Missing credential. Please specify either using the --credential option, or the JCLOUDS_BLOBSTORE_CREDENTIAL environmental variable.")
-                        .append("\n");
+               sb.append("Missing credential." +
+                     " Please specify the --credential option" +
+                     ", set the " + Constants.PROPERTY_CREDENTIAL +
+                     " property, or set the " +
+                     EnvHelper.JCLOUDS_BLOBSTORE_CREDENTIAL +
+                     " environment variable.\n");
             }
             throw new RuntimeException(sb.toString());
          }
