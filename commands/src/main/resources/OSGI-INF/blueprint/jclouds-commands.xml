@@ -352,7 +352,7 @@
                 <entry key="--api" value-ref="blobStoreApiCompleter"/>
             </optional-completers>
         </command>
-        <command name="jclouds/blobstore-list-containers">
+        <command name="jclouds/blobstore-container-metadata">
             <action class="org.jclouds.karaf.commands.blobstore.ContainerMetadataCommand">
                 <property name="blobStoreServices" ref="blobStoreServices"/>
                 <property name="cacheProvider" ref="cacheProvider"/>
