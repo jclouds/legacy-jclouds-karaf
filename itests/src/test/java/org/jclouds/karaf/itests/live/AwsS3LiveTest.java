@@ -73,7 +73,7 @@ public class AwsS3LiveTest extends JcloudsLiveTestSupport {
     @After
     public void tearDown() {
         if (isBlobStoreLiveConfigured()) {
-            System.err.println(executeCommand("jclouds:blobstore-delete-container itest-container"));
+            System.err.println(executeCommand("jclouds:blobstore-container-delete itest-container"));
         }
     }
 
@@ -86,7 +86,7 @@ public class AwsS3LiveTest extends JcloudsLiveTestSupport {
 
             String featureURL = System.getProperty("jclouds.featureURL");
             System.err.println(executeCommand("jclouds:blobstore-list"));
-            System.err.println(executeCommand("jclouds:blobstore-create itest-container"));
+            System.err.println(executeCommand("jclouds:blobstore-container-create itest-container"));
 
             System.err.println(executeCommand("jclouds:blobstore-write itest-container  myfolder/myfile "+ featureURL ));
             System.err.println(executeCommand("jclouds:blobstore-write --url-payload itest-container testblob "+ System.getProperty("jclouds.featureURL")));
@@ -111,7 +111,7 @@ public class AwsS3LiveTest extends JcloudsLiveTestSupport {
             String version =   System.getProperty("jclouds.version");
 
             System.err.println(executeCommand("jclouds:blobstore-list"));
-            System.err.println(executeCommand("jclouds:blobstore-create itest-container"));
+            System.err.println(executeCommand("jclouds:blobstore-container-create itest-container"));
 
             URL artifactUrl = new URL("mvn:"+groupId+"/"+artifactId+"/"+version);
             URL blobUrl = new URL("blob:aws-s3/itest-container/maven2/org/jclouds/api/byon/" +version+"/"+artifactId+"-"+version+".jar" );

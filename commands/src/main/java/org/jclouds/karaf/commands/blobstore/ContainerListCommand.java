@@ -33,7 +33,7 @@ import org.jclouds.blobstore.domain.StorageMetadata;
  *
  * @author: Andrew Gaul
  */
-@Command(scope = "jclouds", name = "blobstore-list-containers", description = "Lists all container names")
+@Command(scope = "jclouds", name = "blobstore-container-list", description = "Lists all container names")
 public class ContainerListCommand extends BlobStoreCommandWithOptions {
 
    @Override
