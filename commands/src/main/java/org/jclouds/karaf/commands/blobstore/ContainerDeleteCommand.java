@@ -19,48 +19,31 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.blobstore.BlobStore;
-import org.jclouds.domain.Location;
 
 /**
  * @author: iocanel
  */
-@Command(scope = "jclouds", name = "blobstore-create-container", description = "Creates a container")
-public class BlobCreateCommand extends BlobStoreCommandWithOptions {
+@Command(scope = "jclouds", name = "blobstore-container-delete", description = "Deletes a container")
+public class ContainerDeleteCommand extends BlobStoreCommandWithOptions {
 
    @Argument(index = 0, name = "containerNames", description = "The name of the container", required = true, multiValued = true)
-   List<String> containerNames;
-
-   @Option(name = "-l", aliases = "--location", description = "Location to create container in", required = false, multiValued = false)
-   String locationString = "";
+   List<String> containerNames = new LinkedList<String>();
 
    @Override
    protected Object doExecute() throws Exception {
       BlobStore blobStore = getBlobStore();
 
-      Location location = null;
-      if (!locationString.isEmpty()) {
-         for (Location loc : blobStore.listAssignableLocations()) {
-            if (loc.getId().equalsIgnoreCase(locationString)) {
-               location = loc;
-               break;
-            }
-         }
-         if (location == null) {
-            throw new IllegalArgumentException("unknown location: " + locationString);
-         }
-      }
-
       for (String container : containerNames) {
-         boolean created = blobStore.createContainerInLocation(location, container);
-         if (!created) {
-            throw new Exception("Could not create container: " + container);
-         }
+         blobStore.deleteContainer(container);
+         cacheProvider.getProviderCacheForType("container").remove(blobStore.getContext().unwrap().getId(),
+                  container);
       }
       return null;
    }
