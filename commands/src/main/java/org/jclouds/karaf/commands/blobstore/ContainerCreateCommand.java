@@ -30,8 +30,8 @@ import org.jclouds.domain.Location;
 /**
  * @author: iocanel
  */
-@Command(scope = "jclouds", name = "blobstore-create-container", description = "Creates a container")
-public class BlobCreateCommand extends BlobStoreCommandWithOptions {
+@Command(scope = "jclouds", name = "blobstore-container-create", description = "Creates a container")
+public class ContainerCreateCommand extends BlobStoreCommandWithOptions {
 
    @Argument(index = 0, name = "containerNames", description = "The name of the container", required = true, multiValued = true)
    List<String> containerNames;
