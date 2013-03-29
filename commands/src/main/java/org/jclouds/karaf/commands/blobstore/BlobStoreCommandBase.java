@@ -26,6 +26,7 @@ import org.apache.karaf.shell.console.AbstractAction;
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.ContainerNotFoundException;
+import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.util.BlobStoreUtils;
 import org.jclouds.karaf.cache.BasicCacheProvider;
@@ -37,7 +38,6 @@ import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -128,7 +128,7 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
          if (!blobStore.containerExists(containerName)) {
             throw new ContainerNotFoundException(containerName, "while getting blob");
          }
-         throw new FileNotFoundException("Blob " + blobName + " does not exist in container " + containerName + ".");
+         throw new KeyNotFoundException(containerName, blobName, "while getting blob");
       }
       return blob.getPayload();
    }

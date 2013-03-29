@@ -19,7 +19,6 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -27,6 +26,7 @@ import com.google.common.collect.Lists;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.jclouds.blobstore.BlobStore;
+import org.jclouds.blobstore.ContainerNotFoundException;
 
 /**
  * Test whether a container exists.
@@ -45,7 +45,7 @@ public class ContainerExistsCommand extends BlobStoreCommandWithOptions {
 
       for (String container : containerNames) {
           if (!blobStore.containerExists(container)) {
-             throw new FileNotFoundException("Container does not exist: " + container);
+             throw new ContainerNotFoundException(container, "while checking existence");
           }
       }
       return null;
