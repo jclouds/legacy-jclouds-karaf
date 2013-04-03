@@ -20,7 +20,6 @@
 package org.jclouds.karaf.commands.blobstore;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -28,6 +27,7 @@ import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.blobstore.BlobStore;
+import org.jclouds.blobstore.KeyNotFoundException;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
@@ -62,7 +62,7 @@ public class BlobReadCommand extends BlobStoreCommandWithOptions {
 
       if (exists) {
           if (!blobStore.blobExists(containerName, blobName)) {
-              throw new FileNotFoundException("Blob does not exist: " + blobName);
+              throw new KeyNotFoundException(containerName, blobName, "while checking existence");
           }
           return null;
       }

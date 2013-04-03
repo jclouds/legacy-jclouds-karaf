@@ -19,7 +19,6 @@
 
 package org.jclouds.karaf.commands.blobstore;
 
-import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +29,7 @@ import com.google.common.io.BaseEncoding;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.jclouds.blobstore.BlobStore;
+import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.io.ContentMetadata;
 
@@ -56,7 +56,7 @@ public class BlobMetadataCommand extends BlobStoreCommandWithOptions {
       for (String blobName : blobNames) {
          BlobMetadata blobMetadata = blobStore.blobMetadata(containerName, blobName);
          if (blobMetadata == null) {
-            throw new FileNotFoundException("Blob does not exist: " + blobName);
+            throw new KeyNotFoundException(containerName, blobName, "while getting metadata");
          }
 
          ContentMetadata contentMetdata = blobMetadata.getContentMetadata();
