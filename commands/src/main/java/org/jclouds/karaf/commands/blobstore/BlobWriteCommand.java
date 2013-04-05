@@ -31,6 +31,7 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.BlobBuilder;
+import org.jclouds.blobstore.options.PutOptions;
 
 /**
  * @author: iocanel
@@ -53,6 +54,9 @@ public class BlobWriteCommand extends BlobStoreCommandWithOptions {
    @Option(name = "-u", aliases = "--url-payload", description = "Use payload from a URL instead of a file", required = false, multiValued = false)
    boolean urlPayload;
 
+   @Option(name = "-m", aliases = "--multipart-upload", description = "Use multi-part upload", required = false, multiValued = false)
+   boolean multipartUpload;
+
    @Override
    protected Object doExecute() throws Exception {
       BlobStore blobStore = getBlobStore();
@@ -71,7 +75,8 @@ public class BlobWriteCommand extends BlobStoreCommandWithOptions {
          builder = builder.payload(new File(payload)).calculateMD5();
       }
 
-      write(blobStore, containerName, blobName, builder.build());
+      PutOptions options = multipartUpload ? new PutOptions().multipart(true) : PutOptions.NONE;
+      write(blobStore, containerName, blobName, builder.build(), options);
 
       cacheProvider.getProviderCacheForType("container").put(blobStore.getContext().unwrap().getId(), containerName);
       cacheProvider.getProviderCacheForType("blob").put(blobStore.getContext().unwrap().getId(), blobName);
