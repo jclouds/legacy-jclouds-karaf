@@ -28,6 +28,7 @@ import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.blobstore.util.BlobStoreUtils;
 import org.jclouds.karaf.cache.BasicCacheProvider;
 import org.jclouds.karaf.cache.CacheProvider;
@@ -140,8 +141,9 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
     * @param bucket
     * @param blobName
     * @param blob
+    * @param options
     */
-   public void write(BlobStore blobStore, String bucket, String blobName, Blob blob) throws Exception {
+   public void write(BlobStore blobStore, String bucket, String blobName, Blob blob, PutOptions options) throws Exception {
       if (blobName.contains("/")) {
          String directory = BlobStoreUtils.parseDirectoryFromPath(blobName);
          if (!Strings.isNullOrEmpty(directory)) {
@@ -149,7 +151,7 @@ public abstract class BlobStoreCommandBase extends AbstractAction {
          }
       }
 
-      blobStore.putBlob(bucket, blob);
+      blobStore.putBlob(bucket, blob, options);
    }
 
    protected void printBlobStoreProviders(Iterable<ProviderMetadata> providers, List<BlobStore> blobStores,
