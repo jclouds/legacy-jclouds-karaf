@@ -72,7 +72,11 @@ public class BlobWriteCommand extends BlobStoreCommandWithOptions {
             input.close();
          }
       } else {
-         builder = builder.payload(new File(payload)).calculateMD5();
+         BlobBuilder.PayloadBlobBuilder payloadBuilder = builder.payload(new File(payload));
+         if (!multipartUpload) {
+            payloadBuilder = payloadBuilder.calculateMD5();
+         }
+         builder = payloadBuilder;
       }
 
       PutOptions options = multipartUpload ? new PutOptions().multipart(true) : PutOptions.NONE;
