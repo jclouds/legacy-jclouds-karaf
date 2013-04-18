@@ -146,6 +146,15 @@ public class ComputeServiceEventProxy implements ComputeService {
     }
 
     /**
+     * all nodes available to the current user that have the given id. If possible, the returned set will include
+     * {@link org.jclouds.compute.domain.NodeMetadata} objects.
+     */
+    @Override
+    public Set<? extends NodeMetadata> listNodesByIds(Iterable<String> ids) {
+       return computeService.listNodesByIds(ids);
+    }
+
+    /**
      * The list locations command returns all the valid locations for nodes. A location has a scope,
      * which is typically region or zone. A region is a general area, like eu-west, where a zone is
      * similar to a datacenter. If a location has a parent, that implies it is within that location.
