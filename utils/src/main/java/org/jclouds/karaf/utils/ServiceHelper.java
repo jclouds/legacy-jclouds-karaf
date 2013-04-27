@@ -144,7 +144,7 @@ public class ServiceHelper {
             if (View.class.isAssignableFrom(context.getClass())) {
                 name = ((View) context).unwrap().getName();
             } else {
-                name = context.getId();
+                name = context.getName();
             }
         } catch (IllegalArgumentException ex) {
             //Fallback to pure reflection
