@@ -110,7 +110,7 @@ public class ComputeServiceCreateCommand extends ComputeCommandWithOptions {
          for (String option : options) {
             if (option.contains("=")) {
                String key = option.substring(0, option.indexOf("="));
-               String value = option.substring(option.lastIndexOf("=") + 1);
+               String value = option.substring(option.indexOf("=") + 1);
                props.put(key, value);
             }
          }
