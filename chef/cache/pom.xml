@@ -24,13 +24,13 @@
     <parent>
         <artifactId>chef</artifactId>
         <groupId>org.jclouds.karaf</groupId>
-        <version>1.6.0-SNAPSHOT</version>
+        <version>1.7.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.jclouds.karaf.chef</groupId>
     <artifactId>cache</artifactId>
-    <version>1.6.0-SNAPSHOT</version>
+    <version>1.7.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>JClouds :: Karaf :: Chef :: Cache</name>
 

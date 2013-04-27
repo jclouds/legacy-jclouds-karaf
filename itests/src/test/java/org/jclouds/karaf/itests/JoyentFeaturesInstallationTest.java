@@ -21,6 +21,7 @@ package org.jclouds.karaf.itests;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.ExamReactorStrategy;
@@ -41,11 +42,13 @@ public class JoyentFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
 
     }
 
+    @Ignore
     @Test
     public void testJoyentCloudApi() throws Exception {
         installAndCheckFeature("jclouds-joyent-cloudapi");
     }
-    
+
+    @Ignore
     @Test
     public void testJoyent() throws Exception {
         installAndCheckFeature("jclouds-joyent");

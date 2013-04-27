@@ -44,13 +44,6 @@
         <bundle>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
     </feature>
 
-  <feature name='jclouds-nodepool' description='JClouds Node Pool' version='${project.version}' resolver='(obr)'>
-    <feature version='${project.version}'>jclouds-compute</feature>
-    <feature version='${project.version}'>jclouds-driver-sshj</feature>
-    <feature version='${project.version}'>jclouds-driver-slf4j</feature>
-    <bundle>mvn:org.jclouds.labs/nodepool/${jclouds.version}</bundle>
-  </feature>
-
     <!-- APIS -->
     <feature name='jclouds-api-filesystem' description='JClouds - API - FileSystem' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
@@ -528,7 +521,7 @@
     </feature>
 
 
-    <!-- Lab Features -->
+    <!-- Lab Features
     <feature name='jclouds-joyent-cloudapi' description='Joyent Cloud API' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
         <feature version='${project.version}'>jclouds-compute</feature>
@@ -542,7 +535,7 @@
         <bundle>mvn:org.jclouds.labs/joyentcloud/${jclouds.version}</bundle>
     </feature>
 
-    <feature name='jclouds-greenqloud-storage' description='GreenQloud Simple Storage Service (S3) provider' version='${project.version}' resolver='(obr)'>
+    <eature name='jclouds-greenqloud-storage' description='GreenQloud Simple Storage Service (S3) provider' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds-api-s3</feature>
         <bundle>mvn:org.jclouds.labs/greenqloud-storage/${jclouds.version}</bundle>
     </feature>
@@ -552,6 +545,13 @@
         <bundle>mvn:org.jclouds.labs/greenqloud-compute/${jclouds.version}</bundle>
     </feature>
 
+    <feature name='jclouds-nodepool' description='JClouds Node Pool' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds-compute</feature>
+        <feature version='${project.version}'>jclouds-driver-sshj</feature>
+        <feature version='${project.version}'>jclouds-driver-slf4j</feature>
+        <bundle>mvn:org.jclouds.labs/nodepool/${jclouds.version}</bundle>
+    </feature>
+    -->
 
     <feature name="jclouds-services" description="OSGi Service Factories for JClouds" version="${project.version}" resolver="(obr)">
         <configfile finalname="/etc/org.jclouds.credentials.cfg">mvn:org.jclouds.karaf/jclouds-karaf/${project.version}/cfg/credentials</configfile>

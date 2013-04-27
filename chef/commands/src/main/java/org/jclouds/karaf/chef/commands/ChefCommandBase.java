@@ -70,8 +70,8 @@ public abstract class ChefCommandBase extends AbstractAction {
             StringBuilder sb = new StringBuilder();
             sb.append("[ ");
             for (ChefService chefService : chefServices) {
-                String contextName = (String) chefService.getContext().getName();
-                if (chefService.getContext().getId().equals(api.getId()) && contextName != null) {
+                String contextName = (String) chefService.getContext().unwrap().getName();
+                if (chefService.getContext().unwrap().getId().equals(api.getId()) && contextName != null) {
                     sb.append(contextName).append(" ");
                 }
             }

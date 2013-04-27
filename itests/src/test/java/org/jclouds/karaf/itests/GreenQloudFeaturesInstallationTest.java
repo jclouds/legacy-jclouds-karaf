@@ -21,6 +21,7 @@ package org.jclouds.karaf.itests;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.ExamReactorStrategy;
@@ -41,11 +42,13 @@ public class GreenQloudFeaturesInstallationTest extends JcloudsFeaturesTestSuppo
 
     }
 
+    @Ignore
     @Test
     public void testGreenQloudStorage() throws Exception {
         installAndCheckFeature("jclouds-greenqloud-storage");
     }
-    
+
+    @Ignore
     @Test
     public void testGreenQloudCompute() throws Exception {
         installAndCheckFeature("jclouds-greenqloud-compute");
