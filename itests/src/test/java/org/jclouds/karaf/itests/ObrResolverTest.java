@@ -79,7 +79,7 @@ public class ObrResolverTest extends JcloudsFeaturesTestSupport {
     }
 
     /**
-     * This test checks that when the obr resolver is installed, jclouds-commands feature can be properly installed.
+     * This test checks that when the obr resolver is installed, jclouds-chef feature can be properly installed.
      * @throws Exception
      */
     @Test

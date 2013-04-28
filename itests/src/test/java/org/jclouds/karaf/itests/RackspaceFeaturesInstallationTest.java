@@ -72,6 +72,16 @@ public class RackspaceFeaturesInstallationTest extends JcloudsFeaturesTestSuppor
     }
 
     @Test
+    public void testCloudDnsUsFeature() throws Exception {
+        installAndCheckFeature("jclouds-rackspace-clouddns-us");
+    }
+
+    @Test
+    public void testCloudDnsUkFeature() throws Exception {
+        installAndCheckFeature("jclouds-rackspace-clouddns-uk");
+    }
+
+    @Test
     public void testCloudLoadBalancersUsFeature() throws Exception {
         installAndCheckFeature("jclouds-rackspace-cloudloadbalancers-us");
     }
@@ -80,5 +90,16 @@ public class RackspaceFeaturesInstallationTest extends JcloudsFeaturesTestSuppor
     public void testCloudLoadBalancersUkFeature() throws Exception {
         installAndCheckFeature("jclouds-rackspace-cloudloadbalancers-uk");
     }
+
+    @Test
+    public void testCloudBlockStorageUsFeature() throws Exception {
+        installAndCheckFeature("jclouds-rackspace-cloudblockstorage-us");
+    }
+
+    @Test
+    public void testCloudBlockStorageUkFeature() throws Exception {
+        installAndCheckFeature("jclouds-rackspace-cloudblockstorage-uk");
+    }
+
 
 }

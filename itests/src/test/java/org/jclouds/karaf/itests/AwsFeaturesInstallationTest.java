@@ -21,6 +21,7 @@ package org.jclouds.karaf.itests;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.ExamReactorStrategy;
@@ -39,6 +40,22 @@ public class AwsFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
     @After
     public void tearDown() {
 
+    }
+
+    @Test
+    public void testAwsRoute53Feature() throws Exception {
+        installAndCheckFeature("jclouds-aws-route53");
+    }
+
+    @Test
+    public void testAwsSqsFeature() throws Exception {
+        installAndCheckFeature("jclouds-aws-sqs");
+    }
+
+    @Ignore
+    @Test
+    public void testAwsStsFeature() throws Exception {
+        installAndCheckFeature("jclouds-aws-sts");
     }
 
     @Test

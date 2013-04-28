@@ -72,8 +72,23 @@ public class ApisFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
     }
 
     @Test
-    public void testElasticStackFeature() throws Exception {
+    public void testRackspaceCloudDnsFeature() throws Exception {
+        installAndCheckFeature("jclouds-api-rackspace-clouddns");
+    }
+
+    @Test
+         public void testElasticStackFeature() throws Exception {
         installAndCheckFeature("jclouds-api-elasticstack");
+    }
+
+    @Test
+    public void testStsFeature() throws Exception {
+        installAndCheckFeature("jclouds-api-sts");
+    }
+
+    @Test
+    public void testSwiftFeature() throws Exception {
+        installAndCheckFeature("jclouds-api-swift");
     }
     
 }
