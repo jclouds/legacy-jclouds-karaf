@@ -105,16 +105,6 @@ public class MiscFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
     }
 
     @Test
-    public void testSynapticStorageFeature() throws Exception {
-        installAndCheckFeature("jclouds-synaptic-storage");
-    }
-
-    @Test
-    public void testStratogenVcloudMycloudFeature() throws Exception {
-        installAndCheckFeature("jclouds-stratogen-vcloud-mycloud");
-    }
-
-    @Test
     public void testTrmkVcloudExpressFeature() throws Exception {
         installAndCheckFeature("jclouds-trmk-vcloudexpress");
     }
@@ -128,9 +118,14 @@ public class MiscFeaturesInstallationTest extends JcloudsFeaturesTestSupport {
     public void testAzureBlobFeature() throws Exception {
         installAndCheckFeature("jclouds-azureblob");
     }
-    
+
     @Test
-    public void testTryStackNova() throws Exception {
-        installAndCheckFeature("jclouds-trystack-nova");
+    public void testDynectFeature() throws Exception {
+        installAndCheckFeature("jclouds-dynect");
+    }
+
+    @Test
+    public void testGlesysFeature() throws Exception {
+        installAndCheckFeature("jclouds-glesys");
     }
 }
