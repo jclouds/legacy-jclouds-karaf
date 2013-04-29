@@ -49,7 +49,7 @@ public class ChefApiCompleter implements Completer {
                 }
             } else if (chefServices != null) {
                 for (ChefService chefService : chefServices) {
-                    String id = chefService.getContext().getId();
+                    String id = chefService.getContext().unwrap().getId();
                     if (Apis.withId(id) != null) {
                         delegate.getStrings().add(id);
                     }

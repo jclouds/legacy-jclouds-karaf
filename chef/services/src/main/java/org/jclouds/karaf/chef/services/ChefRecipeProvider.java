@@ -36,7 +36,7 @@ public class ChefRecipeProvider implements RecipeProvider {
 
     public ChefRecipeProvider(ChefService chefService) {
         this.chefService = chefService;
-        this.id = chefService.getContext().getName();
+        this.id = chefService.getContext().unwrap().getName();
     }
 
     @Override

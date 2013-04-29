@@ -26,6 +26,6 @@ public abstract class ChefCompleterSupport extends GenericCompleterSupport<ChefS
 
     @Override
     public String getCacheableKey(ChefService type) {
-        return type.getContext().getName();
+        return type.getContext().unwrap().getName();
     }
 }

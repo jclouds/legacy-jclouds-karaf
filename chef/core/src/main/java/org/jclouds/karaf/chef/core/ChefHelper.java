@@ -183,7 +183,7 @@ public class ChefHelper {
         if (!Strings.isNullOrEmpty(id)) {
             ChefService service = null;
             for (ChefService svc : services) {
-                if (id.equals(svc.getContext().getName())) {
+                if (id.equals(svc.getContext().unwrap().getName())) {
                     service = svc;
                     break;
                 }
@@ -197,7 +197,7 @@ public class ChefHelper {
         if (!Strings.isNullOrEmpty(api)) {
             ChefService service = null;
             for (ChefService svc : services) {
-                if (api.equals(svc.getContext().getId())) {
+                if (api.equals(svc.getContext().unwrap().getId())) {
                     service = svc;
                     break;
                 }
@@ -215,7 +215,7 @@ public class ChefHelper {
                     if (sb.length() > 0) {
                         sb.append(", ");
                     }
-                    sb.append(svc.getContext().getId());
+                    sb.append(svc.getContext().unwrap().getId());
                 }
                 throw new IllegalArgumentException("Multiple apis are present, please select one using the--api argument in the following values: " + sb.toString());
             } else {
@@ -341,7 +341,7 @@ public class ChefHelper {
         builder = builder.name(name).modules(ImmutableSet.<Module>of(new SLF4JLoggingModule()));
         builder = builder.name(name).credentials(clientName, clientCredential).overrides(chefConfig);
 
-        ChefContext context = builder.build();
+        ChefContext context = builder.build(ChefContext.class);
         ChefService service = context.getChefService();
         return service;
     }

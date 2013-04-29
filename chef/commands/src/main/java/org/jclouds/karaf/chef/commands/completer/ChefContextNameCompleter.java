@@ -35,9 +35,9 @@ public class ChefContextNameCompleter implements Completer {
         try {
             if (chefServices != null) {
                 for (ChefService chefService : chefServices) {
-                    String id = (String) chefService.getContext().getName();
-                    if (id != null) {
-                        delegate.getStrings().add(id);
+                    String name = (String) chefService.getContext().unwrap().getName();
+                    if (name != null) {
+                        delegate.getStrings().add(name);
                     }
                 }
             }
