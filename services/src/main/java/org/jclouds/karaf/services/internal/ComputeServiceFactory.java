@@ -34,6 +34,8 @@ import org.jclouds.karaf.core.CredentialStore;
 import org.jclouds.karaf.services.InvalidConfigurationException;
 import org.jclouds.karaf.services.ServiceFactorySupport;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
+import org.jclouds.management.config.ManagementLifecycle;
+import org.jclouds.management.internal.BaseManagementContext;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.ProviderPredicates;
 import org.jclouds.sshj.config.SshjSshClientModule;
@@ -161,7 +163,7 @@ public class ComputeServiceFactory extends ServiceFactorySupport {
                     builder = builder.endpoint(endpoint);
                 }
 
-                builder = builder.name(id).modules(ImmutableSet.<Module>of(new Log4JLoggingModule(), new SshjSshClientModule()));
+                builder = builder.name(id).modules(ImmutableSet.<Module>of(new Log4JLoggingModule(), new SshjSshClientModule(), new ManagementLifecycle(BaseManagementContext.INSTANCE)));
 
                 if (credentialStore != null) {
                     builder = builder.modules(ImmutableSet.<Module>of(credentialStore));

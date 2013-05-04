@@ -66,6 +66,12 @@
             <artifactId>jclouds-blobstore</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.jclouds.labs.management</groupId>
+            <artifactId>management-core</artifactId>
+            <version>${jclouds.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.jclouds.driver</groupId>
             <artifactId>jclouds-log4j</artifactId>
         </dependency>

@@ -24,6 +24,7 @@
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.aopalliance/${aopalliance.bundle.version}</bundle>
         <bundle>mvn:com.google.inject/guice/${guice.version}</bundle>
         <bundle>mvn:com.google.inject.extensions/guice-assistedinject/${guice.version}</bundle>
+        <bundle>mvn:com.google.inject.extensions/guice-multibindings/${guice.version}</bundle>
         <bundle>mvn:org.99soft.guice/rocoto/${rocoto.version}</bundle>
     </feature>
 
@@ -43,8 +44,19 @@
 
     <feature name='jclouds-compute' description='JClouds Compute' version='${project.version}' resolver='(obr)'>
         <feature version='${project.version}'>jclouds</feature>
+        <bundle dependency='true'>mvn:org.jclouds.driver/jclouds-log4j/${jclouds.version}</bundle>
         <bundle dependency='true'>mvn:org.jclouds/jclouds-scriptbuilder/${jclouds.version}</bundle>
         <bundle>mvn:org.jclouds/jclouds-compute/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name='jclouds-management' description='JClouds Management' version='${project.version}' resolver='(obr)'>
+        <feature version='${project.version}'>jclouds-compute</feature>
+        <feature version='${project.version}'>jclouds-blobstore</feature>
+        <bundle>mvn:org.jclouds.labs.representations/representations-core/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.labs.representations/representations-codec/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.labs.management/management-core/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.labs.management/management-blobstore/${jclouds.version}</bundle>
+        <bundle>mvn:org.jclouds.labs.management/management-compute/${jclouds.version}</bundle>
     </feature>
 
     <!-- APIS -->
@@ -432,6 +444,7 @@
         <configfile finalname="/etc/org.jclouds.credentials.cfg">mvn:org.jclouds.karaf/jclouds-karaf/${project.version}/cfg/credentials</configfile>
         <feature version='${project.version}'>jclouds-compute</feature>
         <feature version='${project.version}'>jclouds-blobstore</feature>
+        <feature version='${project.version}'>jclouds-management</feature>
         <bundle dependency='true'>mvn:net.schmizz/sshj/${sshj.version}</bundle>
         <bundle dependency='true'>mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jzlib/${jzlib.bundle.version}</bundle>
         <bundle dependency='true'>mvn:org.bouncycastle/bcpkix-jdk15on/${bcprov.version}</bundle>
