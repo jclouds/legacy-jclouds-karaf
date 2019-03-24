@@ -159,7 +159,7 @@
         <httpcore.version>4.1</httpcore.version>
         <java-xmlbuilder.bundle.version>0.3_1</java-xmlbuilder.bundle.version>
         <javax.inject.bundle.version>1_1</javax.inject.bundle.version>
-        <jclouds.version>${project.version}</jclouds.version>
+        <jclouds.version>1.7.0-SNAPSHOT</jclouds.version>
         <jclouds.chef.version>${project.version}</jclouds.chef.version>
         <jersey.version>1.11</jersey.version>
         <jersey.bundle.version>1.11_1</jersey.bundle.version>

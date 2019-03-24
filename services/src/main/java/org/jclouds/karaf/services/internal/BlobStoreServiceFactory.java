@@ -32,6 +32,8 @@ import org.jclouds.karaf.core.Constants;
 import org.jclouds.karaf.services.InvalidConfigurationException;
 import org.jclouds.karaf.services.ServiceFactorySupport;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
+import org.jclouds.management.config.ManagementLifecycle;
+import org.jclouds.management.internal.BaseManagementContext;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.ProviderPredicates;
 import org.osgi.framework.BundleContext;
@@ -114,7 +116,7 @@ public class BlobStoreServiceFactory extends ServiceFactorySupport {
                     builder = builder.endpoint(endpoint);
                 }
                 context = builder.name(id).credentials(identity, credential)
-                        .modules(ImmutableSet.<Module>of(new Log4JLoggingModule()))
+                        .modules(ImmutableSet.<Module>of(new Log4JLoggingModule(), new ManagementLifecycle(BaseManagementContext.INSTANCE)))
                         .overrides(props)
                         .build(BlobStoreContext.class);
 
